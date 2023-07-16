@@ -12,10 +12,10 @@ export interface NavigationProps {
     children: ReactNode
 }
 
-export default function Navigation({user, children, ...rest}: NavigationProps) {
+export default function Navigation({user, children}: NavigationProps) {
     const {isOpen, onOpen, onClose} = useDisclosure();
     return (
-        <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
+        <Box minH="100vh">
             <SidebarContent
                 onClose={() => onClose}
                 display={{base: 'none', md: 'block'}}
@@ -34,7 +34,7 @@ export default function Navigation({user, children, ...rest}: NavigationProps) {
             </Drawer>
             {/* mobilenav */}
             <MobileNav onOpen={onOpen} user={user}/>
-            <Box ml={{base: 0, md: 60}} p="4">
+            <Box ml={{base: 0, md: 60}}>
                 {children}
             </Box>
         </Box>
@@ -48,8 +48,7 @@ interface SidebarProps extends BoxProps {
 const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
     return (
         <Box
-            transition="3s ease"
-            bg={useColorModeValue('white', 'gray.900')}
+            bg={useColorModeValue('gray.100', 'gray.900')}
             borderRight="1px"
             borderRightColor={useColorModeValue('gray.200', 'gray.700')}
             w={{base: 'full', md: 60}}
@@ -118,7 +117,7 @@ const MobileNav = ({onOpen, user, ...rest}: MobileProps) => {
             px={{base: 4, md: 4}}
             height="20"
             alignItems="center"
-            bg={useColorModeValue('white', 'gray.900')}
+            bg={useColorModeValue('gray.50', 'gray.900')}
             borderBottomWidth="1px"
             borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
             justifyContent={{base: 'space-between', md: 'flex-end'}}
