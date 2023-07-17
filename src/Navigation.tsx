@@ -6,6 +6,7 @@ import {ColorModeSwitcher} from "./ColorModeSwitcher";
 import {Link as RouteLink} from "react-router-dom";
 import useAuthService from "./auth/AuthService";
 import {UserDetails} from "./http/BackendService";
+import {Logo} from "./Logo";
 
 export interface NavigationProps {
     user: UserDetails
@@ -48,7 +49,7 @@ interface SidebarProps extends BoxProps {
 const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
     return (
         <Box
-            bg={useColorModeValue('gray.100', 'gray.900')}
+            bg={useColorModeValue('gray.300', 'gray.900')}
             borderRight="1px"
             borderRightColor={useColorModeValue('gray.200', 'gray.700')}
             w={{base: 'full', md: 60}}
@@ -57,7 +58,7 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
             {...rest}>
             <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
                 <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-                    Logo
+                    <Logo/>
                 </Text>
                 <CloseButton display={{base: 'flex', md: 'none'}} onClick={onClose}/>
             </Flex>
@@ -117,9 +118,7 @@ const MobileNav = ({onOpen, user, ...rest}: MobileProps) => {
             px={{base: 4, md: 4}}
             height="20"
             alignItems="center"
-            bg={useColorModeValue('gray.50', 'gray.900')}
-            borderBottomWidth="1px"
-            borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
+            bg={useColorModeValue('gray.700', 'gray.900')}
             justifyContent={{base: 'space-between', md: 'flex-end'}}
             {...rest}>
             <IconButton
@@ -127,6 +126,7 @@ const MobileNav = ({onOpen, user, ...rest}: MobileProps) => {
                 onClick={onOpen}
                 variant="outline"
                 aria-label="open menu"
+                bg={useColorModeValue('gray.300', 'gray.700')}
                 icon={<FiMenu/>}
             />
 
@@ -135,7 +135,7 @@ const MobileNav = ({onOpen, user, ...rest}: MobileProps) => {
                 fontSize="2xl"
                 fontFamily="monospace"
                 fontWeight="bold">
-                Logo
+                <Logo/>
             </Text>
 
             <HStack spacing={{base: '0', md: '6'}}>
@@ -157,10 +157,10 @@ const MobileNav = ({onOpen, user, ...rest}: MobileProps) => {
                                     alignItems="flex-start"
                                     spacing="1px"
                                     ml="2">
-                                    <Text fontSize="sm">{user.id}</Text>=
+                                    <Text fontSize="sm" color={"white"}>{user.id}</Text>=
                                 </VStack>
                                 <Box display={{base: 'none', md: 'flex'}}>
-                                    <FiChevronDown/>
+                                    <FiChevronDown color={"white"}/>
                                 </Box>
                             </HStack>
                         </MenuButton>

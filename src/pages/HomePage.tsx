@@ -1,5 +1,6 @@
 import StringKeyTable from "../components/StringKeyTable";
-import {Drawer, DrawerCloseButton, DrawerContent, DrawerHeader} from "@chakra-ui/react";
+import {Drawer, DrawerCloseButton, DrawerContent, DrawerHeader, Modal, ModalCloseButton, ModalContent,
+    ModalHeader, ModalOverlay} from "@chakra-ui/react";
 import * as React from "react";
 
 export default function HomePage() {
@@ -50,10 +51,11 @@ function detailsDrawer(isOpen: boolean, onClose: () => void) {
 }
 
 function createDrawer(isOpen: boolean, onClose: () => void) {
-    return <Drawer isOpen={isOpen} onClose={onClose}>
-        <DrawerContent>
-            <DrawerHeader>Create</DrawerHeader>
-            <DrawerCloseButton/>
-        </DrawerContent>
-    </Drawer>;
+    return <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+            <ModalHeader>Create</ModalHeader>
+            <ModalCloseButton />
+        </ModalContent>
+    </Modal>
 }

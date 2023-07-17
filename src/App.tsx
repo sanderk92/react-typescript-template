@@ -22,19 +22,19 @@ export function UserInterface() {
     const authService = useAuthService()
     const backendService = useBackendService()
 
-    const [user, setUser] = useState<UserDetails>()
-
-    useEffect(() => {
-        if (!authService.isLoading() && !authService.isLoggedIn()) {
-            authService.login()
-        }
-    })
-
-    useEffect(() => {
-        if (authService.isLoggedIn() && user == null) {
-            backendService.getUserDetails().then((user) => setUser(user))
-        }
-    })
+    const [user, setUser] = useState<UserDetails>({id: "sander", roles: []})
+    //
+    // useEffect(() => {
+    //     if (!authService.isLoading() && !authService.isLoggedIn()) {
+    //         authService.login()
+    //     }
+    // })
+    //
+    // useEffect(() => {
+    //     if (authService.isLoggedIn() && user == null) {
+    //         backendService.getUserDetails().then((user) => setUser(user))
+    //     }
+    // })
 
     if (user == null) {
         return <></>
