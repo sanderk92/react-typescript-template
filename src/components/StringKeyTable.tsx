@@ -1,6 +1,6 @@
 import React, {ReactNode, useState} from 'react';
 import {Divider, Flex, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
-import {CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
+import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./tables.css"
 
 export interface TableHeaders {
@@ -18,7 +18,8 @@ export interface TableEntry {
 export interface TableComponentProps {
     headers: TableHeaders
     entries: TableEntry[]
-    details: (entry: TableEntry) => React.JSX.Element
+    createElement: (isOpen: boolean, onClose: () => void) => React.JSX.Element
+    detailsElement: (entry: TableEntry, isOpen: boolean, onClose: () => void) => React.JSX.Element
 }
 
 /**
@@ -26,27 +27,39 @@ export interface TableComponentProps {
  *  - 3 columns of equal width
  *  - Sortable by the first column
  *  - Searchable by all columns
+ *  - Customizable details page
+ *  - Customizable creation page
  */
-export default function StringKeyTable({headers, entries, details}: TableComponentProps) {
+export default function StringKeyTable({headers, entries, detailsElement, createElement}: TableComponentProps) {
     const [selection, select] = useState<TableEntry | undefined>()
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<boolean>(true) // ascending
+    const [createOpen, setCreateOpen] = useState<boolean>(false)
 
-    return selection ?
-        <Details selection={selection} details={details} onClose={() => select(undefined)}/> :
-        <TableContainer p="4">
-            <SearchField search={search} onSearch={(query) => setSearch(query)}/>
-            <Divider/>
-            <Table variant='simple'>
-                <Thead>
-                    <TableHeader headers={headers} setSort={setSort} sort={sort}/>
-                </Thead>
-                <Tbody>
-                    <TableRows entries={filterEntries(entries, search, sort)} onSelect={select}/>
-                </Tbody>
-            </Table>
-        </TableContainer>
-}
+    const closeDetailsElement = (): void => select(undefined)
+    const openCreateElement = () : void => setCreateOpen(true)
+    const closeCreateElement = () : void => setCreateOpen(false)
+
+    return <>
+            <TableContainer p="4">
+                <Flex pr="2" pb="4" alignItems={"flex-end"} justifyContent={"flex-end"}>
+                    <SearchField search={search} onSearch={(query) => setSearch(query)}/>
+                    <IconButton ml="4" icon={<AddIcon/>} aria-label={"create"} onClick={openCreateElement}/>
+                </Flex>
+                <Divider/>
+                <Table variant='simple'>
+                    <Thead>
+                        <TableHeader headers={headers} setSort={setSort} sort={sort}/>
+                    </Thead>
+                    <Tbody>
+                        <TableRows entries={filterEntries(entries, search, sort)} onSelect={select}/>
+                    </Tbody>
+                </Table>
+            </TableContainer>
+            { selection ? detailsElement(selection, true, closeDetailsElement) : null }
+            { createOpen ? createElement(createOpen, closeCreateElement) : null}
+        </>
+    }
 
 interface SearchFieldProps {
     search: string
@@ -56,17 +69,15 @@ interface SearchFieldProps {
 const SearchField = ({search, onSearch}: SearchFieldProps) => {
     const colorScheme = useColorModeValue('white', 'gray.900')
 
-    return <Flex pr="2" pb="4" alignItems={"right"} justifyContent={"right"}>
-        <InputGroup size='md' width={"25vw"}>
-            <InputLeftElement>
-                <SearchIcon/>
-            </InputLeftElement>
-            <Input bg={colorScheme} value={search} onChange={event => onSearch(event.target.value)}/>
-            <InputRightElement>
-                <CloseIcon className={"clickable"} background={colorScheme} onClick={() => onSearch("")}/>
-            </InputRightElement>
-        </InputGroup>
-    </Flex>;
+    return <InputGroup size='md' width={"25vw"}>
+        <InputLeftElement>
+            <SearchIcon/>
+        </InputLeftElement>
+        <Input bg={colorScheme} value={search} onChange={event => onSearch(event.target.value)}/>
+        <InputRightElement>
+            <CloseIcon className={"clickable"} background={colorScheme} onClick={() => onSearch("")}/>
+        </InputRightElement>
+    </InputGroup>
 }
 
 interface TableHeaderProps {
@@ -76,10 +87,10 @@ interface TableHeaderProps {
 }
 
 const TableHeader = ({setSort, sort, headers}: TableHeaderProps) => {
-    const colorScheme = useColorModeValue('white', 'gray.900')
+    const hoverColorScheme = useColorModeValue('gray.50', 'gray.900')
 
     return <Tr>
-        <Th className={"unselectable clickable"} _hover={{background: colorScheme}}
+        <Th className={"unselectable clickable"} _hover={{background: hoverColorScheme}}
             onClick={() => setSort(!sort)}>
             {headers.first}{sort ? <TriangleUpIcon/> : <TriangleDownIcon/>}
         </Th>
@@ -120,18 +131,4 @@ function filterEntries(entries: TableEntry[], search: string, sort: boolean) {
         .sort((a, b) => {
             return sort ? (a.firstColumn > b.firstColumn ? 1 : -1) : (a.firstColumn > b.firstColumn ? -1 : 1)
         })
-}
-
-interface DetailsPageProps {
-    selection: TableEntry
-    details: (entry: TableEntry) => React.JSX.Element
-    onClose : () => void
-}
-
-const Details = ({selection, details, onClose}: DetailsPageProps) => {
-    return (
-        <>
-            <IconButton size={"xs"} isRound={true} icon={<CloseIcon/>} colorScheme='blackAlpha' onClick={onClose} aria-label={'Close'}></IconButton>{details(selection)}
-        </>
-    );
 }

@@ -1,12 +1,13 @@
 import StringKeyTable from "../components/StringKeyTable";
-import {Box} from "@chakra-ui/react";
+import {Drawer, DrawerCloseButton, DrawerContent, DrawerHeader} from "@chakra-ui/react";
 import * as React from "react";
 
 export default function HomePage() {
     return (
         <StringKeyTable
             headers={{first: "first", second: "second", third: "third"}}
-            details={entry => <Box>{entry.firstColumn}</Box>}
+            createElement={(isOpen, onClose) => createDrawer(isOpen, onClose)}
+            detailsElement={(entry, isOpen, onClose) => detailsDrawer(isOpen, onClose)}
             entries={
                 [
                     {firstColumn: "testa", secondColumn: "test2", thirdColumn: "test3"},
@@ -37,4 +38,22 @@ export default function HomePage() {
             }
          ></StringKeyTable>
     )
+}
+
+function detailsDrawer(isOpen: boolean, onClose: () => void) {
+    return <Drawer isOpen={isOpen} onClose={onClose}>
+        <DrawerContent>
+            <DrawerHeader>Details</DrawerHeader>
+            <DrawerCloseButton/>
+        </DrawerContent>
+    </Drawer>;
+}
+
+function createDrawer(isOpen: boolean, onClose: () => void) {
+    return <Drawer isOpen={isOpen} onClose={onClose}>
+        <DrawerContent>
+            <DrawerHeader>Create</DrawerHeader>
+            <DrawerCloseButton/>
+        </DrawerContent>
+    </Drawer>;
 }
