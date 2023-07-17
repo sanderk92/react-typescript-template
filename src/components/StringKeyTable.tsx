@@ -87,7 +87,7 @@ interface TableHeaderProps {
 }
 
 const TableHeader = ({setSort, sort, headers}: TableHeaderProps) => {
-    const hoverColorScheme = useColorModeValue('gray.50', 'gray.900')
+    const hoverColorScheme = useColorModeValue('gray.50', 'gray.700')
 
     return <Tr>
         <Th className={"unselectable clickable"} _hover={{background: hoverColorScheme}}
