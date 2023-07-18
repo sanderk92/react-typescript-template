@@ -10,7 +10,7 @@ export interface TableHeaders {
 }
 
 export interface TableEntry {
-    firstColumn: string,
+    firstColumn: ReactNode,
     secondColumn: ReactNode,
     thirdColumn: ReactNode,
 }
@@ -18,33 +18,36 @@ export interface TableEntry {
 export interface TableComponentProps {
     headers: TableHeaders
     entries: TableEntry[]
-    createElement: (isOpen: boolean, onClose: () => void) => React.JSX.Element
-    detailsElement: (entry: TableEntry, isOpen: boolean, onClose: () => void) => React.JSX.Element
+    onSelect?: (isOpen: boolean, onClose: () => void, entry: TableEntry) => React.JSX.Element
+    onCreate?: (isOpen: boolean, onClose: () => void) => React.JSX.Element
 }
 
 /**
  * A table intended for showing entries with a plain string first column.
  *  - 3 columns of equal width
- *  - Sortable by the first column
  *  - Searchable by all columns
- *  - Customizable details page
- *  - Customizable creation page
+ *  - Sortable by the first column's string value natural key
+ *  - Optional customizable selection page
+ *  - Optional customizable creation page
  */
-export default function StringKeyTable({headers, entries, detailsElement, createElement}: TableComponentProps) {
+export default function StringKeyTable({headers, entries, onSelect, onCreate}: TableComponentProps) {
+    const [createOpen, setCreateOpen] = useState<boolean>(false)
     const [selection, select] = useState<TableEntry | undefined>()
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<boolean>(true) // ascending
-    const [createOpen, setCreateOpen] = useState<boolean>(false)
 
-    const closeDetailsElement = (): void => select(undefined)
-    const openCreateElement = () : void => setCreateOpen(true)
-    const closeCreateElement = () : void => setCreateOpen(false)
+    const openCreate = () : void => setCreateOpen(true)
+    const closeCreate = () : void => setCreateOpen(false)
+
+    const selectOpen = selection !== undefined
+    const openSelect = (entry: TableEntry): void => select(entry)
+    const closeSelect = (): void => select(undefined)
 
     return <>
             <TableContainer p="4">
                 <Flex pr="2" pb="4" alignItems={"flex-end"} justifyContent={"flex-end"}>
                     <SearchField search={search} onSearch={(query) => setSearch(query)}/>
-                    <IconButton ml="4" icon={<AddIcon/>} aria-label={"create"} onClick={openCreateElement}/>
+                    {onCreate ? <IconButton ml="4" icon={<AddIcon/>} aria-label={"create"} onClick={openCreate}/> : null}
                 </Flex>
                 <Divider/>
                 <Table variant='simple'>
@@ -52,12 +55,12 @@ export default function StringKeyTable({headers, entries, detailsElement, create
                         <TableHeader headers={headers} setSort={setSort} sort={sort}/>
                     </Thead>
                     <Tbody>
-                        <TableRows entries={filterEntries(entries, search, sort)} onSelect={select}/>
+                        <TableRows entries={filterEntries(entries, search, sort)} onSelect={openSelect}/>
                     </Tbody>
                 </Table>
             </TableContainer>
-            { selection ? detailsElement(selection, true, closeDetailsElement) : null }
-            { createOpen ? createElement(createOpen, closeCreateElement) : null}
+            { onSelect && selectOpen ? onSelect(selectOpen, closeSelect, selection) : null }
+            { onCreate && createOpen ? onCreate(createOpen, closeCreate) : null}
         </>
     }
 
@@ -128,7 +131,9 @@ function filterEntries(entries: TableEntry[], search: string, sort: boolean) {
         .filter(entry =>
             Object.values(entry).join(" ").toLowerCase().includes(search.toLowerCase())
         )
-        .sort((a, b) => {
-            return sort ? (a.firstColumn > b.firstColumn ? 1 : -1) : (a.firstColumn > b.firstColumn ? -1 : 1)
-        })
+        .sort((a, b) =>
+            sort ?
+                (`${a.firstColumn}` > `${b.firstColumn}` ? 1 : -1) :
+                (`${a.firstColumn}` > `${b.firstColumn}` ? -1 : 1)
+        )
 }

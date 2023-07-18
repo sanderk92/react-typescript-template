@@ -1,20 +1,30 @@
-import StringKeyTable from "../components/StringKeyTable";
-import {Drawer, DrawerCloseButton, DrawerContent, DrawerHeader, Modal, ModalCloseButton, ModalContent,
-    ModalHeader, ModalOverlay} from "@chakra-ui/react";
+import StringKeyTable, {TableEntry} from "../components/StringKeyTable";
+import {
+    Drawer,
+    DrawerCloseButton,
+    DrawerContent,
+    DrawerHeader, IconButton,
+    Modal,
+    ModalCloseButton,
+    ModalContent,
+    ModalHeader,
+    ModalOverlay
+} from "@chakra-ui/react";
 import * as React from "react";
+import {AddIcon, PlusSquareIcon} from "@chakra-ui/icons";
 
 export default function HomePage() {
     return (
         <StringKeyTable
             headers={{first: "first", second: "second", third: "third"}}
-            createElement={(isOpen, onClose) => createDrawer(isOpen, onClose)}
-            detailsElement={(entry, isOpen, onClose) => detailsDrawer(isOpen, onClose)}
+            onCreate={(isOpen, onClose) => createDrawer(isOpen, onClose)}
+            onSelect={(isOpen, onClose, entry) => detailsDrawer(isOpen, onClose, entry)}
             entries={
                 [
-                    {firstColumn: "testa", secondColumn: "test2", thirdColumn: "test3"},
-                    {firstColumn: "testb", secondColumn: "test2", thirdColumn: "test3"},
-                    {firstColumn: "testb", secondColumn: "test2", thirdColumn: "test3"},
-                    {firstColumn: "testba", secondColumn: "test2", thirdColumn: "test3"},
+                    {firstColumn: <AddIcon/>, secondColumn: "test2", thirdColumn: "test3"},
+                    {firstColumn: <PlusSquareIcon/>, secondColumn: "test2", thirdColumn: "test3"},
+                    {firstColumn: 3, secondColumn: "test2", thirdColumn: "test3"},
+                    {firstColumn: 4, secondColumn: "test2", thirdColumn: "test3"},
                     {firstColumn: "testbb", secondColumn: "test2", thirdColumn: "test3"},
                     {firstColumn: "testf", secondColumn: "test2", thirdColumn: "test3"},
                     {firstColumn: "testg", secondColumn: "test2", thirdColumn: "test3"},
@@ -23,8 +33,8 @@ export default function HomePage() {
                     {firstColumn: "testj", secondColumn: "test2", thirdColumn: "test3"},
                     {firstColumn: "testk", secondColumn: "test2", thirdColumn: "test3"},
                     {firstColumn: "testl", secondColumn: "test2", thirdColumn: "test3"},
-                    {firstColumn: "testm", secondColumn: "test2", thirdColumn: "test3"},
-                    {firstColumn: "testn", secondColumn: "test2", thirdColumn: "test3"},
+                    {firstColumn: 5, secondColumn: "test2", thirdColumn: "test3"},
+                    {firstColumn: 6, secondColumn: "test2", thirdColumn: "test3"},
                     {firstColumn: "testo", secondColumn: "test2", thirdColumn: "test3"},
                     {firstColumn: "testp", secondColumn: "test2", thirdColumn: "test3"},
                     {firstColumn: "testq", secondColumn: "test2", thirdColumn: "test3"},
@@ -37,11 +47,11 @@ export default function HomePage() {
                     {firstColumn: "testx", secondColumn: "test2", thirdColumn: "test3"},
                 ]
             }
-         ></StringKeyTable>
+        ></StringKeyTable>
     )
 }
 
-function detailsDrawer(isOpen: boolean, onClose: () => void) {
+function detailsDrawer(isOpen: boolean, onClose: () => void, entry: TableEntry) {
     return <Drawer isOpen={isOpen} onClose={onClose}>
         <DrawerContent>
             <DrawerHeader>Details</DrawerHeader>
@@ -52,10 +62,10 @@ function detailsDrawer(isOpen: boolean, onClose: () => void) {
 
 function createDrawer(isOpen: boolean, onClose: () => void) {
     return <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
+        <ModalOverlay/>
         <ModalContent>
             <ModalHeader>Create</ModalHeader>
-            <ModalCloseButton />
+            <ModalCloseButton/>
         </ModalContent>
     </Modal>
 }
