@@ -36,12 +36,26 @@ export default function StringKeyTable({headers, entries, onSelect, onCreate}: T
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<boolean>(true) // ascending
 
-    const openCreate = () : void => setCreateOpen(true)
-    const closeCreate = () : void => setCreateOpen(false)
-
     const selectOpen = selection !== undefined
-    const openSelect = (entry: TableEntry): void => select(entry)
-    const closeSelect = (): void => select(undefined)
+
+    const openSelect = (entry: TableEntry): void => {
+        select(entry);
+        onBackButton(() => closeSelect())
+    }
+
+    const openCreate = () : void => {
+        setCreateOpen(true)
+        onBackButton(() => closeCreate())
+    }
+    const closeSelect = (): void => {
+        select(undefined);
+        restoreBackButton()
+    }
+
+    const closeCreate = () : void => {
+        setCreateOpen(false);
+        restoreBackButton()
+    }
 
     return <>
             <TableContainer p="4">
@@ -137,3 +151,22 @@ function filterEntries(entries: TableEntry[], search: string, sort: boolean) {
                 (`${a.firstColumn}` > `${b.firstColumn}` ? -1 : 1)
         )
 }
+
+/**
+ * Hack to allow the back button to be used to control modals, drawers etc.
+ */
+const onBackButton = (callback: () => void) => {
+    window.history.pushState(null, "", window.location.href);
+    window.onpopstate = () => {
+        window.history.pushState(null, "", window.location.href);
+        callback();
+    };
+};
+
+/**
+ * Reset the back button to default behaviour.
+ */
+const restoreBackButton = () => {
+    window.history.back();
+    window.onpopstate = null;
+};
