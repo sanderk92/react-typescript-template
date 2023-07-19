@@ -11,8 +11,6 @@ import {
     ModalOverlay
 } from "@chakra-ui/react";
 import * as React from "react";
-import {AddIcon, PlusSquareIcon, TriangleDownIcon} from "@chakra-ui/icons";
-import {useNavigate} from "react-router-dom";
 
 export default function HomePage() {
     return (
