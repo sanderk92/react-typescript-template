@@ -9,17 +9,17 @@ export interface TableHeaders {
     third: ReactNode,
 }
 
-export interface TableEntry {
+export interface TableRow {
     id: string,
     firstColumn: ReactNode,
     secondColumn: ReactNode,
     thirdColumn: ReactNode,
 }
 
-export interface TableComponentProps {
+export interface TableComponentProps<Row extends TableRow> {
     headers: TableHeaders
-    entries: TableEntry[]
-    onSelect?: (isOpen: boolean, onClose: () => void, entry: TableEntry) => React.JSX.Element
+    rows: Row[]
+    onSelect?: (isOpen: boolean, onClose: () => void, row: Row) => React.JSX.Element
     onCreate?: (isOpen: boolean, onClose: () => void) => React.JSX.Element
 }
 
@@ -31,17 +31,17 @@ export interface TableComponentProps {
  *  - Optional customizable selection page
  *  - Optional customizable creation page
  */
-export default function StringKeyTable({headers, entries, onSelect, onCreate}: TableComponentProps) {
+export default function StringKeyTable<Row extends TableRow>({headers, rows, onSelect, onCreate}: TableComponentProps<Row>) {
     const [createOpen, setCreateOpen] = useState<boolean>(false)
-    const [selection, select] = useState<TableEntry | undefined>()
+    const [selection, select] = useState<Row | undefined>()
     const [search, setSearch] = useState<string>('')
     const [sortDirection, setSortDirection] = useState<boolean>(true) // ascending
     const [sortColumn, setSortColumn] = useState<0 | 1 | 2>(0)
 
     const selectOpen = selection !== undefined
 
-    const openSelect = (entry: TableEntry): void => {
-        select(entry);
+    const openSelect = (row: Row): void => {
+        select(row);
         onBackButton(() => closeSelect())
     }
 
@@ -68,7 +68,7 @@ export default function StringKeyTable({headers, entries, onSelect, onCreate}: T
                 <Divider/>
                 <Table variant='simple'>
                     <Thead>
-                        <TableHeaders
+                        <TableHeader
                             headers={headers}
                             sortDirection={sortDirection}
                             setSortDirection={setSortDirection}
@@ -78,8 +78,8 @@ export default function StringKeyTable({headers, entries, onSelect, onCreate}: T
                     </Thead>
                     <Tbody>
                         <TableRows
-                            entries={filterEntries(entries, search, sortDirection, sortColumn)}
-                            onSelect={openSelect}
+                            rows={filterEntries(rows, search, sortDirection, sortColumn)}
+                            onSelect={(row: Row) => openSelect(row)}
                         />
                     </Tbody>
                 </Table>
@@ -116,7 +116,7 @@ interface TableHeaderProps {
     setSortColumn: (column: 0 | 1 | 2) => void
 }
 
-const TableHeaders = ({headers, sortDirection, setSortDirection, sortColumn, setSortColumn}: TableHeaderProps) => {
+const TableHeader = ({headers, sortDirection, setSortDirection, sortColumn, setSortColumn}: TableHeaderProps) => {
     const hoverColorScheme = useColorModeValue('gray.50', 'gray.700')
 
     return <Tr>
@@ -164,35 +164,35 @@ const TableHeaders = ({headers, sortDirection, setSortDirection, sortColumn, set
     }
 }
 
-interface TableRowsProps {
-    entries: TableEntry[]
-    onSelect: (entry: TableEntry) => void
+interface TableRowsProps<Row extends TableRow> {
+    rows: Row[]
+    onSelect: (row: Row) => void
 }
 
-const TableRows = ({entries, onSelect}: TableRowsProps) => {
+const TableRows = <Row extends TableRow>({rows, onSelect}: TableRowsProps<Row>) => {
     const hoverColorScheme = useColorModeValue('gray.100', 'gray.700')
     const activeColorScheme = useColorModeValue('gray.200', 'gray.600')
 
     return <>{
-        entries.map(entry=>
+        rows.map(row=>
             <Tr
-                key={entry.id}
+                key={row.id}
                 className={"unselectable clickable"}
-                onClick={() => onSelect(entry)}
+                onClick={() => onSelect(row)}
                 _hover={{background: hoverColorScheme}}
                 _active={{background: activeColorScheme}}>
-                <Td>{entry.firstColumn}</Td>
-                <Td>{entry.secondColumn}</Td>
-                <Td>{entry.thirdColumn}</Td>
+                <Td>{row.firstColumn}</Td>
+                <Td>{row.secondColumn}</Td>
+                <Td>{row.thirdColumn}</Td>
             </Tr>
         )
     }</>
 }
 
-function filterEntries(entries: TableEntry[], search: string, sortDirection: boolean, sortColumn: 0 | 1 | 2) {
-    return entries
-        .filter(entry =>
-            Object.values(entry).join(" ").toLowerCase().includes(search.toLowerCase())
+function filterEntries<Row extends TableRow>(rows: Row[], search: string, sortDirection: boolean, sortColumn: 0 | 1 | 2) {
+    return rows
+        .filter(row =>
+            Object.values(row).join(" ").toLowerCase().includes(search.toLowerCase())
         )
         .sort((a, b) => {
             if (sortColumn === 0) {
