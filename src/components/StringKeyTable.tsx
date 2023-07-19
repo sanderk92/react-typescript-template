@@ -20,34 +20,31 @@ import {
 import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./tables.css"
 
-interface SortState {
-    direction: boolean,
-    column: 0 | 1 | 2
-}
-
-export interface TableHeaders {
-    first: ReactNode,
-    second: ReactNode,
-    third: ReactNode,
+export interface TableCell {
+    value: ReactNode
+    numerical?: boolean
 }
 
 export interface TableRow {
     id: string,
-    firstColumn: ReactNode,
-    secondColumn: ReactNode,
-    thirdColumn: ReactNode,
+    cells: TableCell[]
 }
 
 export interface TableComponentProps<Row extends TableRow> {
-    headers: TableHeaders
+    headers: TableCell[]
     rows: Row[]
     onSelect?: (isOpen: boolean, onClose: () => void, row: Row) => React.JSX.Element
     onCreate?: (isOpen: boolean, onClose: () => void) => React.JSX.Element
 }
 
+interface SortState {
+    direction: boolean,
+    column: number
+}
+
 /**
  * A table intended for showing entries with a plain string first column.
- *  - 3 columns of equal width
+ *  - dynamic number of columns of equal width
  *  - Searchable by all columns
  *  - Smart sort by all columns
  *  - Optional customizable selection page
@@ -119,48 +116,31 @@ const SearchField = ({search, onSearch}: {
 }
 
 const TableHeader = ({headers, sort, setSort}: {
-    headers: TableHeaders
+    headers: TableCell[]
     sort: SortState
     setSort: (sort: SortState) => void
 }) => {
     const hoverColorScheme = useColorModeValue('gray.50', 'gray.700')
 
-    return <Tr>
-        <Th className={"unselectable clickable"}
-            _hover={{background: hoverColorScheme}}
-            onClick={() => {
-                setSort({direction: !sort.direction, column: 0})
-            }}>
-            <Flex
-                display={"flex"}
-                justifyContent={"space-between"}>
-                {headers.first}
-                {sort.column === 0 ? sortIcon() : <Icon visibility={"hidden"}/>}
-            </Flex>
-        </Th>
-        <Th className={"unselectable clickable"}
-            _hover={{background: hoverColorScheme}}
-            onClick={() => {
-                setSort({direction: !sort.direction, column: 1})
-            }}>
-            <Flex
-                justifyContent={"space-between"}>
-                {headers.second}
-                {sort.column === 1 ? sortIcon() : <Icon visibility={"hidden"}/>}
-            </Flex>
-        </Th>
-        <Th className={"unselectable clickable"}
-            _hover={{background: hoverColorScheme}}
-            onClick={() => {
-                setSort({direction: !sort.direction, column: 2})
-            }}>
-            <Flex
-                justifyContent={"space-between"}>
-                {headers.third}
-                {sort.column === 2 ? sortIcon() : <Icon visibility={"hidden"}/>}
-            </Flex>
-        </Th>
-    </Tr>;
+    return (
+        <Tr>
+            {headers.map((cell, index) =>
+                <Th className={"unselectable clickable"}
+                    isNumeric={cell.numerical}
+                    _hover={{background: hoverColorScheme}}
+                    onClick={() => {
+                        setSort({direction: !sort.direction, column: index})
+                    }}>
+                    <Flex
+                        display={"flex"}
+                        justifyContent={"space-between"}>
+                        {cell.value}
+                        {sort.column === index ? sortIcon() : <Icon visibility={"hidden"}/>}
+                    </Flex>
+                </Th>
+            )}
+        </Tr>
+    )
 
     function sortIcon() {
         return sort.direction ? <TriangleUpIcon/> : <TriangleDownIcon/>;
@@ -174,40 +154,31 @@ const TableRows = <Row extends TableRow>({rows, onSelect}: {
     const hoverColorScheme = useColorModeValue('gray.100', 'gray.700')
     const activeColorScheme = useColorModeValue('gray.200', 'gray.600')
 
-    return <>{
-        rows.map(row =>
-            <Tr
-                key={row.id}
-                className={"unselectable clickable"}
-                onClick={() => onSelect(row)}
-                _hover={{background: hoverColorScheme}}
-                _active={{background: activeColorScheme}}>
-                <Td>{row.firstColumn}</Td>
-                <Td>{row.secondColumn}</Td>
-                <Td>{row.thirdColumn}</Td>
-            </Tr>
-        )
-    }</>
+    return (
+        <>{
+            rows.map(row =>
+                <Tr
+                    key={row.id}
+                    className={"unselectable clickable"}
+                    onClick={() => onSelect(row)}
+                    _hover={{background: hoverColorScheme}}
+                    _active={{background: activeColorScheme}}>
+                    {row.cells.map(cell =>
+                        <Td isNumeric={cell.numerical}>{cell.value}</Td>)}
+                </Tr>
+            )
+        }</>
+    )
 }
 
 function filterEntries<Row extends TableRow>(rows: Row[], search: string, sort: SortState) {
-    return rows
-        .filter(row =>
-            Object.values(row).join(" ").toLowerCase().includes(search.toLowerCase())
-        )
-        .sort((a, b) => {
-                if (sort.column === 0) {
-                    return compare(a.firstColumn, b.firstColumn)
-                } else if (sort.column === 1) {
-                    return compare(a.secondColumn, b.secondColumn)
-                } else {
-                    return compare(a.thirdColumn, b.thirdColumn)
-                }
-            }
-        )
+    const collator = Intl.Collator([], {numeric: true})
 
-    function compare(a: ReactNode, b: ReactNode): number {
-        const collator = Intl.Collator([], {numeric: true})
+    return rows
+        .filter(row => Object.values(row).join(" ").toLowerCase().includes(search.toLowerCase()))
+        .sort((a, b) => compare(a.cells[sort.column]?.value, b.cells[sort.column]?.value))
+
+    function compare(a?: ReactNode, b?: ReactNode): number {
         return sort.direction ? (collator.compare(`${a}`, `${b}`)) : (collator.compare(`${b}`, `${a}`))
     }
 }

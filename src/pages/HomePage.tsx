@@ -1,4 +1,4 @@
-import StringKeyTable, {TableRow} from "../components/StringKeyTable";
+import StringKeyTable, {TableCell, TableRow} from "../components/StringKeyTable";
 import {
     Drawer,
     DrawerCloseButton,
@@ -14,44 +14,30 @@ import * as React from "react";
 
 interface HomePageRow extends TableRow {
     id: string
-    firstColumn: React.ReactNode
-    secondColumn: React.ReactNode
-    thirdColumn: React.ReactNode
+    cells: TableCell[]
     extra: string
 }
 
 export default function HomePage() {
     return (
         <StringKeyTable
-            headers={{first: "first", second: "second", third: "third"}}
+            headers={[{value: "first"}, {value: "second"}, {value: "third"}, {value: "fourth", numerical: true}]}
             onCreate={(isOpen, onClose) => <CreateModal isOpen={isOpen} onClose={onClose}/>}
             onSelect={(isOpen, onClose, selection) => <DetailsDrawer isOpen={isOpen} onClose={onClose} selection={selection}/>}
             rows={
                 [
-                    {id: "a", firstColumn: "testa", secondColumn: "test1", thirdColumn: "test31", extra: "lol"},
-                    {id: "b", firstColumn: "testb", secondColumn: "test2", thirdColumn: "test32", extra: "lol"},
-                    {id: "c", firstColumn: "testc", secondColumn: "test3", thirdColumn: "test33", extra: "lol"},
-                    {id: "d", firstColumn: "testd", secondColumn: "test8", thirdColumn: "test34", extra: "lol"},
-                    {id: "e", firstColumn: "teste", secondColumn: "test9", thirdColumn: "test35", extra: "lol"},
-                    {id: "f", firstColumn: "testf", secondColumn: "test0", thirdColumn: "test36", extra: "lol"},
-                    {id: "g", firstColumn: "testg", secondColumn: "test8", thirdColumn: "test37", extra: "lol"},
-                    {id: "h", firstColumn: "testh", secondColumn: "test38", thirdColumn: "test38", extra: "lol"},
-                    {id: "i", firstColumn: "testi", secondColumn: "test8", thirdColumn: "test39", extra: "lol"},
-                    {id: "j", firstColumn: "testj", secondColumn: "test10", thirdColumn: "test41", extra: "lol"},
-                    {id: "k", firstColumn: "testk", secondColumn: "test11", thirdColumn: "test42", extra: "lol"},
-                    {id: "l", firstColumn: "testl", secondColumn: "test12", thirdColumn: "test43", extra: "lol"},
-                    {id: "m", firstColumn: "testm", secondColumn: "test13", thirdColumn: "test44", extra: "lol"},
-                    {id: "n", firstColumn: "testn", secondColumn: "test14", thirdColumn: "test45", extra: "lol"},
-                    {id: "o", firstColumn: "testo", secondColumn: "test15", thirdColumn: "test46", extra: "lol"},
-                    {id: "p", firstColumn: "testp", secondColumn: "test16", thirdColumn: "test47", extra: "lol"},
-                    {id: "q", firstColumn: "testq", secondColumn: "test17", thirdColumn: "test48", extra: "lol"},
-                    {id: "r", firstColumn: "testr", secondColumn: "test18", thirdColumn: "test49", extra: "lol"},
-                    {id: "s", firstColumn: "tests", secondColumn: "test19", thirdColumn: "test50", extra: "lol"},
-                    {id: "t", firstColumn: "testt", secondColumn: "test20", thirdColumn: "test51", extra: "lol"},
-                    {id: "u", firstColumn: "testu", secondColumn: "test21", thirdColumn: "test52", extra: "lol"},
-                    {id: "v", firstColumn: "testv", secondColumn: "test22", thirdColumn: "test53", extra: "lol"},
-                    {id: "w", firstColumn: "testw", secondColumn: "test23", thirdColumn: "test54", extra: "lol"},
-                    {id: "x", firstColumn: "testx", secondColumn: "test24", thirdColumn: "test55", extra: "lol"},
+                    {id: "a", cells: [{value: "testa"}, {value: "test1"}, {value: "test13"}, {value: "yea", numerical: true}], extra: "test"},
+                    {id: "b", cells: [{value: "testb"}, {value: "test2"}, {value: "test14"}], extra: "test"},
+                    {id: "c", cells: [{value: "testc"}, {value: "test3"}, {value: "test15"}], extra: "test"},
+                    {id: "d", cells: [{value: "testd"}, {value: "test4"}, {value: "test16"}], extra: "test"},
+                    {id: "e", cells: [{value: "teste"}, {value: "test5"}, {value: "test31"}], extra: "test"},
+                    {id: "f", cells: [{value: "testf"}, {value: "test6"}, {value: "test17"}], extra: "test"},
+                    {id: "g", cells: [{value: "testg"}, {value: "test7"}, {value: "test18"}], extra: "test"},
+                    {id: "h", cells: [{value: "testh"}, {value: "test8"}, {value: "test19"}], extra: "test"},
+                    {id: "i", cells: [{value: "testi"}, {value: "test9"}, {value: "test20"}], extra: "test"},
+                    {id: "j", cells: [{value: "testj"}, {value: "test10"}, {value: "test21"}], extra: "test"},
+                    {id: "k", cells: [{value: "testk"}, {value: "test11"}, {value: "test22"}], extra: "test"},
+                    {id: "l", cells: [{value: "testk"}, {value: "test12"}, {value: "test23"}], extra: "test"},
                 ]
             }
         ></StringKeyTable>
