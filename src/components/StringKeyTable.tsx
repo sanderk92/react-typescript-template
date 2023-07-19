@@ -10,6 +10,7 @@ export interface TableHeaders {
 }
 
 export interface TableEntry {
+    id: string,
     firstColumn: ReactNode,
     secondColumn: ReactNode,
     thirdColumn: ReactNode,
@@ -126,8 +127,9 @@ const TableRows = ({entries, onSelect}: TableRowsProps) => {
     const activeColorScheme = useColorModeValue('gray.200', 'gray.600')
 
     return <>{
-        entries.map(entry =>
+        entries.map(entry=>
             <Tr
+                key={entry.id}
                 className={"unselectable clickable"}
                 onClick={() => onSelect(entry)}
                 _hover={{background: hoverColorScheme}}
