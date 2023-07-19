@@ -44,7 +44,7 @@ interface SortState {
 
 /**
  * A table intended for showing entries with a plain string first column.
- *  - dynamic number of columns of equal width
+ *  - dynamic number of columns of equal width, with numerical support
  *  - Searchable by all columns
  *  - Smart sort by all columns
  *  - Optional customizable selection page
