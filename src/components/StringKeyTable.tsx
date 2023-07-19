@@ -1,23 +1,6 @@
 import React, {ReactNode, useState} from 'react';
-import {
-    Divider,
-    Flex,
-    Icon,
-    IconButton,
-    Input,
-    InputGroup,
-    InputLeftElement,
-    InputRightElement,
-    Table,
-    TableContainer,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
-    useColorModeValue
-} from '@chakra-ui/react';
-import {AddIcon, CloseIcon, LockIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
+import {Divider, Flex, Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
+import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./tables.css"
 
 export interface TableHeaders {
@@ -85,7 +68,7 @@ export default function StringKeyTable({headers, entries, onSelect, onCreate}: T
                 <Divider/>
                 <Table variant='simple'>
                     <Thead>
-                        <TableHeader
+                        <TableHeaders
                             headers={headers}
                             sortDirection={sortDirection}
                             setSortDirection={setSortDirection}
@@ -133,7 +116,7 @@ interface TableHeaderProps {
     setSortColumn: (column: 0 | 1 | 2) => void
 }
 
-const TableHeader = ({headers, sortDirection, setSortDirection, sortColumn, setSortColumn}: TableHeaderProps) => {
+const TableHeaders = ({headers, sortDirection, setSortDirection, sortColumn, setSortColumn}: TableHeaderProps) => {
     const hoverColorScheme = useColorModeValue('gray.50', 'gray.700')
 
     return <Tr>
