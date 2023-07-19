@@ -175,8 +175,13 @@ function filterEntries<Row extends TableRow>(rows: Row[], search: string, sort: 
     const collator = Intl.Collator([], {numeric: true})
 
     return rows
-        .filter(row => Object.values(row).join(" ").toLowerCase().includes(search.toLowerCase()))
-        .sort((a, b) => compare(a.cells[sort.column]?.value, b.cells[sort.column]?.value))
+        .filter(row => {
+            const cells = row.cells.map(cell => cell.value)
+            return Object.values(cells).join(" ").toLowerCase().includes(search.toLowerCase())
+        })
+        .sort((a, b) =>
+            compare(a.cells[sort.column]?.value, b.cells[sort.column]?.value)
+        )
 
     function compare(a?: ReactNode, b?: ReactNode): number {
         return sort.direction ? (collator.compare(`${a}`, `${b}`)) : (collator.compare(`${b}`, `${a}`))
