@@ -1,5 +1,26 @@
 import React, {ReactNode} from 'react';
-import {Avatar, Box, BoxProps, CloseButton, Drawer, DrawerContent, Flex, FlexProps, HStack, Icon, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, useColorModeValue, useDisclosure, VStack,} from '@chakra-ui/react';
+import {
+    Avatar,
+    Box,
+    BoxProps,
+    CloseButton, Divider,
+    Drawer,
+    DrawerContent,
+    Flex,
+    FlexProps,
+    HStack,
+    Icon,
+    IconButton,
+    Menu,
+    MenuButton,
+    MenuDivider,
+    MenuItem,
+    MenuList,
+    Text,
+    useColorModeValue,
+    useDisclosure,
+    VStack,
+} from '@chakra-ui/react';
 import {FiChevronDown, FiHome, FiMenu, FiMessageCircle,} from 'react-icons/fi';
 import {IconType} from 'react-icons';
 import {ColorModeSwitcher} from "./ColorModeSwitcher";
@@ -62,9 +83,27 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
                 </Text>
                 <CloseButton display={{base: 'flex', md: 'none'}} onClick={onClose}/>
             </Flex>
-            <NavItem key="home" name="Home" link="/" icon={FiHome}>Home</NavItem>
-            <NavItem key="contact" name="Contact" link="/contact" icon={FiMessageCircle}>Contact</NavItem>
+            <NavHeader name={"General"}></NavHeader>
+            <NavItem key="Home" name="Home" link="/" icon={FiHome}></NavItem>
+            <NavItem key="Contact" name="Contact" link="/contact" icon={FiMessageCircle}></NavItem>
         </Box>
+    );
+};
+
+interface NavHeaderProps extends FlexProps {
+    name: string;
+}
+
+const NavHeader = ({name, ...rest}: NavHeaderProps) => {
+    return (
+        <Flex
+            align="center"
+            p="1"
+            mx="4"
+            borderRadius="lg"
+            role="group">
+            <Text as={"b"} fontSize={"xs"}>{name}</Text>
+        </Flex>
     );
 };
 
@@ -77,32 +116,17 @@ interface NavItemProps extends FlexProps {
 const NavItem = ({icon, link, name, ...rest}: NavItemProps) => {
     return (
         <RouteLink to={link}>
-                <Flex
-                    align="center"
-                    p="4"
-                    mx="4"
-                    borderRadius="lg"
-                    role="group"
-                    cursor="pointer"
-                    _hover={{
-                        bg: useColorModeValue('gray.500', 'gray.700'),
-                        color: 'white',
-                    }}
-                    {...rest}>
-                    {icon && (
-                        <Icon
-                            mr="4"
-                            fontSize="16"
-                            _groupHover={{
-                                color: 'white',
-                            }}
-                            as={icon}
-                        />
-                    )}
-                    {name}
-                </Flex>
+            <Flex align="center"
+                  p="4"
+                  mx="4"
+                  borderRadius="lg"
+                  role="group"
+                  cursor="pointer"
+                  _hover={{bg: useColorModeValue('gray.500', 'gray.700'), color: 'white',}}>
+                {icon && (<Icon mr="4" as={icon} fontSize="16" _groupHover={{color: 'white'}}/>)}
+                {name}
+            </Flex>
         </RouteLink>
-
     );
 };
 

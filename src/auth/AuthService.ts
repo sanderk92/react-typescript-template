@@ -28,13 +28,11 @@ export const useAuthService = (): AuthServiceProps => {
     const login = (): void => {
         auth.signinRedirect()
             .then(() => console.log("Login success"))
-            .catch((err) => console.warn("Login failure", err))
     }
 
     const logout = (): void => {
         auth.signoutRedirect()
             .then(() => console.log("Logout success"))
-            .catch((err) => console.warn("Logout failure", err))
     }
 
     return {
