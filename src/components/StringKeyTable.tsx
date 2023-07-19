@@ -1,6 +1,23 @@
 import React, {ReactNode, useState} from 'react';
-import {Divider, Flex, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
-import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
+import {
+    Divider,
+    Flex,
+    Icon,
+    IconButton,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    InputRightElement,
+    Table,
+    TableContainer,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    Tr,
+    useColorModeValue
+} from '@chakra-ui/react';
+import {AddIcon, CloseIcon, LockIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./tables.css"
 
 export interface TableHeaders {
@@ -27,7 +44,7 @@ export interface TableComponentProps {
  * A table intended for showing entries with a plain string first column.
  *  - 3 columns of equal width
  *  - Searchable by all columns
- *  - Sortable by the first column's string value natural key
+ *  - Smart sort by all columns
  *  - Optional customizable selection page
  *  - Optional customizable creation page
  */
@@ -35,7 +52,8 @@ export default function StringKeyTable({headers, entries, onSelect, onCreate}: T
     const [createOpen, setCreateOpen] = useState<boolean>(false)
     const [selection, select] = useState<TableEntry | undefined>()
     const [search, setSearch] = useState<string>('')
-    const [sort, setSort] = useState<boolean>(true) // ascending
+    const [sortDirection, setSortDirection] = useState<boolean>(true) // ascending
+    const [sortColumn, setSortColumn] = useState<0 | 1 | 2>(0)
 
     const selectOpen = selection !== undefined
 
@@ -67,10 +85,19 @@ export default function StringKeyTable({headers, entries, onSelect, onCreate}: T
                 <Divider/>
                 <Table variant='simple'>
                     <Thead>
-                        <TableHeader headers={headers} setSort={setSort} sort={sort}/>
+                        <TableHeader
+                            headers={headers}
+                            sortDirection={sortDirection}
+                            setSortDirection={setSortDirection}
+                            sortColumn={sortColumn}
+                            setSortColumn={setSortColumn}
+                        />
                     </Thead>
                     <Tbody>
-                        <TableRows entries={filterEntries(entries, search, sort)} onSelect={openSelect}/>
+                        <TableRows
+                            entries={filterEntries(entries, search, sortDirection, sortColumn)}
+                            onSelect={openSelect}
+                        />
                     </Tbody>
                 </Table>
             </TableContainer>
@@ -100,21 +127,58 @@ const SearchField = ({search, onSearch}: SearchFieldProps) => {
 
 interface TableHeaderProps {
     headers: TableHeaders
-    setSort: (sort: boolean) => void
-    sort: boolean
+    sortDirection: boolean
+    setSortDirection: (direction: boolean) => void
+    sortColumn: 0 | 1 | 2
+    setSortColumn: (column: 0 | 1 | 2) => void
 }
 
-const TableHeader = ({setSort, sort, headers}: TableHeaderProps) => {
+const TableHeader = ({headers, sortDirection, setSortDirection, sortColumn, setSortColumn}: TableHeaderProps) => {
     const hoverColorScheme = useColorModeValue('gray.50', 'gray.700')
 
     return <Tr>
-        <Th className={"unselectable clickable"} _hover={{background: hoverColorScheme}}
-            onClick={() => setSort(!sort)}>
-            {headers.first}{sort ? <TriangleUpIcon/> : <TriangleDownIcon/>}
+        <Th className={"unselectable clickable"}
+            _hover={{background: hoverColorScheme}}
+            onClick={() => {
+                setSortDirection(!sortDirection)
+                setSortColumn(0)
+            }}>
+            <Flex
+                display={"flex"}
+                justifyContent={"space-between"}>
+                {headers.first}
+                {sortColumn === 0 ? sortIcon() : <Icon visibility={"hidden"}/>}
+            </Flex>
         </Th>
-        <Th className={"unselectable"}>{headers.second}</Th>
-        <Th className={"unselectable"}>{headers.third}</Th>
+        <Th className={"unselectable clickable"}
+            _hover={{background: hoverColorScheme}}
+            onClick={() => {
+                setSortDirection(!sortDirection)
+                setSortColumn(1)
+            }}>
+            <Flex
+                justifyContent={"space-between"}>
+                {headers.second}
+                {sortColumn === 1 ? sortIcon() : <Icon visibility={"hidden"}/>}
+            </Flex>
+        </Th>
+        <Th className={"unselectable clickable"}
+            _hover={{background: hoverColorScheme}}
+            onClick={() => {
+                setSortDirection(!sortDirection);
+                setSortColumn(2)
+            }}>
+            <Flex
+                justifyContent={"space-between"}>
+                {headers.third}
+                {sortColumn === 2 ? sortIcon() : <Icon visibility={"hidden"}/>}
+            </Flex>
+        </Th>
     </Tr>;
+
+    function sortIcon() {
+        return sortDirection ? <TriangleUpIcon/> : <TriangleDownIcon/>;
+    }
 }
 
 interface TableRowsProps {
@@ -142,16 +206,26 @@ const TableRows = ({entries, onSelect}: TableRowsProps) => {
     }</>
 }
 
-function filterEntries(entries: TableEntry[], search: string, sort: boolean) {
+function filterEntries(entries: TableEntry[], search: string, sortDirection: boolean, sortColumn: 0 | 1 | 2) {
     return entries
         .filter(entry =>
             Object.values(entry).join(" ").toLowerCase().includes(search.toLowerCase())
         )
-        .sort((a, b) =>
-            sort ?
-                (`${a.firstColumn}` > `${b.firstColumn}` ? 1 : -1) :
-                (`${a.firstColumn}` > `${b.firstColumn}` ? -1 : 1)
-        )
+        .sort((a, b) => {
+            if (sortColumn === 0) {
+                return compare(a.firstColumn, b.firstColumn, sortDirection)
+            } else if (sortColumn === 1) {
+                return compare(a.secondColumn, b.secondColumn, sortDirection)
+            } else {
+                return compare(a.thirdColumn, b.thirdColumn, sortDirection)
+            }
+        }
+    )
+}
+
+function compare(a: ReactNode, b: ReactNode, sortDirection: boolean): number {
+    const collator = Intl.Collator([], {numeric: true})
+    return sortDirection ? (collator.compare(`${a}`, `${b}`)) : (collator.compare(`${b}`, `${a}`))
 }
 
 /**
