@@ -89,12 +89,10 @@ export default function StringKeyTable<Row extends TableRow>({headers, rows, onS
         </>
     }
 
-interface SearchFieldProps {
+const SearchField = ({search, onSearch}: {
     search: string
     onSearch: (query: string) => void
-}
-
-const SearchField = ({search, onSearch}: SearchFieldProps) => {
+}) => {
     const colorScheme = useColorModeValue('white', 'gray.900')
 
     return <InputGroup size='md' width={"25vw"}>
@@ -108,15 +106,13 @@ const SearchField = ({search, onSearch}: SearchFieldProps) => {
     </InputGroup>
 }
 
-interface TableHeaderProps {
+const TableHeader = ({headers, sortDirection, setSortDirection, sortColumn, setSortColumn}: {
     headers: TableHeaders
     sortDirection: boolean
     setSortDirection: (direction: boolean) => void
     sortColumn: 0 | 1 | 2
     setSortColumn: (column: 0 | 1 | 2) => void
-}
-
-const TableHeader = ({headers, sortDirection, setSortDirection, sortColumn, setSortColumn}: TableHeaderProps) => {
+}) => {
     const hoverColorScheme = useColorModeValue('gray.50', 'gray.700')
 
     return <Tr>
@@ -164,12 +160,10 @@ const TableHeader = ({headers, sortDirection, setSortDirection, sortColumn, setS
     }
 }
 
-interface TableRowsProps<Row extends TableRow> {
+const TableRows = <Row extends TableRow>({rows, onSelect}: {
     rows: Row[]
     onSelect: (row: Row) => void
-}
-
-const TableRows = <Row extends TableRow>({rows, onSelect}: TableRowsProps<Row>) => {
+}) => {
     const hoverColorScheme = useColorModeValue('gray.100', 'gray.700')
     const activeColorScheme = useColorModeValue('gray.200', 'gray.600')
 
