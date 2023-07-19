@@ -1,7 +1,29 @@
 import React, {ReactNode, useState} from 'react';
-import {Divider, Flex, Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
+import {
+    Divider,
+    Flex,
+    Icon,
+    IconButton,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    InputRightElement,
+    Table,
+    TableContainer,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    Tr,
+    useColorModeValue
+} from '@chakra-ui/react';
 import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./tables.css"
+
+interface SortState {
+    direction: boolean,
+    column: 0 | 1 | 2
+}
 
 export interface TableHeaders {
     first: ReactNode,
@@ -35,8 +57,7 @@ export default function StringKeyTable<Row extends TableRow>({headers, rows, onS
     const [createOpen, setCreateOpen] = useState<boolean>(false)
     const [selection, select] = useState<Row | undefined>()
     const [search, setSearch] = useState<string>('')
-    const [sortDirection, setSortDirection] = useState<boolean>(true) // ascending
-    const [sortColumn, setSortColumn] = useState<0 | 1 | 2>(0)
+    const [sort, setSort] = useState<SortState>({column: 0, direction: true})
 
     const selectOpen = selection !== undefined
 
@@ -45,7 +66,7 @@ export default function StringKeyTable<Row extends TableRow>({headers, rows, onS
         onBackButton(() => closeSelect())
     }
 
-    const openCreate = () : void => {
+    const openCreate = (): void => {
         setCreateOpen(true)
         onBackButton(() => closeCreate())
     }
@@ -54,40 +75,31 @@ export default function StringKeyTable<Row extends TableRow>({headers, rows, onS
         restoreBackButton()
     }
 
-    const closeCreate = () : void => {
+    const closeCreate = (): void => {
         setCreateOpen(false);
         restoreBackButton()
     }
 
     return <>
-            <TableContainer p="4">
-                <Flex pr="2" pb="4" alignItems={"flex-end"} justifyContent={"flex-end"}>
-                    <SearchField search={search} onSearch={(query) => setSearch(query)}/>
-                    {onCreate ? <IconButton ml="4" icon={<AddIcon/>} aria-label={"create"} onClick={openCreate}/> : null}
-                </Flex>
-                <Divider/>
-                <Table variant='simple'>
-                    <Thead>
-                        <TableHeader
-                            headers={headers}
-                            sortDirection={sortDirection}
-                            setSortDirection={setSortDirection}
-                            sortColumn={sortColumn}
-                            setSortColumn={setSortColumn}
-                        />
-                    </Thead>
-                    <Tbody>
-                        <TableRows
-                            rows={filterEntries(rows, search, sortDirection, sortColumn)}
-                            onSelect={(row: Row) => openSelect(row)}
-                        />
-                    </Tbody>
-                </Table>
-            </TableContainer>
-            { onSelect && selectOpen ? onSelect(selectOpen, closeSelect, selection) : null }
-            { onCreate && createOpen ? onCreate(createOpen, closeCreate) : null}
-        </>
-    }
+        <TableContainer p="4">
+            <Flex pr="2" pb="4" alignItems={"flex-end"} justifyContent={"flex-end"}>
+                <SearchField search={search} onSearch={(query) => setSearch(query)}/>
+                {onCreate ? <IconButton ml="4" icon={<AddIcon/>} aria-label={"create"} onClick={openCreate}/> : null}
+            </Flex>
+            <Divider/>
+            <Table variant='simple'>
+                <Thead>
+                    <TableHeader headers={headers} sort={sort} setSort={setSort}/>
+                </Thead>
+                <Tbody>
+                    <TableRows rows={filterEntries(rows, search, sort)} onSelect={openSelect}/>
+                </Tbody>
+            </Table>
+        </TableContainer>
+        {onSelect && selectOpen ? onSelect(selectOpen, closeSelect, selection) : null}
+        {onCreate && createOpen ? onCreate(createOpen, closeCreate) : null}
+    </>
+}
 
 const SearchField = ({search, onSearch}: {
     search: string
@@ -106,12 +118,10 @@ const SearchField = ({search, onSearch}: {
     </InputGroup>
 }
 
-const TableHeader = ({headers, sortDirection, setSortDirection, sortColumn, setSortColumn}: {
+const TableHeader = ({headers, sort, setSort}: {
     headers: TableHeaders
-    sortDirection: boolean
-    setSortDirection: (direction: boolean) => void
-    sortColumn: 0 | 1 | 2
-    setSortColumn: (column: 0 | 1 | 2) => void
+    sort: SortState
+    setSort: (sort: SortState) => void
 }) => {
     const hoverColorScheme = useColorModeValue('gray.50', 'gray.700')
 
@@ -119,44 +129,41 @@ const TableHeader = ({headers, sortDirection, setSortDirection, sortColumn, setS
         <Th className={"unselectable clickable"}
             _hover={{background: hoverColorScheme}}
             onClick={() => {
-                setSortDirection(!sortDirection)
-                setSortColumn(0)
+                setSort({direction: !sort.direction, column: 0})
             }}>
             <Flex
                 display={"flex"}
                 justifyContent={"space-between"}>
                 {headers.first}
-                {sortColumn === 0 ? sortIcon() : <Icon visibility={"hidden"}/>}
+                {sort.column === 0 ? sortIcon() : <Icon visibility={"hidden"}/>}
             </Flex>
         </Th>
         <Th className={"unselectable clickable"}
             _hover={{background: hoverColorScheme}}
             onClick={() => {
-                setSortDirection(!sortDirection)
-                setSortColumn(1)
+                setSort({direction: !sort.direction, column: 1})
             }}>
             <Flex
                 justifyContent={"space-between"}>
                 {headers.second}
-                {sortColumn === 1 ? sortIcon() : <Icon visibility={"hidden"}/>}
+                {sort.column === 1 ? sortIcon() : <Icon visibility={"hidden"}/>}
             </Flex>
         </Th>
         <Th className={"unselectable clickable"}
             _hover={{background: hoverColorScheme}}
             onClick={() => {
-                setSortDirection(!sortDirection);
-                setSortColumn(2)
+                setSort({direction: !sort.direction, column: 2})
             }}>
             <Flex
                 justifyContent={"space-between"}>
                 {headers.third}
-                {sortColumn === 2 ? sortIcon() : <Icon visibility={"hidden"}/>}
+                {sort.column === 2 ? sortIcon() : <Icon visibility={"hidden"}/>}
             </Flex>
         </Th>
     </Tr>;
 
     function sortIcon() {
-        return sortDirection ? <TriangleUpIcon/> : <TriangleDownIcon/>;
+        return sort.direction ? <TriangleUpIcon/> : <TriangleDownIcon/>;
     }
 }
 
@@ -168,7 +175,7 @@ const TableRows = <Row extends TableRow>({rows, onSelect}: {
     const activeColorScheme = useColorModeValue('gray.200', 'gray.600')
 
     return <>{
-        rows.map(row=>
+        rows.map(row =>
             <Tr
                 key={row.id}
                 className={"unselectable clickable"}
@@ -183,26 +190,26 @@ const TableRows = <Row extends TableRow>({rows, onSelect}: {
     }</>
 }
 
-function filterEntries<Row extends TableRow>(rows: Row[], search: string, sortDirection: boolean, sortColumn: 0 | 1 | 2) {
+function filterEntries<Row extends TableRow>(rows: Row[], search: string, sort: SortState) {
     return rows
         .filter(row =>
             Object.values(row).join(" ").toLowerCase().includes(search.toLowerCase())
         )
         .sort((a, b) => {
-            if (sortColumn === 0) {
-                return compare(a.firstColumn, b.firstColumn, sortDirection)
-            } else if (sortColumn === 1) {
-                return compare(a.secondColumn, b.secondColumn, sortDirection)
-            } else {
-                return compare(a.thirdColumn, b.thirdColumn, sortDirection)
+                if (sort.column === 0) {
+                    return compare(a.firstColumn, b.firstColumn)
+                } else if (sort.column === 1) {
+                    return compare(a.secondColumn, b.secondColumn)
+                } else {
+                    return compare(a.thirdColumn, b.thirdColumn)
+                }
             }
-        }
-    )
-}
+        )
 
-function compare(a: ReactNode, b: ReactNode, sortDirection: boolean): number {
-    const collator = Intl.Collator([], {numeric: true})
-    return sortDirection ? (collator.compare(`${a}`, `${b}`)) : (collator.compare(`${b}`, `${a}`))
+    function compare(a: ReactNode, b: ReactNode): number {
+        const collator = Intl.Collator([], {numeric: true})
+        return sort.direction ? (collator.compare(`${a}`, `${b}`)) : (collator.compare(`${b}`, `${a}`))
+    }
 }
 
 /**
