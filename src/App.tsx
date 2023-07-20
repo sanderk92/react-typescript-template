@@ -47,7 +47,7 @@ export function UserInterface() {
                 <BrowserRouter>
                     <Navigation user={user}>
                         <Routes>
-                            <Route path="/" element={<HomePage/>}/>
+                            <Route path="/home/*" element={<HomePage/>}/>
                             <Route path="/contact" element={<ContactPage/>}/>
                         </Routes>
                     </Navigation>

@@ -1,26 +1,5 @@
 import React, {ReactNode} from 'react';
-import {
-    Avatar,
-    Box,
-    BoxProps,
-    CloseButton, Divider,
-    Drawer,
-    DrawerContent,
-    Flex,
-    FlexProps,
-    HStack,
-    Icon,
-    IconButton,
-    Menu,
-    MenuButton,
-    MenuDivider,
-    MenuItem,
-    MenuList,
-    Text,
-    useColorModeValue,
-    useDisclosure,
-    VStack,
-} from '@chakra-ui/react';
+import {Avatar, Box, BoxProps, CloseButton, Drawer, DrawerContent, Flex, FlexProps, HStack, Icon, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, useColorModeValue, useDisclosure, VStack,} from '@chakra-ui/react';
 import {FiChevronDown, FiHome, FiMenu, FiMessageCircle,} from 'react-icons/fi';
 import {IconType} from 'react-icons';
 import {ColorModeSwitcher} from "./ColorModeSwitcher";
@@ -84,7 +63,7 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
                 <CloseButton display={{base: 'flex', md: 'none'}} onClick={onClose}/>
             </Flex>
             <NavHeader name={"General"}></NavHeader>
-            <NavItem key="Home" name="Home" link="/" icon={FiHome}></NavItem>
+            <NavItem key="Home" name="Home" link="/home" icon={FiHome}></NavItem>
             <NavItem key="Contact" name="Contact" link="/contact" icon={FiMessageCircle}></NavItem>
         </Box>
     );

@@ -19,6 +19,7 @@ import {
 } from '@chakra-ui/react';
 import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./tables.css"
+import {Simulate} from "react-dom/test-utils";
 
 export interface TableCell {
     value: ReactNode
@@ -33,8 +34,9 @@ export interface TableRow {
 export interface TableComponentProps<Row extends TableRow> {
     headers: TableCell[]
     rows: Row[]
-    onSelect?: (isOpen: boolean, onClose: () => void, row: Row) => React.JSX.Element
-    onCreate?: (isOpen: boolean, onClose: () => void) => React.JSX.Element
+    onSelect: (row: Row) => void
+    onCreate?: () => void
+    children: React.JSX.Element
 }
 
 interface SortState {
@@ -47,41 +49,18 @@ interface SortState {
  *  - dynamic number of columns of equal width with numerical and empty cell support
  *  - Searchable by all columns
  *  - Smart sort by all columns
- *  - Optional customizable selection page
- *  - Optional customizable creation page
+ *  - Mandatory on select action
+ *  - Optional on create action
  */
-export default function StringKeyTable<Row extends TableRow>({headers, rows, onSelect, onCreate}: TableComponentProps<Row>) {
-    const [createOpen, setCreateOpen] = useState<boolean>(false)
-    const [selection, select] = useState<Row | undefined>()
+export default function StringKeyTable<Row extends TableRow>({headers, rows, onSelect, onCreate, children}: TableComponentProps<Row>) {
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<SortState>({column: 0, direction: true})
-
-    const selectOpen = selection !== undefined
-
-    const openSelect = (row: Row): void => {
-        select(row);
-        onBackButton(() => closeSelect())
-    }
-
-    const openCreate = (): void => {
-        setCreateOpen(true)
-        onBackButton(() => closeCreate())
-    }
-    const closeSelect = (): void => {
-        select(undefined);
-        restoreBackButton()
-    }
-
-    const closeCreate = (): void => {
-        setCreateOpen(false);
-        restoreBackButton()
-    }
 
     return <>
         <TableContainer p="4">
             <Flex pr="2" pb="4" alignItems={"flex-end"} justifyContent={"flex-end"}>
                 <SearchField search={search} onSearch={(query) => setSearch(query)}/>
-                {onCreate ? <IconButton ml="4" icon={<AddIcon/>} aria-label={"create"} onClick={openCreate}/> : null}
+                {onCreate ? <IconButton ml="4" icon={<AddIcon/>} aria-label={"create"} onClick={onCreate}/> : null}
             </Flex>
             <Divider/>
             <Table variant='simple'>
@@ -89,12 +68,11 @@ export default function StringKeyTable<Row extends TableRow>({headers, rows, onS
                     <TableHeader headers={headers} sort={sort} setSort={setSort}/>
                 </Thead>
                 <Tbody>
-                    <TableRows rows={filterEntries(rows, search, sort)} onSelect={openSelect}/>
+                    <TableRows rows={filterEntries(rows, search, sort)} onSelect={onSelect}/>
                 </Tbody>
             </Table>
+            {children}
         </TableContainer>
-        {onSelect && selectOpen ? onSelect(selectOpen, closeSelect, selection) : null}
-        {onCreate && createOpen ? onCreate(createOpen, closeCreate) : null}
     </>
 }
 
@@ -187,22 +165,3 @@ function filterEntries<Row extends TableRow>(rows: Row[], search: string, sort: 
         return sort.direction ? (collator.compare(`${a}`, `${b}`)) : (collator.compare(`${b}`, `${a}`))
     }
 }
-
-/**
- * Hack to allow the back button to be used to control modals, drawers etc.
- */
-const onBackButton = (callback: () => void) => {
-    window.history.pushState(null, "", window.location.href);
-    window.onpopstate = () => {
-        window.history.pushState(null, "", window.location.href);
-        callback();
-    };
-};
-
-/**
- * Reset the back button to default behaviour.
- */
-const restoreBackButton = () => {
-    window.history.back();
-    window.onpopstate = null;
-};
