@@ -80,8 +80,7 @@ export default function HomePage() {
                 headers={[{value: "first"}, {value: "second"}, {value: "third"}]}
                 onSelect={select}
                 onCreate={create}
-                rows={rows!!}
-            >
+                rows={rows!!}>
                 <Routes>
                     <Route path=":id" element={<DetailsDrawer isOpen={true} onClose={closeSelect} input={rows!!}/>}/>
                     <Route path="create" element={<CreateModal isOpen={true} onClose={closeCreate} onCreated={onCreate}/>}/>
