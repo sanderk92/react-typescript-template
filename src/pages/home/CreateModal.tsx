@@ -48,16 +48,19 @@ export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerPr
                 <ModalCloseButton/>
                 <ModalBody pb={6}>
                     <FormControl>
-                        <FormLabel>First name</FormLabel>
-                        <Input placeholder='First name' />
+                        <FormLabel>First</FormLabel>
+                        <Input placeholder='First'/>
                     </FormControl>
-
                     <FormControl mt={4}>
-                        <FormLabel>Last name</FormLabel>
-                        <Input placeholder='Last name' />
+                        <FormLabel>Second</FormLabel>
+                        <Input placeholder='Second'/>
+                    </FormControl>
+                    <FormControl mt={4}>
+                        <FormLabel>Third</FormLabel>
+                        <Input placeholder='Third'/>
                     </FormControl>
                     <ModalFooter>
-                        <Button onClick={() => create()}>Create</Button>
+                        <Button onClick={create}>Create</Button>
                     </ModalFooter>
                 </ModalBody>
             </ModalContent>

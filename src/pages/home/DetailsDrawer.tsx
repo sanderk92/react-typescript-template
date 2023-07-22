@@ -30,14 +30,17 @@ export default function DetailsDrawer({isOpen, onClose, input}: DetailsDrawerPro
             <DrawerContent>
                 <DrawerHeader>Details</DrawerHeader>
                 <DrawerBody>
-                    <FormControl>
-                        <FormLabel>First name</FormLabel>
-                        <Input value={row.id} placeholder='First name'/>
+                    <FormControl >
+                        <FormLabel>First</FormLabel>
+                        <Input isDisabled={true} value={`${row.cells[0].value}`} placeholder='First'/>
                     </FormControl>
-
                     <FormControl mt={4}>
-                        <FormLabel>Last name</FormLabel>
-                        <Input value={row.id} placeholder='Last name'/>
+                        <FormLabel>Second</FormLabel>
+                        <Input isDisabled={true} value={`${row.cells[1].value}`} placeholder='Second'/>
+                    </FormControl>
+                    <FormControl mt={4}>
+                        <FormLabel>Third</FormLabel>
+                        <Input isDisabled={true} value={`${row.cells[2].value}`} placeholder='Third'/>
                     </FormControl>
                 </DrawerBody>
                 <DrawerCloseButton/>
