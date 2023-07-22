@@ -52,15 +52,15 @@ export default function HomePage() {
     }
 
     else return (
-            <GenericTable
-                headers={[{value: "first"}, {value: "second"}, {value: "third"}]}
-                onSelect={navigateDetails}
-                onCreate={navigateCreate}
-                rows={rows!!}>
-                <Routes>
-                    <Route path=":id" element={<DetailsDrawer isOpen={true} onClose={navigateHome} input={rows!!}/>}/>
-                    <Route path="create" element={<CreateModal isOpen={true} onClose={navigateHome} onCreated={onCreated}/>}/>
-                </Routes>
-            </GenericTable>
+        <GenericTable
+            headers={[{value: "first"}, {value: "second"}, {value: "third"}]}
+            onSelect={navigateDetails}
+            onCreate={navigateCreate}
+            rows={rows!!}>
+            <Routes>
+                <Route path=":id" element={<DetailsDrawer isOpen={true} onClose={navigateHome} input={rows!!}/>}/>
+                <Route path="create" element={<CreateModal isOpen={true} onClose={navigateHome} onCreated={onCreated}/>}/>
+            </Routes>
+        </GenericTable>
     )
 }
