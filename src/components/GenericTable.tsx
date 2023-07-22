@@ -79,13 +79,15 @@ const TableHeader = ({headers, sort, setSort}: {
     sort: SortState
     setSort: (sort: SortState) => void
 }) => {
-    const hoverColorScheme = useColorModeValue('gray.50', 'gray.700')
+    const backgroundColorScheme = useColorModeValue('gray.300', 'gray.800')
+    const hoverColorScheme = useColorModeValue('gray.400', 'gray.900')
 
     return (
         <Tr>
             {headers.map((cell, index) =>
                 <Th className={"unselectable clickable"}
                     isNumeric={cell.numerical}
+                    bg={backgroundColorScheme}
                     _hover={{background: hoverColorScheme}}
                     onClick={() => {
                         setSort({direction: !sort.direction, column: index})

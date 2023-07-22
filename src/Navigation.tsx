@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react';
+import React, {ReactNode, useState} from 'react';
 import {Avatar, Box, BoxProps, CloseButton, Drawer, DrawerContent, Flex, FlexProps, HStack, Icon, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, useColorModeValue, useDisclosure, VStack,} from '@chakra-ui/react';
 import {FiChevronDown, FiHome, FiMenu, FiMessageCircle,} from 'react-icons/fi';
 import {IconType} from 'react-icons';
@@ -63,8 +63,8 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
                 <CloseButton display={{base: 'flex', md: 'none'}} onClick={onClose}/>
             </Flex>
             <NavHeader name={"General"}></NavHeader>
-            <NavItem key="Home" name="Home" link="/" icon={FiHome}></NavItem>
-            <NavItem key="Contact" name="Contact" link="/contact" icon={FiMessageCircle}></NavItem>
+            <NavItem onClick={onClose} key="Home" name="Home" link="/" icon={FiHome}></NavItem>
+            <NavItem onClick={onClose} key="Contact" name="Contact" link="/contact" icon={FiMessageCircle}></NavItem>
         </Box>
     );
 };
@@ -90,11 +90,12 @@ interface NavItemProps extends FlexProps {
     icon: IconType;
     link: string;
     name: string;
+    onClick: () => void
 }
 
-const NavItem = ({icon, link, name, ...rest}: NavItemProps) => {
+const NavItem = ({icon, link, name, onClick, ...rest}: NavItemProps) => {
     return (
-        <RouteLink to={link}>
+        <RouteLink to={link} onClick={onClick}>
             <Flex align="center"
                   p="4"
                   mx="4"

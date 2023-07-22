@@ -1,6 +1,6 @@
 import useAuthService from "../auth/AuthService";
 import axios from "axios";
-import {HomePageRow} from "../pages/HomePage";
+import {HomePageRow} from "../pages/home/HomePage";
 
 export interface BackendProps {
     getUserDetails(): Promise<UserDetails>
