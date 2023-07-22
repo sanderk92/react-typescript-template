@@ -18,7 +18,7 @@ import {
     useColorModeValue
 } from '@chakra-ui/react';
 import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
-import "./tables.css"
+import "./components.css"
 
 export interface TableCell {
     value: ReactNode
@@ -44,7 +44,7 @@ interface SortState {
 }
 
 /**
- *  - dynamic number of columns of equal width with numerical and empty cell support
+ *  - Generic table with a dynamic number of columns of equal width with numerical and empty cell support
  *  - Searchable by all columns
  *  - Smart sort by all columns
  *  - Mandatory on select action
