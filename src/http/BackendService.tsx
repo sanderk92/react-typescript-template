@@ -2,13 +2,13 @@ import useAuthService from "../auth/AuthService";
 import axios from "axios";
 import {HomePageRow} from "../pages/HomePage";
 
-export interface BackendServiceProps {
+export interface BackendProps {
     getUserDetails(): Promise<UserDetails>
     getHomePageRows(): Promise<HomePageRow[]>
-    createHomePageRow(): Promise<null>
+    createHomePageRow(): Promise<HomePageRow>
 }
 
-export const useBackend = (): BackendServiceProps => {
+export const useBackend = (): BackendProps => {
 
     const auth = useAuthService()
 
@@ -32,8 +32,9 @@ export const useBackend = (): BackendServiceProps => {
             .then(_ => homePageRows);
     }
 
-    const createHomePageRow = (): Promise<null> => {
+    const createHomePageRow = (): Promise<HomePageRow> => {
         return new Promise(resolve => setTimeout(resolve, 2000))
+            .then(_ => newHomePageRow);
     }
 
     return {
@@ -47,6 +48,9 @@ export interface UserDetails {
     id: string,
     roles: string[],
 }
+
+const newHomePageRow : HomePageRow =
+    {id: "new", cells: [{value: "new"}, {value: "new"}, {value: "new"}], extra: "new"}
 
 const homePageRows : HomePageRow[] = [
     {id: "a", cells: [{value: "testa"}, {value: "test1"}, {value: "test13"}], extra: "test32"},
