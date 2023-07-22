@@ -1,22 +1,5 @@
 import React, {ReactNode, useState} from 'react';
-import {
-    Divider,
-    Flex,
-    Icon,
-    IconButton,
-    Input,
-    InputGroup,
-    InputLeftElement,
-    InputRightElement,
-    Table,
-    TableContainer,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
-    useColorModeValue
-} from '@chakra-ui/react';
+import {Divider, Flex, Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
 import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./tables.css"
 
@@ -80,7 +63,7 @@ const SearchField = ({search, onSearch}: {
 }) => {
     const colorScheme = useColorModeValue('white', 'gray.900')
 
-    return <InputGroup size='md' width={"25vw"}>
+    return <InputGroup size='md' width={"100%"}>
         <InputLeftElement>
             <SearchIcon/>
         </InputLeftElement>

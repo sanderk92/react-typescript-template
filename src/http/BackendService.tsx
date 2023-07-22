@@ -60,5 +60,4 @@ const homePageRows : HomePageRow[] = [
     {id: "i", cells: [{value: "testi"}, {value: "test9"}, {value: "test20"}], extra: "test40"},
     {id: "j", cells: [{value: "testj"}, {value: "test10"}, {value: "test21"}], extra: "test41"},
     {id: "k", cells: [{value: "testk"}, {value: "test11"}, {value: "test22"}], extra: "test42"},
-    {id: "l", cells: [{value: "testk"}, {value: "test12"}, {value: "test23"}], extra: "test43"},
 ]

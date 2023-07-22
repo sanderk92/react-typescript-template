@@ -27,17 +27,17 @@ export function UserInterface() {
 
     const [user, setUser] = useState<UserDetails>({id: "sander", roles:[]})
 
-    useEffect(() => {
-        if (!authService.isLoading() && !authService.isLoggedIn()) {
-            authService.login()
-        }
-    })
-
-    useEffect(() => {
-        if (authService.isLoggedIn() && user == null) {
-            backendService.getUserDetails().then((user) => setUser(user))
-        }
-    })
+    // useEffect(() => {
+    //     if (!authService.isLoading() && !authService.isLoggedIn()) {
+    //         authService.login()
+    //     }
+    // })
+    //
+    // useEffect(() => {
+    //     if (authService.isLoggedIn() && user == null) {
+    //         backendService.getUserDetails().then((user) => setUser(user))
+    //     }
+    // })
 
     if (user == null) {
         return <></>
