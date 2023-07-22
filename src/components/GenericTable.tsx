@@ -19,7 +19,6 @@ import {
 } from '@chakra-ui/react';
 import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./tables.css"
-import {Simulate} from "react-dom/test-utils";
 
 export interface TableCell {
     value: ReactNode
@@ -45,14 +44,13 @@ interface SortState {
 }
 
 /**
- * A table intended for showing entries with a plain string first column.
  *  - dynamic number of columns of equal width with numerical and empty cell support
  *  - Searchable by all columns
  *  - Smart sort by all columns
  *  - Mandatory on select action
  *  - Optional on create action
  */
-export default function StringKeyTable<Row extends TableRow>({headers, rows, onSelect, onCreate, children}: TableComponentProps<Row>) {
+export default function GenericTable<Row extends TableRow>({headers, rows, onSelect, onCreate, children}: TableComponentProps<Row>) {
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<SortState>({column: 0, direction: true})
 

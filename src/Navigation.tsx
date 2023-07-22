@@ -63,7 +63,7 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
                 <CloseButton display={{base: 'flex', md: 'none'}} onClick={onClose}/>
             </Flex>
             <NavHeader name={"General"}></NavHeader>
-            <NavItem key="Home" name="Home" link="/home" icon={FiHome}></NavItem>
+            <NavItem key="Home" name="Home" link="/" icon={FiHome}></NavItem>
             <NavItem key="Contact" name="Contact" link="/contact" icon={FiMessageCircle}></NavItem>
         </Box>
     );

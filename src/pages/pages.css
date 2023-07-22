@@ -1,0 +1,8 @@
+/*TODO improve to position in parent*/
+.spinner {
+    display: block;
+    position: fixed;
+    z-index: 10000;
+    top: 55%;
+    right: 45%;
+}

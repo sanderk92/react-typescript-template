@@ -1,40 +1,32 @@
-import StringKeyTable, {TableCell, TableRow} from "../components/StringKeyTable";
-import {Text, Drawer, DrawerCloseButton, DrawerContent, DrawerHeader, Modal, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay} from "@chakra-ui/react";
+import GenericTable, {TableCell, TableRow} from "../components/GenericTable";
+import {Text, Drawer, DrawerCloseButton, DrawerContent, DrawerHeader, Modal, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Spinner, Center} from "@chakra-ui/react";
 import * as React from "react";
 import {Route, Routes, useNavigate, useParams} from "react-router-dom";
+import {useBackend} from "../http/BackendService";
+import {useEffect, useState} from "react";
+import "./pages.css"
 
-interface HomePageRow extends TableRow {
+const basePath = "/"
+
+export interface HomePageRow extends TableRow {
     id: string
     cells: TableCell[]
     extra: string
 }
 
-const input = [
-    {id: "a", cells: [{value: "testa"}, {value: "test1"}, {value: "test13"}], extra: "test32"},
-    {id: "b", cells: [{value: "testb"}, {value: "test2"}, {value: "test14"}], extra: "test33"},
-    {id: "c", cells: [{value: "testc"}, {value: "test3"}, {value: "test15"}], extra: "test34"},
-    {id: "d", cells: [{value: "testd"}, {value: "test4"}, {value: "test16"}], extra: "test35"},
-    {id: "e", cells: [{value: "teste"}, {value: "test5"}, {value: "test31"}], extra: "test36"},
-    {id: "f", cells: [{value: "testf"}, {value: "test6"}, {value: "test17"}], extra: "test37"},
-    {id: "g", cells: [{value: "testg"}, {value: "test7"}, {value: "test18"}], extra: "test38"},
-    {id: "h", cells: [{value: "testh"}, {value: "test8"}, {value: "test19"}], extra: "test39"},
-    {id: "i", cells: [{value: "testi"}, {value: "test9"}, {value: "test20"}], extra: "test40"},
-    {id: "j", cells: [{value: "testj"}, {value: "test10"}, {value: "test21"}], extra: "test41"},
-    {id: "k", cells: [{value: "testk"}, {value: "test11"}, {value: "test22"}], extra: "test42"},
-    {id: "l", cells: [{value: "testk"}, {value: "test12"}, {value: "test23"}], extra: "test43"},
-]
-
-
 export default function HomePage() {
     const navigate = useNavigate()
-    const absoluteBase = "/home"
+    const backend = useBackend()
+
+    const [rows, setRows] = useState<HomePageRow[] | undefined>(undefined)
+    const [loading, isLoading] = useState<boolean>(true)
 
     const select = (row: HomePageRow) => {
         navigate(row.id)
     }
 
     const closeSelect = () => {
-        navigate(absoluteBase)
+        navigate(basePath)
     }
 
     const create = () => {
@@ -42,39 +34,59 @@ export default function HomePage() {
     }
 
     const closeCreate = () => {
-        navigate(absoluteBase)
+        navigate(basePath)
     }
 
-    return (
-            <StringKeyTable
-                headers={[{value: "first"}, {value: "second"}, {value: "third"}, {value: "fourth", numerical: true}]}
+    useEffect(() => {
+        if (rows != null) {
+            isLoading(false)
+        }
+    }, [rows])
+
+    useEffect(() => {
+        backend.getHomePageRows()
+            .then(rows => setRows(rows))
+    }, [backend])
+
+    if (loading) {
+        return <Center><Spinner className="spinner"></Spinner></Center>
+    }
+
+    else if (rows?.length === 0) {
+        return <Text>No results</Text>
+    }
+
+    else return (
+            <GenericTable
+                headers={[{value: "first"}, {value: "second"}, {value: "third"}]}
                 onSelect={select}
                 onCreate={create}
-                rows={input}
+                rows={rows!!}
             >
                 <Routes>
-                    <Route path=":id" element={<DetailsDrawer isOpen={true} onClose={closeSelect}/>}/>
+                    <Route path=":id" element={<DetailsDrawer isOpen={true} onClose={closeSelect} input={rows!!}/>}/>
                     <Route path="create" element={<CreateModal isOpen={true} onClose={closeCreate}/>}/>
                 </Routes>
-            </StringKeyTable>
+            </GenericTable>
     )
 }
 
 interface DetailsDrawerProps {
     isOpen: boolean
     onClose: () => void
-    // selection: HomePageRow
+    input: HomePageRow[]
 }
 
-function DetailsDrawer({isOpen, onClose}: DetailsDrawerProps) {
+function DetailsDrawer({isOpen, onClose, input}: DetailsDrawerProps) {
     const { id } = useParams();
 
     return <Drawer isOpen={isOpen} onClose={onClose}>
         <DrawerContent>
             <DrawerHeader>Details</DrawerHeader>
-            {
-                <Text>{input.find(it => it.id === id)!!.extra}</Text>
-            }
+            {/*TODO optionally fetch from backend*/}
+            <Text>{
+                input.find(it => it.id === id)?.extra
+            }</Text>
             <DrawerCloseButton/>
         </DrawerContent>
     </Drawer>;

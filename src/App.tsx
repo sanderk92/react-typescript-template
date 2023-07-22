@@ -8,7 +8,7 @@ import {authSettings} from "./auth/AuthSettings";
 import HomePage from "./pages/HomePage";
 import ContactPage from "./pages/ContactPage";
 import useAuthService from "./auth/AuthService";
-import {useBackendService, UserDetails} from "./http/BackendService";
+import {useBackend, UserDetails} from "./http/BackendService";
 import ErrorBoundary from "./ErrorBoundary";
 
 export function App() {
@@ -23,7 +23,7 @@ export function App() {
 
 export function UserInterface() {
     const authService = useAuthService()
-    const backendService = useBackendService()
+    const backendService = useBackend()
 
     const [user, setUser] = useState<UserDetails>({id: "sander", roles:[]})
 
@@ -47,7 +47,7 @@ export function UserInterface() {
                 <BrowserRouter>
                     <Navigation user={user}>
                         <Routes>
-                            <Route path="/home/*" element={<HomePage/>}/>
+                            <Route path="/*" element={<HomePage/>}/>
                             <Route path="/contact" element={<ContactPage/>}/>
                         </Routes>
                     </Navigation>
