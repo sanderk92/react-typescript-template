@@ -1,8 +1,6 @@
-/*TODO improve to position in parent*/
 .spinner {
-    display: block;
-    position: fixed;
-    z-index: 10000;
+    position: absolute;
     top: 50%;
-    right: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
