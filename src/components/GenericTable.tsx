@@ -1,5 +1,22 @@
 import React, {ReactNode, useState} from 'react';
-import {Divider, Flex, Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
+import {
+    Divider,
+    Flex,
+    Icon,
+    IconButton,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    InputRightElement,
+    Table,
+    TableContainer,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    Tr,
+    useColorModeValue
+} from '@chakra-ui/react';
 import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./tables.css"
 
@@ -125,7 +142,8 @@ const TableRows = <Row extends TableRow>({rows, onSelect}: {
                     _hover={{background: hoverColorScheme}}
                     _active={{background: activeColorScheme}}>
                     {row.cells.map(cell =>
-                        <Td isNumeric={cell.numerical}>{cell.value}</Td>)}
+                        <Td isNumeric={cell.numerical}>{cell.value}</Td>
+                    )}
                 </Tr>
             )
         }</>
