@@ -1,5 +1,5 @@
 import GenericTable, {TableCell, TableRow} from "../../components/GenericTable";
-import {Center, Spinner, Text} from "@chakra-ui/react";
+import {Center, Progress, SkeletonText, Spinner, Text} from "@chakra-ui/react";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Route, Routes, useNavigate} from "react-router-dom";
@@ -44,7 +44,7 @@ export default function HomePage() {
     }, [backend])
 
     if (rows == null) {
-        return <Center><Spinner className="spinner"></Spinner></Center>
+        return <Spinner className="spinner"></Spinner>
     }
 
     else if (rows?.length === 0) {

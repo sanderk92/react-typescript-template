@@ -1,6 +1,7 @@
 import {
+    Box,
     Button,
-    Center,
+    Center, Flex,
     FormControl,
     FormLabel,
     Input,
@@ -28,40 +29,47 @@ export interface CreateDrawerProps {
 export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerProps) {
     const toast = useToast()
     const backend = useBackend()
-    const [loading, isLoading] = useState(false)
+    const [isCreating, setIsCreating] = useState(false)
 
-    if (loading) {
-        return <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay/>
-            <Center><Spinner className="spinner"></Spinner></Center>
-        </Modal>
+    if (isCreating) {
+        return (
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay/>
+                <Spinner className="spinner"></Spinner>
+            </Modal>
+        )
     }
 
-    return <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay/>
-        <ModalContent>
-            <ModalHeader>Create new</ModalHeader>
-            <ModalCloseButton/>
-            <ModalBody pb={6}>
-                <FormControl>
-                    <FormLabel>First name</FormLabel>
-                    <Input placeholder='First name' />
-                </FormControl>
+    else return (
+        <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay/>
+            <ModalContent>
+                <ModalHeader>Create new</ModalHeader>
+                <ModalCloseButton/>
+                <ModalBody pb={6}>
+                    <FormControl>
+                        <FormLabel>First name</FormLabel>
+                        <Input placeholder='First name' />
+                    </FormControl>
 
-                <FormControl mt={4}>
-                    <FormLabel>Last name</FormLabel>
-                    <Input placeholder='Last name' />
-                </FormControl>
-                <ModalFooter>
-                    <Button onClick={() => {
-                        isLoading(true)
-                        backend.createHomePageRow()
-                            .then(row => {onCreated(row); toast({title: `Created '${row.id}'.`, status: 'success', isClosable: true})})
-                            .catch(_ => toast({title: "Error creating.", status: 'error', isClosable: true}))
-                            .finally(() => isLoading(false))
-                    }}>Create</Button>
-                </ModalFooter>
-            </ModalBody>
-        </ModalContent>
-    </Modal>
+                    <FormControl mt={4}>
+                        <FormLabel>Last name</FormLabel>
+                        <Input placeholder='Last name' />
+                    </FormControl>
+                    <ModalFooter>
+                        <Button onClick={() => create()}>Create</Button>
+                    </ModalFooter>
+                </ModalBody>
+            </ModalContent>
+        </Modal>
+    )
+
+    function create() {
+        setIsCreating(true)
+        backend.createHomePageRow()
+            .then(row => onCreated(row))
+            .then(_ => {toast({title: "Successfully created!", status: 'success', isClosable: true})})
+            .catch(_ => toast({title: "Error creating.", status: 'error', isClosable: true}))
+            .finally(() => setIsCreating(false))
+    }
 }
