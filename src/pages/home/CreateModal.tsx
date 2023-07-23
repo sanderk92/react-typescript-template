@@ -11,7 +11,6 @@ import {
     ModalHeader,
     ModalOverlay,
     useToast,
-    Progress
 } from "@chakra-ui/react";
 import {useBackend} from "../../http/BackendService";
 import * as React from "react";
@@ -49,11 +48,8 @@ export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerPr
                         <Input placeholder='Third'/>
                     </FormControl>
                     <ModalFooter>
-                        <Button ml={4} onClick={create}>Create</Button>
+                        <Button ml={4} isLoading={isCreating} onClick={create}>Create</Button>
                     </ModalFooter>
-                    {
-                        isCreating ? <Progress isIndeterminate></Progress> : <Progress visibility={"hidden"}></Progress>
-                    }
                 </ModalBody>
             </ModalContent>
         </Modal>
