@@ -21,7 +21,7 @@ export default function HomePage() {
     const [rows, setRows] = useState<HomePageRow[] | undefined>(undefined)
 
     const navigateBack = () => {
-        navigate(-1)
+        navigate("/")
     }
 
     const navigateDetails = (row: HomePageRow) => {
