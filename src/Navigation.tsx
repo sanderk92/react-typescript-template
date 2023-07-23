@@ -3,7 +3,7 @@ import {Avatar, Box, BoxProps, CloseButton, Drawer, DrawerContent, Flex, FlexPro
 import {FiChevronDown, FiHome, FiMenu, FiMessageCircle,} from 'react-icons/fi';
 import {IconType} from 'react-icons';
 import {ColorModeSwitcher} from "./ColorModeSwitcher";
-import {Link as RouteLink} from "react-router-dom";
+import {Link as RouteLink, useNavigate} from "react-router-dom";
 import useAuthService from "./auth/AuthService";
 import {UserDetails} from "./http/BackendService";
 import {Logo} from "./Logo";
@@ -15,6 +15,37 @@ export interface NavigationProps {
 
 export default function Navigation({user, children}: NavigationProps) {
     const {isOpen, onOpen, onClose} = useDisclosure();
+
+    const openSideBar = () => {
+        onOpen()
+        onPageBackButton(closeSideBar)
+    }
+
+    const closeSideBar = () => {
+        onClose()
+        restorePageBackButton()
+    }
+
+    /**
+     * Hack allowing us to manipulate the functionality of the back button.
+     */
+    const onPageBackButton = (callback: () => void) => {
+        window.history.pushState(null, "", window.location.href);
+        window.onpopstate = () => {
+            window.history.pushState(null, "", window.location.href);
+            callback();
+        };
+    };
+
+    /**
+     * Reset the back button to default behaviour. Will leave an empty forward navigation on the stack,
+     * but I doubt this will bother users.
+     */
+    const restorePageBackButton = () => {
+        window.history.back()
+        window.onpopstate = null
+    };
+
     return (
         <Box minH="100vh">
             <SidebarContent
@@ -30,11 +61,10 @@ export default function Navigation({user, children}: NavigationProps) {
                 onOverlayClick={onClose}
                 size="full">
                 <DrawerContent>
-                    <SidebarContent onClose={onClose}/>
+                    <SidebarContent onClose={closeSideBar}/>
                 </DrawerContent>
             </Drawer>
-            {/* mobilenav */}
-            <MobileNav onOpen={onOpen} user={user}/>
+            <MobileNav onOpen={openSideBar} user={user}/>
             <Box ml={{base: 0, md: 60}}>
                 {children}
             </Box>
@@ -111,11 +141,11 @@ const NavItem = ({icon, link, name, onClick, ...rest}: NavItemProps) => {
 };
 
 interface MobileProps extends FlexProps {
-    onOpen: () => void
     user: UserDetails
+    onOpen: () => void
 }
 
-const MobileNav = ({onOpen, user, ...rest}: MobileProps) => {
+const MobileNav = ({user, onOpen, ...rest}: MobileProps) => {
     return (
         <Flex
             ml={{base: 0, md: 60}}

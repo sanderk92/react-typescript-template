@@ -1,5 +1,5 @@
 import GenericTable, {TableCell, TableRow} from "../../components/GenericTable";
-import {Center, Progress, SkeletonText, Spinner, Text} from "@chakra-ui/react";
+import {Text, Spinner} from "@chakra-ui/react";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Route, Routes, useNavigate} from "react-router-dom";
@@ -7,8 +7,6 @@ import {useBackend} from "../../http/BackendService";
 import "../pages.css"
 import DetailsDrawer from "./DetailsDrawer";
 import CreateModal from "./CreateModal";
-
-const basePath = "/"
 
 export interface HomePageRow extends TableRow {
     id: string
@@ -22,8 +20,8 @@ export default function HomePage() {
 
     const [rows, setRows] = useState<HomePageRow[] | undefined>(undefined)
 
-    const navigateHome = () => {
-        navigate(basePath)
+    const navigateBack = () => {
+        navigate(-1)
     }
 
     const navigateDetails = (row: HomePageRow) => {
@@ -32,11 +30,6 @@ export default function HomePage() {
 
     const navigateCreate = () => {
         navigate("create")
-    }
-
-    const onCreated = (row: HomePageRow) => {
-        navigateHome()
-        rows?.push(row)
     }
 
     useEffect(() => {
@@ -58,8 +51,12 @@ export default function HomePage() {
             onCreate={navigateCreate}
             rows={rows!!}>
             <Routes>
-                <Route path=":id" element={<DetailsDrawer isOpen={true} onClose={navigateHome} input={rows!!}/>}/>
-                <Route path="create" element={<CreateModal isOpen={true} onClose={navigateHome} onCreated={onCreated}/>}/>
+                <Route path=":id" element={
+                    <DetailsDrawer isOpen={true} onClose={navigateBack} input={rows!!}/>
+                }/>
+                <Route path="create" element={
+                    <CreateModal isOpen={true} onClose={navigateBack} onCreated={row => {navigateBack(); rows?.push(row)}}/>
+                }/>
             </Routes>
         </GenericTable>
     )
