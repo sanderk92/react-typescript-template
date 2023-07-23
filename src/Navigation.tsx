@@ -49,7 +49,7 @@ export default function Navigation({user, children}: NavigationProps) {
     return (
         <Box minH="100vh">
             <SidebarContent
-                onClose={() => onClose}
+                onClose={onClose}
                 display={{base: 'none', md: 'block'}}
             />
             <Drawer

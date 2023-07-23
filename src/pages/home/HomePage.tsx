@@ -55,7 +55,7 @@ export default function HomePage() {
                     <DetailsDrawer isOpen={true} onClose={navigateBack} input={rows!!}/>
                 }/>
                 <Route path="create" element={
-                    <CreateModal isOpen={true} onClose={navigateBack} onCreated={row => {rows?.push(row)}}/>
+                    <CreateModal isOpen={true} onClose={navigateBack} onCreated={row => {rows?.push(row); navigateBack()}}/>
                 }/>
             </Routes>
         </GenericTable>

@@ -96,9 +96,9 @@ const TableHeader = ({headers, sort, setSort}: {
     sort: SortState
     setSort: (sort: SortState) => void
 }) => {
-    const backgroundColorScheme = useColorModeValue('gray.300', 'gray.800')
-    const hoverColorScheme = useColorModeValue('gray.400', 'gray.700')
-    const activeColorScheme = useColorModeValue('gray.500', 'gray.600')
+    const backgroundColorScheme = useColorModeValue('gray.200', 'gray.800')
+    const hoverColorScheme = useColorModeValue('gray.300', 'gray.700')
+    const activeColorScheme = useColorModeValue('gray.400', 'gray.600')
 
     return (
         <Tr>
