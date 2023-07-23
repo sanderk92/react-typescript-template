@@ -10,8 +10,8 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
-    Spinner,
-    useToast
+    useToast,
+    Progress
 } from "@chakra-ui/react";
 import {useBackend} from "../../http/BackendService";
 import * as React from "react";
@@ -29,16 +29,7 @@ export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerPr
     const backend = useBackend()
     const [isCreating, setIsCreating] = useState(false)
 
-    if (isCreating) {
-        return (
-            <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay/>
-                <Spinner className="spinner"></Spinner>
-            </Modal>
-        )
-    }
-
-    else return (
+    return (
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay/>
             <ModalContent>
@@ -58,8 +49,11 @@ export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerPr
                         <Input placeholder='Third'/>
                     </FormControl>
                     <ModalFooter>
-                        <Button onClick={create}>Create</Button>
+                        <Button ml={4} onClick={create}>Create</Button>
                     </ModalFooter>
+                    {
+                        isCreating ? <Progress isIndeterminate></Progress> : <Progress visibility={"hidden"}></Progress>
+                    }
                 </ModalBody>
             </ModalContent>
         </Modal>

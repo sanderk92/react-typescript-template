@@ -97,7 +97,8 @@ const TableHeader = ({headers, sort, setSort}: {
     setSort: (sort: SortState) => void
 }) => {
     const backgroundColorScheme = useColorModeValue('gray.300', 'gray.800')
-    const hoverColorScheme = useColorModeValue('gray.400', 'gray.900')
+    const hoverColorScheme = useColorModeValue('gray.400', 'gray.700')
+    const activeColorScheme = useColorModeValue('gray.500', 'gray.600')
 
     return (
         <Tr>
@@ -106,6 +107,7 @@ const TableHeader = ({headers, sort, setSort}: {
                     isNumeric={cell.numerical}
                     bg={backgroundColorScheme}
                     _hover={{background: hoverColorScheme}}
+                    _active={{background: activeColorScheme}}
                     onClick={() => {
                         setSort({direction: !sort.direction, column: index})
                     }}>
