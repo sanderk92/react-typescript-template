@@ -54,7 +54,7 @@ export default function GenericTable<Row extends TableRow>({headers, rows, onSel
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<SortState>({column: 0, direction: true})
 
-    return <>
+    return (
         <TableContainer p="4">
             <Flex pr="2" pb="4" alignItems={"flex-end"} justifyContent={"flex-end"}>
                 <SearchField search={search} onSearch={(query) => setSearch(query)}/>
@@ -71,7 +71,7 @@ export default function GenericTable<Row extends TableRow>({headers, rows, onSel
             </Table>
             {children}
         </TableContainer>
-    </>
+    )
 }
 
 const SearchField = ({search, onSearch}: {
@@ -80,15 +80,17 @@ const SearchField = ({search, onSearch}: {
 }) => {
     const colorScheme = useColorModeValue('white', 'gray.900')
 
-    return <InputGroup size='md' width={"100%"}>
-        <InputLeftElement>
-            <SearchIcon/>
-        </InputLeftElement>
-        <Input bg={colorScheme} value={search} onChange={event => onSearch(event.target.value)}/>
-        <InputRightElement>
-            <CloseIcon className={"clickable"} background={colorScheme} onClick={() => onSearch("")}/>
-        </InputRightElement>
-    </InputGroup>
+    return (
+        <InputGroup size='md' width={"100%"}>
+            <InputLeftElement>
+                <SearchIcon/>
+            </InputLeftElement>
+            <Input bg={colorScheme} value={search} onChange={event => onSearch(event.target.value)}/>
+            <InputRightElement>
+                <CloseIcon className={"clickable"} background={colorScheme} onClick={() => onSearch("")}/>
+            </InputRightElement>
+        </InputGroup>
+    )
 }
 
 const TableHeader = ({headers, sort, setSort}: {
@@ -134,8 +136,7 @@ const TableRows = <Row extends TableRow>({rows, onSelect}: {
     const hoverColorScheme = useColorModeValue('gray.100', 'gray.700')
     const activeColorScheme = useColorModeValue('gray.200', 'gray.600')
 
-    return (
-        <>{
+    return <>{
             rows.map(row =>
                 <Tr
                     key={row.id}
@@ -148,8 +149,7 @@ const TableRows = <Row extends TableRow>({rows, onSelect}: {
                     )}
                 </Tr>
             )
-        }</>
-    )
+    }</>
 }
 
 function filterEntries<Row extends TableRow>(rows: Row[], search: string, sort: SortState) {
