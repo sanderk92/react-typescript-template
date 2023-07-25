@@ -1,5 +1,4 @@
 import GenericTable, {TableCell, TableRow} from "../../components/GenericTable";
-import {Text} from "@chakra-ui/react";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Route, Routes, useNavigate} from "react-router-dom";
@@ -7,6 +6,7 @@ import {useBackend} from "../../http/BackendService";
 import DetailsDrawer from "./DetailsDrawer";
 import CreateModal from "./CreateModal";
 import SpinnerCentered from "../../components/SpinnerCentered";
+import NoResultDisplay from "../../components/NoResultDisplay";
 
 export interface HomePageRow extends TableRow {
     id: string
@@ -41,7 +41,7 @@ export default function HomePage() {
     }
 
     else if (rows?.length === 0) {
-        return <Text>No results</Text>
+        return <NoResultDisplay/>
     }
 
     else return (

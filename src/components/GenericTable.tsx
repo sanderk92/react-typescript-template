@@ -17,7 +17,7 @@ import {
     Tr,
     useColorModeValue
 } from '@chakra-ui/react';
-import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
+import {AddIcon, ChevronDownIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./components.css"
 
 export interface TableCell {
@@ -35,6 +35,7 @@ export interface TableComponentProps<Row extends TableRow> {
     rows: Row[]
     onSelect: (row: Row) => void
     onCreate?: () => void
+    onFilter?: () => void
     children: React.JSX.Element
 }
 
@@ -50,7 +51,7 @@ interface SortState {
  *  - Mandatory on select action
  *  - Optional on create action
  */
-export default function GenericTable<Row extends TableRow>({headers, rows, onSelect, onCreate, children}: TableComponentProps<Row>) {
+export default function GenericTable<Row extends TableRow>({headers, rows, onSelect, onCreate, onFilter, children}: TableComponentProps<Row>) {
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<SortState>({column: 0, direction: true})
 
@@ -58,6 +59,7 @@ export default function GenericTable<Row extends TableRow>({headers, rows, onSel
         <TableContainer p="4">
             <Flex pr="2" pb="4" alignItems={"flex-end"} justifyContent={"flex-end"}>
                 <SearchField search={search} onSearch={(query) => setSearch(query)}/>
+                {onFilter ? <IconButton ml="4" icon={<ChevronDownIcon/>} aria-label={"filter"} onClick={onFilter}/> : null}
                 {onCreate ? <IconButton ml="4" icon={<AddIcon/>} aria-label={"create"} onClick={onCreate}/> : null}
             </Flex>
             <Divider/>

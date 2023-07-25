@@ -11,12 +11,12 @@
     cursor: pointer;
 }
 
-.spinner-parent {
+.centered-parent {
     display: flex;
     justify-content: center;
 }
 
-.spinner {
+.centered-child {
     margin-top: 25%;
     justify-content: center;
     align-items: center;

@@ -3,5 +3,5 @@ import * as React from "react";
 import "./components.css"
 
 export default function SpinnerCentered() {
-    return <Box className={"spinner-parent"}><Spinner className="spinner"></Spinner></Box>
+    return <Box className={"centered-parent"}><Spinner className="centered-child"></Spinner></Box>
 }
