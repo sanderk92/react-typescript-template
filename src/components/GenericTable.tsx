@@ -22,7 +22,9 @@ import "./components.css"
 
 export interface TableCell {
     value: ReactNode
+    width?: number
     numerical?: boolean
+    sortValue?: ReactNode
 }
 
 export interface TableRow {
@@ -50,6 +52,8 @@ interface SortState {
  *  - Smart sort by all columns
  *  - Mandatory on select action
  *  - Optional on create action
+ *  - Optional on filter action
+ *  - Optional alternative sort value per cell, i.e. for icons
  */
 export default function GenericTable<Row extends TableRow>({headers, rows, onSelect, onCreate, onFilter, children}: TableComponentProps<Row>) {
     const [search, setSearch] = useState<string>('')
@@ -68,7 +72,7 @@ export default function GenericTable<Row extends TableRow>({headers, rows, onSel
                     <TableHeader headers={headers} sort={sort} setSort={setSort}/>
                 </Thead>
                 <Tbody>
-                    <TableRows rows={filterEntries(rows, search, sort)} onSelect={onSelect}/>
+                    <TableRows rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/>
                 </Tbody>
             </Table>
             {children}
@@ -108,6 +112,8 @@ const TableHeader = ({headers, sort, setSort}: {
         <Tr>
             {headers.map((cell, index) =>
                 <Th className={"unselectable clickable"}
+                    maxWidth={cell.width}
+                    overflowX={"hidden"}
                     isNumeric={cell.numerical}
                     bg={backgroundColorScheme}
                     _hover={{background: hoverColorScheme}}
@@ -142,19 +148,25 @@ const TableRows = <Row extends TableRow>({rows, onSelect}: {
             rows.map(row =>
                 <Tr
                     key={row.id}
+                    overflowX={"hidden"}
                     className={"unselectable clickable"}
                     onClick={() => onSelect(row)}
                     _hover={{background: hoverColorScheme}}
                     _active={{background: activeColorScheme}}>
                     {row.cells.map(cell =>
-                        <Td isNumeric={cell.numerical}>{cell.value}</Td>
+                        <Td
+                            maxWidth={cell.width}
+                            overflow={"hidden"}
+                            text-overflow={"ellipsis"}
+                            white-space={"no-wrap"}>
+                            {cell.value}</Td>
                     )}
                 </Tr>
             )
     }</>
 }
 
-function filterEntries<Row extends TableRow>(rows: Row[], search: string, sort: SortState) {
+function filterAndSort<Row extends TableRow>(rows: Row[], search: string, sort: SortState) {
     const collator = Intl.Collator([], {numeric: true})
 
     return rows
@@ -163,10 +175,15 @@ function filterEntries<Row extends TableRow>(rows: Row[], search: string, sort: 
             return Object.values(cells).join(" ").toLowerCase().includes(search.toLowerCase())
         })
         .sort((a, b) =>
-            compare(a.cells[sort.column]?.value, b.cells[sort.column]?.value)
+            compare(getSortValue(a), getSortValue(b))
         )
 
-    function compare(a?: ReactNode, b?: ReactNode): number {
+    function getSortValue<Row extends TableRow>(a: Row): ReactNode {
+        const cell = a.cells[sort.column]
+        return cell.sortValue != null ? cell.sortValue : cell.value
+    }
+
+    function compare(a: ReactNode, b: ReactNode): number {
         return sort.direction ? (collator.compare(`${a}`, `${b}`)) : (collator.compare(`${b}`, `${a}`))
     }
 }

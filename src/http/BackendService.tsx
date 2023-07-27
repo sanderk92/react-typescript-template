@@ -1,6 +1,8 @@
 import useAuthService from "../auth/AuthService";
 import axios from "axios";
 import {HomePageRow} from "../pages/home/HomePage";
+import {RiMapPin2Fill, RiMapPin3Fill, RiMapPinAddFill} from "react-icons/all";
+import {RiMapPinTimeFill} from "react-icons/ri";
 
 export interface BackendProps {
     getUserDetails(): Promise<UserDetails>
@@ -50,18 +52,21 @@ export interface UserDetails {
 }
 
 const newHomePageRow : HomePageRow =
-    {id: "new", cells: [{value: "new"}, {value: "new"}, {value: "new"}], extra: "new"}
+    {id: "new", cells: [{value: "new", width: 85}, {value: "time", width: 10}, {value: "", width: 5}], extra: "new"}
 
+
+const pad = (minutes: number): string => minutes.toString().padStart(2, '0')
+const time = (minus: number): string => pad(new Date().getHours() - minus) + ":" + pad(new Date().getMinutes())
+const date = (minus: number): string => pad(new Date().getMonth() - minus) + "-" + pad(new Date().getDate())
+
+// TODO Move data formatting to home page
 const homePageRows : HomePageRow[] = [
-    {id: "b", cells: [{value: new Date().toLocaleTimeString()}, {value: "testc"},  {value: "test14"}], extra: "test33"},
-    {id: "a", cells: [{value: new Date().toLocaleTimeString()}, {value: "testc"},  {value: "test13"}], extra: "test32"},
-    {id: "c", cells: [{value: new Date().toLocaleTimeString()}, {value: "testc"},  {value: "test15"}], extra: "test34"},
-    {id: "d", cells: [{value: new Date().toLocaleTimeString()}, {value: "testc"},  {value: "test16"}], extra: "test35"},
-    {id: "e", cells: [{value: new Date().toLocaleTimeString()}, {value: "testc"},  {value: "test31"}], extra: "test36"},
-    {id: "f", cells: [{value: new Date().toLocaleTimeString()}, {value: "testc"},  {value: "test17"}], extra: "test37"},
-    {id: "g", cells: [{value: new Date().toLocaleTimeString()}, {value: "testc"},  {value: "test18"}], extra: "test38"},
-    {id: "h", cells: [{value: new Date().toLocaleTimeString()}, {value: "testc"},  {value: "test19"}], extra: "test39"},
-    {id: "i", cells: [{value: new Date().toLocaleTimeString()}, {value: "testc"},  {value: "test20"}], extra: "test40"},
-    {id: "j", cells: [{value: new Date().toLocaleTimeString()}, {value: "testc"},  {value: "test21"}], extra: "test41"},
-    {id: "k", cells: [{value: new Date().toLocaleTimeString()}, {value: "testc"},  {value: "test22"}], extra: "test42"},
+    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: time(0), width: 10}, {value: <RiMapPinAddFill color={"green"}/>, width: 5, sortValue: 0}], extra: "test33"},
+    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: time(1), width: 10}, {value: <RiMapPinTimeFill color={"dodgerblue"}/>, width: 5, sortValue: 1}, ], extra: "test33"},
+    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: time(2), width: 10}, {value: <RiMapPinTimeFill color={"dodgerblue"}/>, width: 5, sortValue: 1}], extra: "test33"},
+    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: time(3), width: 10}, {value: <RiMapPin2Fill color={"red"}/>, width: 5, sortValue: 2}], extra: "test33"},
+    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: date(1), width: 10}, {value: <RiMapPin3Fill color={"grey"}/>, width: 5, sortValue: 3}], extra: "test33"},
+    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: date(2), width: 10}, {value: <RiMapPin3Fill color={"grey"}/>, width: 5, sortValue: 3}], extra: "test33"},
+    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: date(3), width: 10}, {value: <RiMapPin3Fill color={"grey"}/>, width: 5, sortValue: 3}], extra: "test33"},
+    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: date(4), width: 10}, {value: <RiMapPin3Fill color={"grey"}/>, width: 5, sortValue: 3}], extra: "test33"},
 ]

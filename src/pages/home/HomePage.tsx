@@ -46,7 +46,7 @@ export default function HomePage() {
 
     else return (
         <GenericTable
-            headers={[{value: "first"}, {value: "second"}, {value: "third"}]}
+            headers={[{value: "first", width: 85}, {value: "time", width: 10}, {value: "", width: 5}]}
             onSelect={navigateDetails}
             onCreate={navigateCreate}
             rows={rows!!}>
