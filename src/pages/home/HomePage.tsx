@@ -16,9 +16,9 @@ export interface HomePageRow extends TableRow {
     cells: TableCell[]
 }
 
-const firstRowWidth = "10"
-const secondRowWidth = "75"
-const thirdRowWidth = "15"
+const firstColumnWidth = "10"
+const secondColumnWidth = "80"
+const thirdColumnWidth = "10"
 
 export default function HomePage() {
     const backend = useBackend()
@@ -48,7 +48,7 @@ export default function HomePage() {
         return <NoResultDisplay/>
     } else return (
         <GenericTable
-            headers={[{value: "status", width: firstRowWidth}, {value: "title", width: secondRowWidth}, {value: "time", width: thirdRowWidth}]}
+            headers={[{value: "status", width: firstColumnWidth}, {value: "title", width: secondColumnWidth}, {value: "time", width: thirdColumnWidth}]}
             onSelect={navigateDetails}
             onCreate={navigateCreate}
             onFilter={navigateCreate}
@@ -79,20 +79,20 @@ const asHomePageRow = (row: Data): HomePageRow => ({
 
 const statusCell = (status: 'open' | 'running' | 'cancelled' | 'finished'): TableCell => {
     if (status === 'open') {
-        return {sortValue: 0, width: firstRowWidth, value: <RiAddCircleFill color={"green"}/>}
+        return {sortValue: 0, width: firstColumnWidth, value: <RiAddCircleFill color={"green"}/>}
     } else if (status === 'running') {
-        return {sortValue: 1, width: firstRowWidth, value: <RiPlayCircleFill color={"dodgerblue"}/>}
+        return {sortValue: 1, width: firstColumnWidth, value: <RiPlayCircleFill color={"dodgerblue"}/>}
     } else if (status === 'cancelled') {
-        return {sortValue: 2, width: firstRowWidth, value: <RiCloseCircleFill color={"red"}/>}
+        return {sortValue: 2, width: firstColumnWidth, value: <RiCloseCircleFill color={"red"}/>}
     } else {
-        return {sortValue: 3, width: firstRowWidth, value: <RiCloseCircleFill color={"grey"}/>}
+        return {sortValue: 3, width: firstColumnWidth, value: <RiCloseCircleFill color={"grey"}/>}
     }
 }
 
 const companyCell = (name: string): TableCell => {
     return {
         sortValue: name,
-        width: secondRowWidth,
+        width: secondColumnWidth,
         value: name
     }
 }
@@ -100,7 +100,7 @@ const companyCell = (name: string): TableCell => {
 const timeCell = (date: Date): TableCell => {
     return {
         sortValue: date.getTime(),
-        width: thirdRowWidth,
+        width: thirdColumnWidth,
         value: isSameDate(new Date(), date) ? timeShortFormatted(date) : dateShortFormatted(date)
     }
 }

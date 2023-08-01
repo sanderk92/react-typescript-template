@@ -8,6 +8,7 @@ import useAuthService from "./auth/AuthService";
 import {UserDetails} from "./http/BackendService";
 import {Logo} from "./Logo";
 import {onResize} from "./utils/Resize";
+import {onBack} from "./utils/History";
 
 export interface NavigationProps {
     user: UserDetails
@@ -83,6 +84,7 @@ const SidebarDrawer = ({isOpen, onClose, ...rest}: {
 
     useEffect(() => {
         onResize(onClose)
+        onBack(onClose)
     })
 
     return (
