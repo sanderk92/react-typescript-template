@@ -12,15 +12,14 @@ import {
     ModalOverlay,
     useToast,
 } from "@chakra-ui/react";
-import {useBackend} from "../../http/BackendService";
+import {Data, useBackend} from "../../http/BackendService";
 import * as React from "react";
 import {useState} from "react";
-import {HomePageRow} from "./HomePage";
 
 export interface CreateDrawerProps {
     isOpen: boolean
     onClose: () => void
-    onCreated: (page: HomePageRow) => void
+    onCreated: (data: Data) => void
 }
 
 export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerProps) {
@@ -57,7 +56,7 @@ export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerPr
 
     function create() {
         setIsCreating(true)
-        backend.createHomePageRow()
+        backend.createData()
             .then(row => onCreated(row))
             .then(_ => {toast({title: "Successfully created!", status: 'success', isClosable: true})})
             .catch(_ => toast({title: "Error creating.", status: 'error', isClosable: true}))

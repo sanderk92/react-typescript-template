@@ -1,13 +1,10 @@
 import useAuthService from "../auth/AuthService";
 import axios from "axios";
-import {HomePageRow} from "../pages/home/HomePage";
-import {RiMapPin2Fill, RiMapPin3Fill, RiMapPinAddFill} from "react-icons/all";
-import {RiMapPinTimeFill} from "react-icons/ri";
 
 export interface BackendProps {
     getUserDetails(): Promise<UserDetails>
-    getHomePageRows(): Promise<HomePageRow[]>
-    createHomePageRow(): Promise<HomePageRow>
+    getData(): Promise<Data[]>
+    createData(): Promise<Data>
 }
 
 export const useBackend = (): BackendProps => {
@@ -29,20 +26,20 @@ export const useBackend = (): BackendProps => {
             .then(result => result.data)
     }
 
-    const getHomePageRows = (): Promise<HomePageRow[]> => {
+    const getData = (): Promise<Data[]> => {
         return new Promise(resolve => setTimeout(resolve, 2000))
             .then(_ => homePageRows);
     }
 
-    const createHomePageRow = (): Promise<HomePageRow> => {
+    const createData = (): Promise<Data> => {
         return new Promise(resolve => setTimeout(resolve, 2000))
             .then(_ => newHomePageRow);
     }
 
     return {
         getUserDetails,
-        getHomePageRows,
-        createHomePageRow,
+        getData: getData,
+        createData: createData,
     }
 }
 
@@ -51,22 +48,22 @@ export interface UserDetails {
     roles: string[],
 }
 
-const newHomePageRow : HomePageRow =
-    {id: "new", cells: [{value: "new", width: 85}, {value: "time", width: 10}, {value: "", width: 5}], extra: "new"}
+export interface Data {
+    id: string,
+    status: 'open' | 'running' | 'cancelled' | 'finished',
+    company: string,
+    time: Date,
+}
 
-
-const pad = (minutes: number): string => minutes.toString().padStart(2, '0')
-const time = (minus: number): string => pad(new Date().getHours() - minus) + ":" + pad(new Date().getMinutes())
-const date = (minus: number): string => pad(new Date().getMonth() - minus) + "-" + pad(new Date().getDate())
-
-// TODO Move data formatting to home page
-const homePageRows : HomePageRow[] = [
-    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: time(0), width: 10}, {value: <RiMapPinAddFill color={"green"}/>, width: 5, sortValue: 0}], extra: "test33"},
-    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: time(1), width: 10}, {value: <RiMapPinTimeFill color={"dodgerblue"}/>, width: 5, sortValue: 1}, ], extra: "test33"},
-    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: time(2), width: 10}, {value: <RiMapPinTimeFill color={"dodgerblue"}/>, width: 5, sortValue: 1}], extra: "test33"},
-    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: time(3), width: 10}, {value: <RiMapPin2Fill color={"red"}/>, width: 5, sortValue: 2}], extra: "test33"},
-    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: date(1), width: 10}, {value: <RiMapPin3Fill color={"grey"}/>, width: 5, sortValue: 3}], extra: "test33"},
-    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: date(2), width: 10}, {value: <RiMapPin3Fill color={"grey"}/>, width: 5, sortValue: 3}], extra: "test33"},
-    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: date(3), width: 10}, {value: <RiMapPin3Fill color={"grey"}/>, width: 5, sortValue: 3}], extra: "test33"},
-    {id: "b", cells: [{value: "Bandel B.V", width:85}, {value: date(4), width: 10}, {value: <RiMapPin3Fill color={"grey"}/>, width: 5, sortValue: 3}], extra: "test33"},
+const homePageRows : Data[] = [
+    {id: "a", status: 'open', company: 'Pikobello B.V.', time: new Date()},
+    {id: "b", status: 'open', company: 'Bandel B.V.', time: new Date()},
+    {id: "c", status: 'running', company: 'Jantje B.V.', time: new Date()},
+    {id: "d", status: 'running', company: 'Oke B.V.', time: new Date()},
+    {id: "e", status: 'cancelled', company: 'Altijd optijd B.V.', time: new Date()},
+    {id: "f", status: 'finished', company: 'Minder B.V.', time: new Date()}
 ]
+
+const newHomePageRow : Data =
+    {id: "g", status: 'finished', company: 'Minder B.V.', time: new Date()}
+

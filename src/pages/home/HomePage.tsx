@@ -2,16 +2,18 @@ import GenericTable, {TableCell, TableRow} from "../../components/GenericTable";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Route, Routes, useNavigate} from "react-router-dom";
-import {useBackend} from "../../http/BackendService";
+import {Data, useBackend} from "../../http/BackendService";
 import DetailsDrawer from "./DetailsDrawer";
 import CreateModal from "./CreateModal";
 import SpinnerCentered from "../../components/SpinnerCentered";
 import NoResultDisplay from "../../components/NoResultDisplay";
+import {RiAddCircleFill, RiCloseCircleFill} from "react-icons/all";
+import {RiPlayCircleFill} from "react-icons/ri";
+import {dateShortFormatted, isSameDate, timeShortFormatted} from "../../utils/Date";
 
 export interface HomePageRow extends TableRow {
     id: string
     cells: TableCell[]
-    extra: string
 }
 
 export default function HomePage() {
@@ -33,31 +35,60 @@ export default function HomePage() {
     }
 
     useEffect(() => {
-        backend.getHomePageRows().then(rows => setRows(rows))
+        backend.getData().then(data => setRows(data.map(asHomePageRow)))
     }, [backend])
 
     if (rows == null) {
         return <SpinnerCentered/>
-    }
-
-    else if (rows?.length === 0) {
+    } else if (rows?.length === 0) {
         return <NoResultDisplay/>
-    }
-
-    else return (
+    } else return (
         <GenericTable
-            headers={[{value: "first", width: 85}, {value: "time", width: 10}, {value: "", width: 5}]}
+            headers={[{value: "status", width: "10"}, {value: "title", width: "80"}, {value: "time", width: "10"}]}
             onSelect={navigateDetails}
             onCreate={navigateCreate}
+            onFilter={navigateCreate}
             rows={rows!!}>
             <Routes>
                 <Route path=":id" element={
                     <DetailsDrawer isOpen={true} onClose={navigateBack} input={rows!!}/>
                 }/>
                 <Route path="create" element={
-                    <CreateModal isOpen={true} onClose={navigateBack} onCreated={row => {rows?.push(row); navigateBack()}}/>
+                    <CreateModal isOpen={true} onClose={navigateBack} onCreated={row => {
+                        rows?.push(asHomePageRow(row));
+                        navigateBack()
+                    }}/>
                 }/>
             </Routes>
         </GenericTable>
     )
+}
+
+const asHomePageRow = (row: Data): HomePageRow => ({
+    id: row.id,
+    cells: [
+        statusCell(row.status),
+        companyCell(row.company),
+        timeCell(row.time)
+    ],
+})
+
+const statusCell = (status: 'open' | 'running' | 'cancelled' | 'finished'): TableCell => {
+    if (status === 'open') {
+        return {sortValue: 0, value: <RiAddCircleFill color={"green"}/>}
+    } else if (status === 'running') {
+        return {sortValue: 1, value: <RiPlayCircleFill color={"dodgerblue"}/>}
+    } else if (status === 'cancelled') {
+        return {sortValue: 2, value: <RiCloseCircleFill color={"red"}/>}
+    } else {
+        return {sortValue: 3, value: <RiCloseCircleFill color={"grey"}/>}
+    }
+}
+
+const companyCell = (name: string): TableCell => {
+    return {value: name}
+}
+
+const timeCell = (date: Date): TableCell => {
+    return {value: isSameDate(new Date(), date) ? timeShortFormatted(date) : dateShortFormatted(date)}
 }

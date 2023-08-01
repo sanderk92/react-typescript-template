@@ -22,7 +22,7 @@ import "./components.css"
 
 export interface TableCell {
     value: ReactNode
-    width?: number
+    width?: string
     numerical?: boolean
     sortValue?: ReactNode
 }
