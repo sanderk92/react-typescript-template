@@ -19,6 +19,7 @@ import {
 } from '@chakra-ui/react';
 import {AddIcon, ChevronDownIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./components.css"
+import {RiFilter2Line, RiFilterLine} from "react-icons/all";
 
 export interface TableCell {
     value: ReactNode
@@ -63,7 +64,7 @@ export default function GenericTable<Row extends TableRow>({headers, rows, onSel
         <TableContainer p="4">
             <Flex pr="2" pb="4" alignItems={"flex-end"} justifyContent={"flex-end"}>
                 <SearchField search={search} onSearch={(query) => setSearch(query)}/>
-                {onFilter ? <IconButton ml="4" icon={<ChevronDownIcon/>} aria-label={"filter"} onClick={onFilter}/> : null}
+                {onFilter ? <IconButton ml="4" icon={<RiFilterLine/>} aria-label={"filter"} onClick={onFilter}/> : null}
                 {onCreate ? <IconButton ml="4" icon={<AddIcon/>} aria-label={"create"} onClick={onCreate}/> : null}
             </Flex>
             <Divider/>
@@ -109,9 +110,10 @@ const TableHeader = ({headers, sort, setSort}: {
     const activeColorScheme = useColorModeValue('gray.400', 'gray.600')
 
     return (
-        <Tr>
+        <Tr key={"header"}>
             {headers.map((cell, index) =>
                 <Th className={"unselectable clickable"}
+                    key={`header-${index}`}
                     maxWidth={cell.width}
                     overflowX={"hidden"}
                     isNumeric={cell.numerical}
@@ -153,13 +155,15 @@ const TableRows = <Row extends TableRow>({rows, onSelect}: {
                     onClick={() => onSelect(row)}
                     _hover={{background: hoverColorScheme}}
                     _active={{background: activeColorScheme}}>
-                    {row.cells.map(cell =>
+                    {row.cells.map((cell, index) =>
                         <Td
+                            key={`${row.id}-${index}`}
                             maxWidth={cell.width}
                             overflow={"hidden"}
                             text-overflow={"ellipsis"}
                             white-space={"no-wrap"}>
-                            {cell.value}</Td>
+                            {cell.value}
+                        </Td>
                     )}
                 </Tr>
             )
