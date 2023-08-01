@@ -57,13 +57,14 @@ export interface Data {
 
 const homePageRows : Data[] = [
     {id: "a", status: 'open', company: 'Pikobello B.V.', time: new Date()},
-    {id: "b", status: 'open', company: 'Bandel B.V.', time: new Date()},
-    {id: "c", status: 'running', company: 'Jantje B.V.', time: new Date()},
-    {id: "d", status: 'running', company: 'Oke B.V.', time: new Date()},
-    {id: "e", status: 'cancelled', company: 'Altijd optijd B.V.', time: new Date()},
-    {id: "f", status: 'finished', company: 'Minder B.V.', time: new Date()}
+    {id: "b", status: 'open', company: 'Bandel B.V.', time: new Date(2023, 4, 4, 10, 0, 0)},
+    {id: "c", status: 'running', company: 'Jantje B.V.', time: new Date(2023, 4, 4, 9, 0, 0)},
+    {id: "d", status: 'running', company: 'Oke B.V.', time: new Date(2023, 4, 3, 10, 0, 0)},
+    {id: "e", status: 'cancelled', company: 'Altijd optijd B.V.', time: new Date(2023, 4, 3, 10, 15, 0)},
+    {id: "f", status: 'finished', company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
+    {id: "g", status: 'finished', company: 'Minder B.V.', time: new Date(2023, 2, 2, 10, 0, 0)}
 ]
 
 const newHomePageRow : Data =
-    {id: "g", status: 'finished', company: 'Minder B.V.', time: new Date()}
+    {id: "h", status: 'finished', company: 'Minder B.V.', time: new Date()}
 

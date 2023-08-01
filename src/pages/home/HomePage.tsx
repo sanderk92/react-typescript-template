@@ -16,6 +16,10 @@ export interface HomePageRow extends TableRow {
     cells: TableCell[]
 }
 
+const firstRowWidth = "10"
+const secondRowWidth = "75"
+const thirdRowWidth = "15"
+
 export default function HomePage() {
     const backend = useBackend()
     const navigate = useNavigate()
@@ -44,7 +48,7 @@ export default function HomePage() {
         return <NoResultDisplay/>
     } else return (
         <GenericTable
-            headers={[{value: "status", width: "10"}, {value: "title", width: "80"}, {value: "time", width: "10"}]}
+            headers={[{value: "status", width: firstRowWidth}, {value: "title", width: secondRowWidth}, {value: "time", width: thirdRowWidth}]}
             onSelect={navigateDetails}
             onCreate={navigateCreate}
             onFilter={navigateCreate}
@@ -75,20 +79,28 @@ const asHomePageRow = (row: Data): HomePageRow => ({
 
 const statusCell = (status: 'open' | 'running' | 'cancelled' | 'finished'): TableCell => {
     if (status === 'open') {
-        return {sortValue: 0, value: <RiAddCircleFill color={"green"}/>}
+        return {sortValue: 0, width: firstRowWidth, value: <RiAddCircleFill color={"green"}/>}
     } else if (status === 'running') {
-        return {sortValue: 1, value: <RiPlayCircleFill color={"dodgerblue"}/>}
+        return {sortValue: 1, width: firstRowWidth, value: <RiPlayCircleFill color={"dodgerblue"}/>}
     } else if (status === 'cancelled') {
-        return {sortValue: 2, value: <RiCloseCircleFill color={"red"}/>}
+        return {sortValue: 2, width: firstRowWidth, value: <RiCloseCircleFill color={"red"}/>}
     } else {
-        return {sortValue: 3, value: <RiCloseCircleFill color={"grey"}/>}
+        return {sortValue: 3, width: firstRowWidth, value: <RiCloseCircleFill color={"grey"}/>}
     }
 }
 
 const companyCell = (name: string): TableCell => {
-    return {value: name}
+    return {
+        sortValue: name,
+        width: secondRowWidth,
+        value: name
+    }
 }
 
 const timeCell = (date: Date): TableCell => {
-    return {value: isSameDate(new Date(), date) ? timeShortFormatted(date) : dateShortFormatted(date)}
+    return {
+        sortValue: date.getTime(),
+        width: thirdRowWidth,
+        value: isSameDate(new Date(), date) ? timeShortFormatted(date) : dateShortFormatted(date)
+    }
 }
