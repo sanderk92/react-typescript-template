@@ -6,16 +6,16 @@ import {
     DrawerContent,
     DrawerHeader,
     FormControl,
-    FormLabel, Input,
-    Text
+    FormLabel,
+    Input
 } from "@chakra-ui/react";
 import * as React from "react";
-import {HomePageRow} from "./HomePage";
+import {Data} from "../../http/model/Data";
 
 export interface DetailsDrawerProps {
     isOpen: boolean
     onClose: () => void
-    input: HomePageRow[]
+    input: Data[]
 }
 
 export default function DetailsDrawer({isOpen, onClose, input}: DetailsDrawerProps) {
@@ -32,15 +32,15 @@ export default function DetailsDrawer({isOpen, onClose, input}: DetailsDrawerPro
                 <DrawerBody>
                     <FormControl >
                         <FormLabel>First</FormLabel>
-                        <Input isDisabled={true} value={`${row.cells[0].value}`} placeholder='First'/>
+                        <Input isDisabled={true} value={row.id} placeholder='First'/>
                     </FormControl>
                     <FormControl mt={4}>
                         <FormLabel>Second</FormLabel>
-                        <Input isDisabled={true} value={`${row.cells[1].value}`} placeholder='Second'/>
+                        <Input isDisabled={true} value={row.company} placeholder='Second'/>
                     </FormControl>
                     <FormControl mt={4}>
                         <FormLabel>Third</FormLabel>
-                        <Input isDisabled={true} value={`${row.cells[2].value}`} placeholder='Third'/>
+                        <Input isDisabled={true} value={row.status} placeholder='Third'/>
                     </FormControl>
                 </DrawerBody>
                 <DrawerCloseButton/>

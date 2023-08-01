@@ -12,11 +12,6 @@ import {RiPlayCircleFill} from "react-icons/ri";
 import {dateShortFormatted, isSameDate, timeShortFormatted} from "../../utils/Date";
 import {Data} from "../../http/model/Data";
 
-export interface HomePageRow extends TableRow {
-    id: string
-    cells: TableCell[]
-}
-
 const firstColumnWidth = "10"
 const secondColumnWidth = "80"
 const thirdColumnWidth = "10"
@@ -25,13 +20,13 @@ export default function HomePage() {
     const backend = useBackend()
     const navigate = useNavigate()
 
-    const [rows, setRows] = useState<HomePageRow[] | undefined>(undefined)
+    const [rows, setRows] = useState<Data[] | undefined>(undefined)
 
     const navigateBack = () => {
         navigate("/")
     }
 
-    const navigateDetails = (row: HomePageRow) => {
+    const navigateDetails = (row: TableRow) => {
         navigate(row.id)
     }
 
@@ -40,7 +35,7 @@ export default function HomePage() {
     }
 
     useEffect(() => {
-        backend.getData().then(data => setRows(data.map(asHomePageRow)))
+        backend.getData().then(data => setRows(data))
     })
 
     if (rows == null) {
@@ -53,14 +48,14 @@ export default function HomePage() {
             onSelect={navigateDetails}
             onCreate={navigateCreate}
             onFilter={navigateCreate}
-            rows={rows!!}>
+            rows={rows!!.map(asTableRow)}>
             <Routes>
                 <Route path=":id" element={
                     <DetailsDrawer isOpen={true} onClose={navigateBack} input={rows!!}/>
                 }/>
                 <Route path="create" element={
-                    <CreateModal isOpen={true} onClose={navigateBack} onCreated={row => {
-                        rows?.push(asHomePageRow(row));
+                    <CreateModal isOpen={true} onClose={navigateBack} onCreated={data => {
+                        rows?.push(data);
                         navigateBack()
                     }}/>
                 }/>
@@ -69,7 +64,7 @@ export default function HomePage() {
     )
 }
 
-const asHomePageRow = (data: Data): HomePageRow => ({
+const asTableRow = (data: Data): TableRow => ({
     id: data.id,
     cells: [
         statusCell(data.status),

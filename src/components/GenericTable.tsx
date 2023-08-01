@@ -1,25 +1,8 @@
 import React, {ReactNode, useState} from 'react';
-import {
-    Divider,
-    Flex,
-    Icon,
-    IconButton,
-    Input,
-    InputGroup,
-    InputLeftElement,
-    InputRightElement,
-    Table,
-    TableContainer,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
-    useColorModeValue
-} from '@chakra-ui/react';
-import {AddIcon, ChevronDownIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
+import {Divider, Flex, Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
+import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./components.css"
-import {RiFilter2Line, RiFilterLine} from "react-icons/all";
+import {RiFilterLine} from "react-icons/all";
 
 export interface TableCell {
     value: ReactNode
@@ -33,10 +16,10 @@ export interface TableRow {
     cells: TableCell[]
 }
 
-export interface TableComponentProps<Row extends TableRow> {
+export interface TableComponentProps {
     headers: TableCell[]
-    rows: Row[]
-    onSelect: (row: Row) => void
+    rows: TableRow[]
+    onSelect: (row: TableRow) => void
     onCreate?: () => void
     onFilter?: () => void
     children: React.JSX.Element
@@ -54,9 +37,8 @@ interface SortState {
  *  - Mandatory on select action
  *  - Optional on create action
  *  - Optional on filter action
- *  - Optional alternative sort value per cell, i.e. for icons
  */
-export default function GenericTable<Row extends TableRow>({headers, rows, onSelect, onCreate, onFilter, children}: TableComponentProps<Row>) {
+export default function GenericTable({headers, rows, onSelect, onCreate, onFilter, children}: TableComponentProps) {
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<SortState>({column: 0, direction: true})
 
@@ -139,9 +121,9 @@ const TableHeader = ({headers, sort, setSort}: {
     }
 }
 
-const TableRows = <Row extends TableRow>({rows, onSelect}: {
-    rows: Row[]
-    onSelect: (row: Row) => void
+const TableRows = ({rows, onSelect}: {
+    rows: TableRow[]
+    onSelect: (row: TableRow) => void
 }) => {
     const hoverColorScheme = useColorModeValue('gray.100', 'gray.700')
     const activeColorScheme = useColorModeValue('gray.200', 'gray.600')
@@ -170,7 +152,7 @@ const TableRows = <Row extends TableRow>({rows, onSelect}: {
     }</>
 }
 
-function filterAndSort<Row extends TableRow>(rows: Row[], search: string, sort: SortState) {
+function filterAndSort(rows: TableRow[], search: string, sort: SortState) {
     const collator = Intl.Collator([], {numeric: true})
 
     return rows
@@ -182,7 +164,7 @@ function filterAndSort<Row extends TableRow>(rows: Row[], search: string, sort: 
             compare(getSortValue(a), getSortValue(b))
         )
 
-    function getSortValue<Row extends TableRow>(a: Row): ReactNode {
+    function getSortValue(a: TableRow): ReactNode {
         const cell = a.cells[sort.column]
         return cell.sortValue != null ? cell.sortValue : cell.value
     }
