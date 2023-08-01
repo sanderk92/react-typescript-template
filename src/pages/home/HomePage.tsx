@@ -58,7 +58,7 @@ export default function HomePage() {
 }
 
 const firstColumnWidth = "20"
-const secondColumnWidth = "60"
+const secondColumnWidth = "40"
 const thirdColumnWidth = "20"
 
 const tableHeader = () => [
