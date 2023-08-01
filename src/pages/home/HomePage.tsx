@@ -12,10 +12,6 @@ import {RiPlayCircleFill} from "react-icons/ri";
 import {dateShortFormatted, isSameDate, timeShortFormatted} from "../../utils/Date";
 import {Data} from "../../http/model/Data";
 
-const firstColumnWidth = "10"
-const secondColumnWidth = "80"
-const thirdColumnWidth = "10"
-
 export default function HomePage() {
     const backend = useBackend()
     const navigate = useNavigate()
@@ -44,27 +40,34 @@ export default function HomePage() {
         return <NoResultDisplay/>
     } else return (
         <GenericTable
-            headers={[{value: "status", width: firstColumnWidth}, {value: "title", width: secondColumnWidth}, {value: "time", width: thirdColumnWidth}]}
+            headers={tableHeader()}
             onSelect={navigateDetails}
             onCreate={navigateCreate}
             onFilter={navigateCreate}
-            rows={rows!!.map(asTableRow)}>
+            rows={rows!!.map(tableRow)}>
             <Routes>
                 <Route path=":id" element={
                     <DetailsDrawer isOpen={true} onClose={navigateBack} input={rows!!}/>
                 }/>
                 <Route path="create" element={
-                    <CreateModal isOpen={true} onClose={navigateBack} onCreated={data => {
-                        rows?.push(data);
-                        navigateBack()
-                    }}/>
+                    <CreateModal isOpen={true} onClose={navigateBack} onCreated={data => {rows?.push(data); navigateBack()}}/>
                 }/>
             </Routes>
         </GenericTable>
     )
 }
 
-const asTableRow = (data: Data): TableRow => ({
+const firstColumnWidth = "20"
+const secondColumnWidth = "60"
+const thirdColumnWidth = "20"
+
+const tableHeader = () => [
+    {value: "status", width: firstColumnWidth},
+    {value: "title", width: secondColumnWidth},
+    {value: "time", width: thirdColumnWidth}
+];
+
+const tableRow = (data: Data): TableRow => ({
     id: data.id,
     cells: [
         statusCell(data.status),
@@ -97,6 +100,7 @@ const timeCell = (date: Date): TableCell => {
     return {
         sortValue: date.getTime(),
         width: thirdColumnWidth,
+        numerical: true,
         value: isSameDate(new Date(), date) ? timeShortFormatted(date) : dateShortFormatted(date)
     }
 }
