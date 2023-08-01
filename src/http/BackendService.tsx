@@ -1,10 +1,13 @@
 import useAuthService from "../auth/AuthService";
 import axios from "axios";
+import { v4 as uuid } from 'uuid';
+import {Data, DataEntry} from "./model/Data";
+import {UserDetails} from "./model/UserDetails";
 
 export interface BackendProps {
     getUserDetails(): Promise<UserDetails>
     getData(): Promise<Data[]>
-    createData(): Promise<Data>
+    createData(entry: DataEntry): Promise<Data>
 }
 
 export const useBackend = (): BackendProps => {
@@ -31,9 +34,9 @@ export const useBackend = (): BackendProps => {
             .then(_ => homePageRows);
     }
 
-    const createData = (): Promise<Data> => {
+    const createData = (entry: DataEntry): Promise<Data> => {
         return new Promise(resolve => setTimeout(resolve, 2000))
-            .then(_ => newHomePageRow);
+            .then(_ => ({id: uuid(), status: 'open', company: entry.company, time: new Date()}));
     }
 
     return {
@@ -43,28 +46,12 @@ export const useBackend = (): BackendProps => {
     }
 }
 
-export interface UserDetails {
-    id: string,
-    roles: string[],
-}
-
-export interface Data {
-    id: string,
-    status: 'open' | 'running' | 'cancelled' | 'finished',
-    company: string,
-    time: Date,
-}
-
 const homePageRows : Data[] = [
-    {id: "a", status: 'open', company: 'Pikobello B.V.', time: new Date()},
-    {id: "b", status: 'open', company: 'Bandel B.V.', time: new Date(2023, 4, 4, 10, 0, 0)},
-    {id: "c", status: 'running', company: 'Jantje B.V.', time: new Date(2023, 4, 4, 9, 0, 0)},
-    {id: "d", status: 'running', company: 'Oke B.V.', time: new Date(2023, 4, 3, 10, 0, 0)},
-    {id: "e", status: 'cancelled', company: 'Altijd optijd B.V.', time: new Date(2023, 4, 3, 10, 15, 0)},
-    {id: "f", status: 'finished', company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
-    {id: "g", status: 'finished', company: 'Minder B.V.', time: new Date(2023, 2, 2, 10, 0, 0)}
+    {id: uuid(), status: 'open', company: 'Pikobello B.V.', time: new Date()},
+    {id: uuid(), status: 'open', company: 'Bandel B.V.', time: new Date(2023, 4, 4, 10, 0, 0)},
+    {id: uuid(), status: 'running', company: 'Jantje B.V.', time: new Date(2023, 4, 4, 9, 0, 0)},
+    {id: uuid(), status: 'running', company: 'Oke B.V.', time: new Date(2023, 4, 3, 10, 0, 0)},
+    {id: uuid(), status: 'cancelled', company: 'Altijd optijd B.V.', time: new Date(2023, 4, 3, 10, 15, 0)},
+    {id: uuid(), status: 'finished', company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
+    {id: uuid(), status: 'finished', company: 'Minder B.V.', time: new Date(2023, 2, 2, 10, 0, 0)}
 ]
-
-const newHomePageRow : Data =
-    {id: "h", status: 'finished', company: 'Minder B.V.', time: new Date()}
-

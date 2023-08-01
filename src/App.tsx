@@ -8,8 +8,9 @@ import {authSettings} from "./auth/AuthSettings";
 import HomePage from "./pages/home/HomePage";
 import ContactPage from "./pages/contact/ContactPage";
 import useAuthService from "./auth/AuthService";
-import {useBackend, UserDetails} from "./http/BackendService";
+import {useBackend} from "./http/BackendService";
 import ErrorBoundary from "./ErrorBoundary";
+import {UserDetails} from "./http/model/UserDetails";
 
 export function App() {
     return (

@@ -5,10 +5,10 @@ import {IconType} from 'react-icons';
 import {ColorModeSwitcher} from "./ColorModeSwitcher";
 import {Link as RouteLink} from "react-router-dom";
 import useAuthService from "./auth/AuthService";
-import {UserDetails} from "./http/BackendService";
 import {Logo} from "./Logo";
 import {onResize} from "./utils/Resize";
 import {onBack} from "./utils/History";
+import {UserDetails} from "./http/model/UserDetails";
 
 export interface NavigationProps {
     user: UserDetails

@@ -2,7 +2,7 @@ import GenericTable, {TableCell, TableRow} from "../../components/GenericTable";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Route, Routes, useNavigate} from "react-router-dom";
-import {Data, useBackend} from "../../http/BackendService";
+import {useBackend} from "../../http/BackendService";
 import DetailsDrawer from "./DetailsDrawer";
 import CreateModal from "./CreateModal";
 import SpinnerCentered from "../../components/SpinnerCentered";
@@ -10,6 +10,7 @@ import NoResultDisplay from "../../components/NoResultDisplay";
 import {RiAddCircleFill, RiCloseCircleFill} from "react-icons/all";
 import {RiPlayCircleFill} from "react-icons/ri";
 import {dateShortFormatted, isSameDate, timeShortFormatted} from "../../utils/Date";
+import {Data} from "../../http/model/Data";
 
 export interface HomePageRow extends TableRow {
     id: string
@@ -40,7 +41,7 @@ export default function HomePage() {
 
     useEffect(() => {
         backend.getData().then(data => setRows(data.map(asHomePageRow)))
-    }, [backend])
+    })
 
     if (rows == null) {
         return <SpinnerCentered/>
@@ -68,12 +69,12 @@ export default function HomePage() {
     )
 }
 
-const asHomePageRow = (row: Data): HomePageRow => ({
-    id: row.id,
+const asHomePageRow = (data: Data): HomePageRow => ({
+    id: data.id,
     cells: [
-        statusCell(row.status),
-        companyCell(row.company),
-        timeCell(row.time)
+        statusCell(data.status),
+        companyCell(data.company),
+        timeCell(data.time)
     ],
 })
 

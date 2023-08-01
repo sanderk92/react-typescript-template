@@ -12,9 +12,10 @@ import {
     ModalOverlay,
     useToast,
 } from "@chakra-ui/react";
-import {Data, useBackend} from "../../http/BackendService";
+import {useBackend} from "../../http/BackendService";
 import * as React from "react";
 import {useState} from "react";
+import {Data} from "../../http/model/Data";
 
 export interface CreateDrawerProps {
     isOpen: boolean
@@ -25,7 +26,9 @@ export interface CreateDrawerProps {
 export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerProps) {
     const toast = useToast()
     const backend = useBackend()
+
     const [isCreating, setIsCreating] = useState(false)
+    const [companyInput, setCompanyInput] = useState("")
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -34,20 +37,20 @@ export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerPr
                 <ModalHeader>Create new</ModalHeader>
                 <ModalCloseButton/>
                 <ModalBody pb={6}>
-                    <FormControl>
-                        <FormLabel>First</FormLabel>
-                        <Input placeholder='First'/>
+                    <FormControl isRequired={true}>
+                        <FormLabel>Company name</FormLabel>
+                        <Input placeholder='Name' onChange={event => setCompanyInput(event.target.value)}/>
                     </FormControl>
                     <FormControl mt={4}>
-                        <FormLabel>Second</FormLabel>
-                        <Input placeholder='Second'/>
+                        <FormLabel>Test</FormLabel>
+                        <Input placeholder='Test' disabled={true}/>
                     </FormControl>
                     <FormControl mt={4}>
-                        <FormLabel>Third</FormLabel>
-                        <Input placeholder='Third'/>
+                        <FormLabel>Test</FormLabel>
+                        <Input placeholder='Test'  disabled={true}/>
                     </FormControl>
                     <ModalFooter>
-                        <Button ml={4} isLoading={isCreating} onClick={create}>Create</Button>
+                        <Button ml={4} isDisabled={companyInput.length === 0} isLoading={isCreating} onClick={create}>Create</Button>
                     </ModalFooter>
                 </ModalBody>
             </ModalContent>
@@ -56,7 +59,7 @@ export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerPr
 
     function create() {
         setIsCreating(true)
-        backend.createData()
+        backend.createData({company: companyInput})
             .then(row => onCreated(row))
             .then(_ => {toast({title: "Successfully created!", status: 'success', isClosable: true})})
             .catch(_ => toast({title: "Error creating.", status: 'error', isClosable: true}))
