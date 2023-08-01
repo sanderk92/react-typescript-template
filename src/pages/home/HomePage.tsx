@@ -62,7 +62,7 @@ const secondColumnWidth = "60"
 const thirdColumnWidth = "20"
 
 const tableHeader = () => [
-    {value: "status", width: firstColumnWidth},
+    {value: "", width: firstColumnWidth},
     {value: "title", width: secondColumnWidth},
     {value: "time", width: thirdColumnWidth}
 ];
