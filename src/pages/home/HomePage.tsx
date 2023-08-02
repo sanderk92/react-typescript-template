@@ -5,12 +5,11 @@ import {Route, Routes, useNavigate} from "react-router-dom";
 import {useBackend} from "../../http/BackendService";
 import DetailsDrawer from "./DetailsDrawer";
 import CreateModal from "./CreateModal";
-import SpinnerCentered from "../../components/SpinnerCentered";
-import NoResultDisplay from "../../components/NoResultDisplay";
 import {RiAddCircleFill, RiCloseCircleFill} from "react-icons/all";
 import {RiPlayCircleFill} from "react-icons/ri";
 import {dateShortFormatted, isSameDate, timeShortFormatted} from "../../utils/Date";
 import {Data} from "../../http/model/Data";
+import FiltersModal from "./FiltersModal";
 
 export default function HomePage() {
     const backend = useBackend()
@@ -18,7 +17,7 @@ export default function HomePage() {
 
     const [rows, setRows] = useState<Data[] | undefined>(undefined)
 
-    const navigateBack = () => {
+    const navigateBase = () => {
         navigate("/")
     }
 
@@ -30,6 +29,10 @@ export default function HomePage() {
         navigate("create")
     }
 
+    const navigateFilters = () => {
+        navigate("filters")
+    }
+
     useEffect(() => {
         backend.getData().then(data => setRows(data))
     })
@@ -39,15 +42,18 @@ export default function HomePage() {
             header={tableHeader()}
             onSelect={navigateDetails}
             onCreate={navigateCreate}
-            onFilter={() => {}}
+            onFilter={navigateFilters}
             rows={rows?.map(tableRow)}
         >
             <Routes>
                 <Route path=":id" element={
-                    <DetailsDrawer isOpen={true} onClose={navigateBack} input={rows!!}/>
+                    <DetailsDrawer isOpen={true} onClose={navigateBase} input={rows!!}/>
                 }/>
                 <Route path="create" element={
-                    <CreateModal isOpen={true} onClose={navigateBack} onCreated={data => {rows?.push(data); navigateBack()}}/>
+                    <CreateModal isOpen={true} onClose={navigateBase} onCreated={data => { rows?.push(data) }}/>
+                }/>
+                <Route path="filters" element={
+                    <FiltersModal isOpen={true} onClose={navigateBase}/>
                 }/>
             </Routes>
         </GenericTable>

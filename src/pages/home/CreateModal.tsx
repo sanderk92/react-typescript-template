@@ -21,7 +21,7 @@ export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerPr
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay/>
             <ModalContent>
-                <ModalHeader>Create new</ModalHeader>
+                <ModalHeader>Create</ModalHeader>
                 <ModalCloseButton/>
                 <ModalBody pb={6}>
                     <FormControl isRequired={true}>
@@ -47,7 +47,7 @@ export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerPr
     function create() {
         setIsCreating(true)
         backend.createData({company: companyInput})
-            .then(row => onCreated(row))
+            .then(row => {onCreated(row); onClose()})
             .then(_ => {toast({title: "Successfully created!", status: 'success', isClosable: true})})
             .catch(_ => toast({title: "Error creating.", status: 'error', isClosable: true}))
             .finally(() => setIsCreating(false))
