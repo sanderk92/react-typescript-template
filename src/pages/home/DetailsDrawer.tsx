@@ -22,16 +22,16 @@ export default function DetailsDrawer({isOpen, onClose, input}: DetailsDrawerPro
                 <DrawerHeader>Details</DrawerHeader>
                 <DrawerBody>
                     <FormControl >
-                        <FormLabel>First</FormLabel>
-                        <Input isDisabled={true} value={row.id} placeholder='First'/>
+                        <FormLabel>Id</FormLabel>
+                        <Input isDisabled={true} value={row.id} placeholder='Id'/>
                     </FormControl>
                     <FormControl mt={4}>
-                        <FormLabel>Second</FormLabel>
-                        <Input isDisabled={true} value={row.company} placeholder='Second'/>
+                        <FormLabel>Name</FormLabel>
+                        <Input isDisabled={true} value={row.company} placeholder='Name'/>
                     </FormControl>
                     <FormControl mt={4}>
-                        <FormLabel>Third</FormLabel>
-                        <Input isDisabled={true} value={row.status} placeholder='Third'/>
+                        <FormLabel>Time</FormLabel>
+                        <Input isDisabled={true} value={row.time.toLocaleString()} placeholder='Time'/>
                     </FormControl>
                 </DrawerBody>
                 <DrawerCloseButton/>

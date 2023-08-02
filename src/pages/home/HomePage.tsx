@@ -34,17 +34,14 @@ export default function HomePage() {
         backend.getData().then(data => setRows(data))
     })
 
-    if (rows == null) {
-        return <SpinnerCentered/>
-    } else if (rows?.length === 0) {
-        return <NoResultDisplay/>
-    } else return (
+    return (
         <GenericTable
             header={tableHeader()}
             onSelect={navigateDetails}
             onCreate={navigateCreate}
-            onFilter={navigateCreate}
-            rows={rows!!.map(tableRow)}>
+            onFilter={() => {}}
+            rows={rows?.map(tableRow)}
+        >
             <Routes>
                 <Route path=":id" element={
                     <DetailsDrawer isOpen={true} onClose={navigateBack} input={rows!!}/>
@@ -64,7 +61,7 @@ const thirdColumnWidth = "20"
 const tableHeader = () => ({
     cells: [
         {value: "", width: firstColumnWidth},
-        {value: "title", width: secondColumnWidth},
+        {value: "name", width: secondColumnWidth},
         {value: "time", width: thirdColumnWidth}
     ]
 });

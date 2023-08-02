@@ -4,6 +4,8 @@ import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '
 import "./components.css"
 import {RiFilterLine} from "react-icons/all";
 import { v4 as uuid } from 'uuid';
+import SpinnerCentered from "./SpinnerCentered";
+import NoResultDisplay from "./NoResultDisplay";
 
 export interface TableCell {
     value: ReactNode
@@ -27,7 +29,7 @@ export interface TableHeader {
 
 export interface TableComponentProps {
     header: TableHeader
-    rows: TableRow[]
+    rows: TableRow[] | undefined
     onSelect: (row: TableRow) => void
     onCreate?: () => void
     onFilter?: () => void
@@ -39,14 +41,6 @@ interface SortState {
     column: number
 }
 
-/**
- *  - Generic table with a dynamic number of columns of equal width with numerical and empty cell support
- *  - Searchable by all columns
- *  - Smart sort by all columns
- *  - Mandatory on select action
- *  - Optional on create action
- *  - Optional on filter action
- */
 export default function GenericTable({header, rows, onSelect, onCreate, onFilter, children}: TableComponentProps) {
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<SortState>({column: 0, direction: true})
@@ -59,14 +53,13 @@ export default function GenericTable({header, rows, onSelect, onCreate, onFilter
                 {onCreate ? <IconButton ml="4" icon={<AddIcon/>} aria-label={"create"} onClick={onCreate}/> : null}
             </Flex>
             <Divider/>
-            <Table variant='simple'>
-                <Thead>
-                    <TableHead header={header} sort={sort} setSort={setSort}/>
-                </Thead>
-                <Tbody>
-                    <TableRows rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/>
-                </Tbody>
-            </Table>
+            {
+                rows == null ? <SpinnerCentered/> : rows.length === 0 ? <NoResultDisplay/> :
+                    <Table variant='simple'>
+                        <Thead><TableHead header={header} sort={sort} setSort={setSort}/></Thead>
+                        <Tbody><TableRows rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/></Tbody>
+                    </Table>
+            }
             {children}
         </TableContainer>
     )
