@@ -65,7 +65,7 @@ const tableHeader = () => ({
     cells: [
         {value: "", width: firstColumnWidth},
         {value: "title", width: secondColumnWidth},
-        {value: "time", width: thirdColumnWidth, sortable: false}
+        {value: "time", width: thirdColumnWidth}
     ]
 });
 

@@ -3,6 +3,7 @@ import {Divider, Flex, Icon, IconButton, Input, InputGroup, InputLeftElement, In
 import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./components.css"
 import {RiFilterLine} from "react-icons/all";
+import { v4 as uuid } from 'uuid';
 
 export interface TableCell {
     value: ReactNode
@@ -100,7 +101,7 @@ const TableHead = ({header, sort, setSort}: {
     const activeColorScheme = useColorModeValue('gray.400', 'gray.600')
 
     return (
-        <Tr key={"header"}>
+        <Tr key={uuid()}>
             {header.cells.map((cell, index) =>
                 <Th
                     overflowX={"hidden"}
