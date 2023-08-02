@@ -45,7 +45,7 @@ export default function FiltersModal({isOpen, onClose}: FiltersDrawerProps) {
                         </Checkbox>
                     </FormControl>
                     <FormControl>
-                        <Checkbox m={2} size={"lg"}>
+                        <Checkbox m={2} size={"lg"} isChecked={true}>
                             <Flex>
                                 <RiCheckboxIndeterminateFill color={"red"}/>
                                 <Text m={1}>Cancelled</Text>
@@ -53,7 +53,7 @@ export default function FiltersModal({isOpen, onClose}: FiltersDrawerProps) {
                         </Checkbox>
                     </FormControl>
                     <FormControl>
-                        <Checkbox m={2} size={"lg"}>
+                        <Checkbox m={2} size={"lg"} isChecked={true}>
                             <Flex>
                                 <RiCheckboxFill color={"green"}></RiCheckboxFill>
                                 <Text m={1}>Completed</Text>
