@@ -40,7 +40,7 @@ export default function HomePage() {
         return <NoResultDisplay/>
     } else return (
         <GenericTable
-            headers={tableHeader()}
+            header={tableHeader()}
             onSelect={navigateDetails}
             onCreate={navigateCreate}
             onFilter={navigateCreate}
@@ -61,11 +61,13 @@ const firstColumnWidth = "20"
 const secondColumnWidth = "40"
 const thirdColumnWidth = "20"
 
-const tableHeader = () => [
-    {value: "", width: firstColumnWidth},
-    {value: "title", width: secondColumnWidth},
-    {value: "time", width: thirdColumnWidth}
-];
+const tableHeader = () => ({
+    cells: [
+        {value: "", width: firstColumnWidth},
+        {value: "title", width: secondColumnWidth},
+        {value: "time", width: thirdColumnWidth, sortable: false}
+    ]
+});
 
 const tableRow = (data: Data): TableRow => ({
     id: data.id,

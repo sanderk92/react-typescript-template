@@ -16,8 +16,16 @@ export interface TableRow {
     cells: TableCell[]
 }
 
+export interface TableHeaderCell extends TableCell {
+    sortable?: boolean,
+}
+
+export interface TableHeader {
+    cells: TableHeaderCell[]
+}
+
 export interface TableComponentProps {
-    headers: TableCell[]
+    header: TableHeader
     rows: TableRow[]
     onSelect: (row: TableRow) => void
     onCreate?: () => void
@@ -38,7 +46,7 @@ interface SortState {
  *  - Optional on create action
  *  - Optional on filter action
  */
-export default function GenericTable({headers, rows, onSelect, onCreate, onFilter, children}: TableComponentProps) {
+export default function GenericTable({header, rows, onSelect, onCreate, onFilter, children}: TableComponentProps) {
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<SortState>({column: 0, direction: true})
 
@@ -52,7 +60,7 @@ export default function GenericTable({headers, rows, onSelect, onCreate, onFilte
             <Divider/>
             <Table variant='simple'>
                 <Thead>
-                    <TableHeader headers={headers} sort={sort} setSort={setSort}/>
+                    <TableHead header={header} sort={sort} setSort={setSort}/>
                 </Thead>
                 <Tbody>
                     <TableRows rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/>
@@ -82,8 +90,8 @@ const SearchField = ({search, onSearch}: {
     )
 }
 
-const TableHeader = ({headers, sort, setSort}: {
-    headers: TableCell[]
+const TableHead = ({header, sort, setSort}: {
+    header: TableHeader
     sort: SortState
     setSort: (sort: SortState) => void
 }) => {
@@ -93,18 +101,17 @@ const TableHeader = ({headers, sort, setSort}: {
 
     return (
         <Tr key={"header"}>
-            {headers.map((cell, index) =>
-                <Th className={"unselectable clickable"}
-                    key={`header-${index}`}
-                    maxWidth={cell.width}
+            {header.cells.map((cell, index) =>
+                <Th
                     overflowX={"hidden"}
+                    maxWidth={cell.width}
                     isNumeric={cell.numerical}
                     bg={backgroundColorScheme}
-                    _hover={{background: hoverColorScheme}}
-                    _active={{background: activeColorScheme}}
-                    onClick={() => {
-                        setSort({direction: !sort.direction, column: index})
-                    }}>
+                    className={ isSortable(cell) ? "unselectable clickable" : "unselectable" }
+                    _hover={ isSortable(cell) ? {background: hoverColorScheme} : {backgroundColorScheme}}
+                    _active={ isSortable(cell) ? {background: activeColorScheme} : {backgroundColorScheme}}
+                    onClick={() => {if (isSortable(cell)) setSort({direction: !sort.direction, column: index})}}
+                >
                     <Flex
                         display={"flex"}
                         justifyContent={"space-between"}>
@@ -118,6 +125,10 @@ const TableHeader = ({headers, sort, setSort}: {
 
     function sortIcon() {
         return sort.direction ? <TriangleUpIcon/> : <TriangleDownIcon/>;
+    }
+
+    function isSortable(cell: TableHeaderCell): boolean {
+        return cell?.sortable ?? true
     }
 }
 
