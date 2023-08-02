@@ -5,8 +5,8 @@ import {Route, Routes, useNavigate} from "react-router-dom";
 import {useBackend} from "../../http/BackendService";
 import DetailsDrawer from "./DetailsDrawer";
 import CreateModal from "./CreateModal";
-import {RiAddCircleFill, RiCloseCircleFill} from "react-icons/all";
-import {RiPlayCircleFill} from "react-icons/ri";
+import {RiAddCircleFill, RiCheckboxFill} from "react-icons/all";
+import {RiCheckboxIndeterminateFill, RiPlayCircleFill} from "react-icons/ri";
 import {dateShortFormatted, isSameDate, timeShortFormatted} from "../../utils/Date";
 import {Data} from "../../http/model/Data";
 import FiltersModal from "./FiltersModal";
@@ -83,13 +83,13 @@ const tableRow = (data: Data): TableRow => ({
 
 const statusCell = (status: 'open' | 'running' | 'cancelled' | 'finished'): TableCell => {
     if (status === 'open') {
-        return {sortValue: 0, width: firstColumnWidth, value: <RiAddCircleFill color={"green"}/>}
+        return {sortValue: 0, width: firstColumnWidth, value: <RiAddCircleFill color={"orange"}/>}
     } else if (status === 'running') {
         return {sortValue: 1, width: firstColumnWidth, value: <RiPlayCircleFill color={"dodgerblue"}/>}
     } else if (status === 'cancelled') {
-        return {sortValue: 2, width: firstColumnWidth, value: <RiCloseCircleFill color={"red"}/>}
+        return {sortValue: 2, width: firstColumnWidth, value: <RiCheckboxIndeterminateFill color={"red"}/>}
     } else {
-        return {sortValue: 3, width: firstColumnWidth, value: <RiCloseCircleFill color={"grey"}/>}
+        return {sortValue: 3, width: firstColumnWidth, value: <RiCheckboxFill color={"green"}/>}
     }
 }
 
