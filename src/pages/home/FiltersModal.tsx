@@ -1,5 +1,19 @@
-import {Checkbox, FormControl, Text, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay,} from "@chakra-ui/react";
+import {
+    Checkbox,
+    FormControl,
+    Text,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalHeader,
+    ModalOverlay,
+    Box, Flex, Divider,
+} from "@chakra-ui/react";
 import * as React from "react";
+import {TableCell} from "../../components/GenericTable";
+import {RiAddCircleFill, RiCloseCircleFill} from "react-icons/all";
+import {RiPlayCircleFill} from "react-icons/ri";
 
 export interface FiltersDrawerProps {
     isOpen: boolean
@@ -16,16 +30,36 @@ export default function FiltersModal({isOpen, onClose}: FiltersDrawerProps) {
                 <ModalBody pb={6}>
                     <Text as={"b"}>Status</Text>
                     <FormControl>
-                        <Checkbox m={2} size={"lg"}>Open</Checkbox>
+                        <Checkbox m={2} size={"lg"}>
+                            <Flex>
+                                <RiAddCircleFill color={"green"}/>
+                                <Text m={1}>Open</Text>
+                            </Flex>
+                        </Checkbox>
                     </FormControl>
                     <FormControl>
-                        <Checkbox m={2} size={"lg"}>Running</Checkbox>
+                        <Checkbox m={2} size={"lg"}>
+                            <Flex>
+                                <RiPlayCircleFill color={"dodgerblue"}/>
+                                <Text m={1}>Running</Text>
+                            </Flex>
+                        </Checkbox>
                     </FormControl>
                     <FormControl>
-                        <Checkbox m={2} size={"lg"}>Cancelled</Checkbox>
+                        <Checkbox m={2} size={"lg"}>
+                            <Flex>
+                                <RiCloseCircleFill color={"red"}/>
+                                <Text m={1}>Cancelled</Text>
+                            </Flex>
+                        </Checkbox>
                     </FormControl>
                     <FormControl>
-                        <Checkbox m={2} size={"lg"}>Finished</Checkbox>
+                        <Checkbox m={2} size={"lg"}>
+                            <Flex>
+                                <RiCloseCircleFill color={"grey"}></RiCloseCircleFill>
+                                <Text m={1}>Cancelled</Text>
+                            </Flex>
+                        </Checkbox>
                     </FormControl>
                 </ModalBody>
             </ModalContent>
