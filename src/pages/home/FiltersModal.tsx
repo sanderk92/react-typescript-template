@@ -31,7 +31,7 @@ export default function FiltersModal({isOpen, onClose}: FiltersDrawerProps) {
                     <FormControl>
                         <Checkbox m={2} size={"lg"} isChecked={true}>
                             <Flex>
-                                <RiAddCircleFill color={"orange"}/>
+                                <RiAddCircleFill color={"green"}/>
                                 <Text m={1}>Open</Text>
                             </Flex>
                         </Checkbox>
@@ -55,7 +55,7 @@ export default function FiltersModal({isOpen, onClose}: FiltersDrawerProps) {
                     <FormControl>
                         <Checkbox m={2} size={"lg"} isChecked={true}>
                             <Flex>
-                                <RiCheckboxFill color={"green"}></RiCheckboxFill>
+                                <RiCheckboxFill color={"grey"}></RiCheckboxFill>
                                 <Text m={1}>Completed</Text>
                             </Flex>
                         </Checkbox>
