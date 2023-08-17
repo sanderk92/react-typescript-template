@@ -1,8 +1,7 @@
 import React, {ReactNode, useState} from 'react';
-import {Divider, Flex, Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
-import {AddIcon, CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
+import {Flex, Icon, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
+import {CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./components.css"
-import {RiFilterLine} from "react-icons/all";
 import { v4 as uuid } from 'uuid';
 import SpinnerCentered from "./SpinnerCentered";
 import NoResultDisplay from "./NoResultDisplay";
@@ -31,9 +30,6 @@ export interface TableComponentProps {
     header: TableHeader
     rows: TableRow[] | undefined
     onSelect: (row: TableRow) => void
-    onCreate?: () => void
-    onFilter?: () => void
-    children: React.JSX.Element
 }
 
 interface SortState {
@@ -41,28 +37,18 @@ interface SortState {
     column: number
 }
 
-export default function GenericTable({header, rows, onSelect, onCreate, onFilter, children}: TableComponentProps) {
+export default function GenericTable({header, rows, onSelect}: TableComponentProps) {
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<SortState>({column: 0, direction: true})
 
-    return (
-        <TableContainer p="4">
-            <Flex pr="2" pb="4" alignItems={"flex-end"} justifyContent={"flex-end"}>
-                <SearchField search={search} onSearch={(query) => setSearch(query)}/>
-                {onFilter ? <IconButton ml="4" icon={<RiFilterLine/>} aria-label={"filter"} onClick={onFilter}/> : null}
-                {onCreate ? <IconButton ml="4" icon={<AddIcon/>} aria-label={"create"} onClick={onCreate}/> : null}
-            </Flex>
-            <Divider/>
-            {
-                rows == null ? <SpinnerCentered/> : rows.length === 0 ? <NoResultDisplay/> :
-                    <Table variant='simple'>
-                        <Thead><TableHead header={header} sort={sort} setSort={setSort}/></Thead>
-                        <Tbody><TableRows rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/></Tbody>
-                    </Table>
-            }
-            {children}
+    return rows == null ? <SpinnerCentered/> : rows.length === 0 ? <NoResultDisplay/> :
+        <TableContainer p="2">
+            <SearchField search={search} onSearch={setSearch}/>
+            <Table variant='simple'>
+                <Thead><TableHead header={header} sort={sort} setSort={setSort}/></Thead>
+                <Tbody><TableRows rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/></Tbody>
+            </Table>
         </TableContainer>
-    )
 }
 
 const SearchField = ({search, onSearch}: {
@@ -72,7 +58,7 @@ const SearchField = ({search, onSearch}: {
     const colorScheme = useColorModeValue('white', 'gray.900')
 
     return (
-        <InputGroup size='md' width={"100%"}>
+        <InputGroup pb="2" size='md' width={"100%"}>
             <InputLeftElement>
                 <SearchIcon/>
             </InputLeftElement>

@@ -5,54 +5,38 @@ import {Route, Routes, useNavigate} from "react-router-dom";
 import {useBackend} from "../../http/BackendService";
 import DetailsDrawer from "./DetailsDrawer";
 import CreateModal from "./CreateModal";
-import {
-    BsAlarm, BsAlarmFill,
-    BsInbox,
-    BsInboxFill,
-    RiAddCircleFill,
-    RiCheckboxFill,
-    RiEditCircleFill,
-    RiLoginCircleFill
-} from "react-icons/all";
-import {RiCheckboxIndeterminateFill, RiPlayCircleFill} from "react-icons/ri";
+import {RiAddCircleFill, RiAddLine, RiCheckboxCircleFill, RiCloseCircleFill, RiFilterLine, RiRefreshLine} from "react-icons/all";
+import {RiPlayCircleFill} from "react-icons/ri";
 import {dateShortFormatted, isSameDate, timeShortFormatted} from "../../utils/Date";
 import {Data} from "../../http/model/Data";
 import FiltersModal from "./FiltersModal";
+import {Box, Flex, IconButton} from "@chakra-ui/react";
 
 export default function HomePage() {
+    const [rows, setRows] = useState<Data[] | undefined>(undefined)
+    const [refresh, setRefreshing] = useState(false)
+
     const backend = useBackend()
     const navigate = useNavigate()
 
-    const [rows, setRows] = useState<Data[] | undefined>(undefined)
-
-    const navigateBase = () => {
-        navigate("/")
-    }
-
-    const navigateDetails = (row: TableRow) => {
-        navigate(row.id)
-    }
-
-    const navigateCreate = () => {
-        navigate("create")
-    }
-
-    const navigateFilters = () => {
-        navigate("filters")
-    }
+    const navigateBase = () => navigate("/")
+    const navigateCreate = () => navigate("create")
+    const navigateFilters = () => navigate("filters")
+    const navigateDetails = (row: TableRow) => navigate(row.id)
 
     useEffect(() => {
-        backend.getData().then(data => setRows(data))
-    })
+        setRows(undefined)
+        backend.getData().then(setRows)
+    }, [refresh])
 
     return (
-        <GenericTable
-            header={tableHeader()}
-            onSelect={navigateDetails}
-            onCreate={navigateCreate}
-            onFilter={navigateFilters}
-            rows={rows?.map(tableRow)}
-        >
+        <Box>
+            <Flex pt="2" alignItems={"flex-end"} justifyContent={"flex-end"}>
+                <IconButton mr="2" icon={<RiRefreshLine/>} aria-label={"refresh"} onClick={() => setRefreshing(!refresh)}/>
+                <IconButton mr="2" icon={<RiFilterLine/>} aria-label={"filter"} onClick={navigateFilters}/>
+                <IconButton mr="2" icon={<RiAddLine/>} aria-label={"create"} onClick={navigateCreate}/>
+            </Flex>
+            <GenericTable header={tableHeader()} onSelect={navigateDetails} rows={rows?.map(tableRow)}/>
             <Routes>
                 <Route path=":id" element={
                     <DetailsDrawer isOpen={true} onClose={navigateBase} input={rows!!}/>
@@ -64,7 +48,7 @@ export default function HomePage() {
                     <FiltersModal isOpen={true} onClose={navigateBase}/>
                 }/>
             </Routes>
-        </GenericTable>
+        </Box>
     )
 }
 
@@ -76,7 +60,7 @@ const tableHeader = () => ({
     cells: [
         {value: "", width: firstColumnWidth},
         {value: "name", width: secondColumnWidth},
-        {value: "time", width: thirdColumnWidth}
+        {value: "time", width: thirdColumnWidth},
     ]
 });
 
@@ -85,7 +69,7 @@ const tableRow = (data: Data): TableRow => ({
     cells: [
         statusCell(data.status),
         companyCell(data.company),
-        timeCell(data.time)
+        timeCell(data.time),
     ],
 })
 
@@ -95,9 +79,9 @@ const statusCell = (status: 'open' | 'running' | 'cancelled' | 'finished'): Tabl
     } else if (status === 'running') {
         return {sortValue: 1, width: firstColumnWidth, value: <RiPlayCircleFill color={"dodgerblue"}/>}
     } else if (status === 'cancelled') {
-        return {sortValue: 2, width: firstColumnWidth, value: <RiCheckboxIndeterminateFill color={"red"}/>}
+        return {sortValue: 2, width: firstColumnWidth, value: <RiCloseCircleFill color={"red"}/>}
     } else {
-        return {sortValue: 3, width: firstColumnWidth, value: <RiCheckboxFill color={"grey"}/>}
+        return {sortValue: 3, width: firstColumnWidth, value: <RiCheckboxCircleFill color={"grey"}/>}
     }
 }
 
@@ -105,7 +89,7 @@ const companyCell = (name: string): TableCell => {
     return {
         sortValue: name,
         width: secondColumnWidth,
-        value: name
+        value: name,
     }
 }
 
@@ -114,6 +98,6 @@ const timeCell = (date: Date): TableCell => {
         sortValue: date.getTime(),
         width: thirdColumnWidth,
         numerical: true,
-        value: isSameDate(new Date(), date) ? timeShortFormatted(date) : dateShortFormatted(date)
+        value: isSameDate(new Date(), date) ? timeShortFormatted(date) : dateShortFormatted(date),
     }
 }
