@@ -2,12 +2,12 @@ import {Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButto
 import {useBackend} from "../../http/BackendService";
 import * as React from "react";
 import {useState} from "react";
-import {Data} from "../../http/model/Data";
+import {DataView} from "../../http/model/DataView";
 
 export interface CreateDrawerProps {
     isOpen: boolean
     onClose: () => void
-    onCreated: (data: Data) => void
+    onCreated: (data: DataView) => void
 }
 
 export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerProps) {

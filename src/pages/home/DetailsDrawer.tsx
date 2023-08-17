@@ -1,12 +1,12 @@
 import {useParams} from "react-router-dom";
 import {Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, FormControl, FormLabel, Input} from "@chakra-ui/react";
 import * as React from "react";
-import {Data} from "../../http/model/Data";
+import {DataView} from "../../http/model/DataView";
 
 export interface DetailsDrawerProps {
     isOpen: boolean
     onClose: () => void
-    input: Data[]
+    input: DataView[]
 }
 
 export default function DetailsDrawer({isOpen, onClose, input}: DetailsDrawerProps) {

@@ -5,15 +5,31 @@ import {Route, Routes, useNavigate} from "react-router-dom";
 import {useBackend} from "../../http/BackendService";
 import DetailsDrawer from "./DetailsDrawer";
 import CreateModal from "./CreateModal";
-import {RiAddCircleFill, RiAddLine, RiCheckboxCircleFill, RiCloseCircleFill, RiFilterLine, RiRefreshLine} from "react-icons/all";
+import {
+    RiAddCircleFill,
+    RiAddLine,
+    RiCheckboxCircleFill,
+    RiCloseCircleFill,
+    RiFilterLine,
+    RiRefreshLine
+} from "react-icons/all";
 import {RiPlayCircleFill} from "react-icons/ri";
 import {dateShortFormatted, isSameDate, timeShortFormatted} from "../../utils/Date";
-import {Data} from "../../http/model/Data";
+import {DataStatus, DataView} from "../../http/model/DataView";
 import FiltersModal from "./FiltersModal";
 import {Box, Flex, IconButton} from "@chakra-ui/react";
 
+export interface HomeFilter {
+    status: DataStatus[]
+}
+
+const defaultHomeFilter : HomeFilter = {
+    status: [DataStatus.open, DataStatus.running]
+}
+
 export default function HomePage() {
-    const [rows, setRows] = useState<Data[] | undefined>(undefined)
+    const [rows, setRows] = useState<DataView[] | undefined>(undefined)
+    const [filter, setFilter] = useState<HomeFilter>(defaultHomeFilter)
     const [refresh, setRefreshing] = useState(false)
 
     const backend = useBackend()
@@ -26,8 +42,8 @@ export default function HomePage() {
 
     useEffect(() => {
         setRows(undefined)
-        backend.getData().then(setRows)
-    }, [refresh])
+        backend.getData(filter.status).then(setRows)
+    }, [refresh, filter])
 
     return (
         <Box>
@@ -45,7 +61,7 @@ export default function HomePage() {
                     <CreateModal isOpen={true} onClose={navigateBase} onCreated={data => { rows?.push(data) }}/>
                 }/>
                 <Route path="filters" element={
-                    <FiltersModal isOpen={true} onClose={navigateBase}/>
+                    <FiltersModal isOpen={true} onClose={navigateBase} filter={filter} setFilter={setFilter}/>
                 }/>
             </Routes>
         </Box>
@@ -64,7 +80,7 @@ const tableHeader = () => ({
     ]
 });
 
-const tableRow = (data: Data): TableRow => ({
+const tableRow = (data: DataView): TableRow => ({
     id: data.id,
     cells: [
         statusCell(data.status),
@@ -73,12 +89,12 @@ const tableRow = (data: Data): TableRow => ({
     ],
 })
 
-const statusCell = (status: 'open' | 'running' | 'cancelled' | 'finished'): TableCell => {
-    if (status === 'open') {
+const statusCell = (status: DataStatus): TableCell => {
+    if (status === DataStatus.open) {
         return {sortValue: 0, width: firstColumnWidth, value: <RiAddCircleFill color={"green"}/>}
-    } else if (status === 'running') {
+    } else if (status === DataStatus.running) {
         return {sortValue: 1, width: firstColumnWidth, value: <RiPlayCircleFill color={"dodgerblue"}/>}
-    } else if (status === 'cancelled') {
+    } else if (status === DataStatus.cancelled) {
         return {sortValue: 2, width: firstColumnWidth, value: <RiCloseCircleFill color={"red"}/>}
     } else {
         return {sortValue: 3, width: firstColumnWidth, value: <RiCheckboxCircleFill color={"grey"}/>}
