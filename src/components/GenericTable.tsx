@@ -45,8 +45,8 @@ export default function GenericTable({header, rows, onSelect}: TableComponentPro
         <TableContainer p="2">
             <SearchField search={search} onSearch={setSearch}/>
             <Table variant='simple'>
-                <Thead><TableHead header={header} sort={sort} setSort={setSort}/></Thead>
-                <Tbody><TableRows rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/></Tbody>
+                <TableHead header={header} sort={sort} setSort={setSort}/>
+                <TableRows rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/>
             </Table>
         </TableContainer>
 }
@@ -80,27 +80,29 @@ const TableHead = ({header, sort, setSort}: {
     const activeColorScheme = useColorModeValue('gray.400', 'gray.600')
 
     return (
-        <Tr key={uuid()}>
-            {header.cells.map((cell, index) =>
-                <Th
-                    overflowX={"hidden"}
-                    maxWidth={cell.width}
-                    isNumeric={cell.numerical}
-                    bg={backgroundColorScheme}
-                    className={ isSortable(cell) ? "unselectable clickable" : "unselectable" }
-                    _hover={ isSortable(cell) ? {background: hoverColorScheme} : {backgroundColorScheme}}
-                    _active={ isSortable(cell) ? {background: activeColorScheme} : {backgroundColorScheme}}
-                    onClick={() => {if (isSortable(cell)) setSort({direction: !sort.direction, column: index})}}
-                >
-                    <Flex
-                        display={"flex"}
-                        justifyContent={"space-between"}>
-                        {cell.value}
-                        {sort.column === index ? sortIcon() : <Icon visibility={"hidden"}/>}
-                    </Flex>
-                </Th>
-            )}
-        </Tr>
+        <Thead>
+            <Tr key={uuid()}>
+                {header.cells.map((cell, index) =>
+                    <Th
+                        overflowX={"hidden"}
+                        maxWidth={cell.width}
+                        isNumeric={cell.numerical}
+                        bg={backgroundColorScheme}
+                        className={ isSortable(cell) ? "unselectable clickable" : "unselectable" }
+                        _hover={ isSortable(cell) ? {background: hoverColorScheme} : {backgroundColorScheme}}
+                        _active={ isSortable(cell) ? {background: activeColorScheme} : {backgroundColorScheme}}
+                        onClick={() => {if (isSortable(cell)) setSort({direction: !sort.direction, column: index})}}
+                    >
+                        <Flex
+                            display={"flex"}
+                            justifyContent={"space-between"}>
+                            {cell.value}
+                            {sort.column === index ? sortIcon() : <Icon visibility={"hidden"}/>}
+                        </Flex>
+                    </Th>
+                )}
+            </Tr>
+        </Thead>
     )
 
     function sortIcon() {
@@ -119,7 +121,8 @@ const TableRows = ({rows, onSelect}: {
     const hoverColorScheme = useColorModeValue('gray.100', 'gray.700')
     const activeColorScheme = useColorModeValue('gray.200', 'gray.600')
 
-    return <>{
+    return (
+        <Tbody>{
             rows.map(row =>
                 <Tr
                     key={row.id}
@@ -140,7 +143,8 @@ const TableRows = ({rows, onSelect}: {
                     )}
                 </Tr>
             )
-    }</>
+        }</Tbody>
+    )
 }
 
 function filterAndSort(rows: TableRow[], search: string, sort: SortState) {
