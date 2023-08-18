@@ -3,17 +3,17 @@ import * as React from "react";
 import {useState} from "react";
 import {RiAddCircleFill} from "react-icons/all";
 import {RiCheckboxCircleFill, RiCloseCircleFill, RiPlayCircleFill} from "react-icons/ri";
-import {HomeFilter} from "./HomePage";
+import {InboxFilter} from "./Inbox";
 import {DataStatus} from "../../http/model/Data";
 
 export interface FiltersDrawerProps {
     isOpen: boolean
     onClose: () => void
-    filter: HomeFilter,
-    setFilter: (filter: HomeFilter) => void
+    filter: InboxFilter,
+    setFilter: (filter: InboxFilter) => void
 }
 
-export default function FiltersModal({isOpen, onClose, filter, setFilter}: FiltersDrawerProps) {
+export default function InboxFiltersModal({isOpen, onClose, filter, setFilter}: FiltersDrawerProps) {
     const [open, setOpen] = useState(filter.status.includes(DataStatus.open))
     const [running, setRunning] = useState(filter.status.includes(DataStatus.running))
     const [cancelled, setCancelled] = useState(filter.status.includes(DataStatus.cancelled))

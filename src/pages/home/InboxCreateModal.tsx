@@ -10,7 +10,7 @@ export interface CreateDrawerProps {
     onCreated: (data: DataView) => void
 }
 
-export default function CreateModal({isOpen, onClose, onCreated}: CreateDrawerProps) {
+export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDrawerProps) {
     const toast = useToast()
     const backend = useBackend()
 

@@ -1,10 +1,27 @@
 import React, {ReactNode, useState} from 'react';
-import {Box, Divider, Flex, Icon, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
+import {
+    Box,
+    Flex,
+    Icon,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    InputRightElement,
+    Table,
+    TableContainer,
+    Tbody,
+    Td,
+    Text,
+    Th,
+    Thead,
+    Tr,
+    useColorModeValue
+} from '@chakra-ui/react';
 import {CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./components.css"
 import { v4 as uuid } from 'uuid';
 import SpinnerCentered from "./SpinnerCentered";
-import NoResultDisplay from "./NoResultDisplay";
+import EmptyResultDisplay from "./EmptyResultDisplay";
 
 export interface TableCell {
     value: ReactNode
@@ -30,7 +47,7 @@ export interface TableComponentProps {
     header: TableHeader
     rows: TableRow[] | undefined
     onSelect: (row: TableRow) => void
-    children?: React.JSX.Element
+    buttons?: React.JSX.Element
 }
 
 interface SortState {
@@ -38,15 +55,15 @@ interface SortState {
     column: number
 }
 
-export default function GenericTable({header, rows, onSelect, children}: TableComponentProps) {
+export default function SortAndSearchTable({header, rows, onSelect, buttons}: TableComponentProps) {
     const [search, setSearch] = useState<string>('')
-    const [sort, setSort] = useState<SortState>({column: 0, direction: true})
+    const [sort, setSort] = useState<SortState>({column: 0, direction: false})
 
-    return rows == null ? <SpinnerCentered/> : rows.length === 0 ? <NoResultDisplay/> :
+    return rows == null ? <SpinnerCentered/> : rows.length === 0 ? <EmptyResultDisplay/> :
         <TableContainer>
             <Flex justifyContent={"flex-end"}>
                 <Box m={"2"}><SearchField search={search} onSearch={setSearch}/></Box>
-                <Box m={"2"}>{children}</Box>
+                <Box m={"2"}>{buttons}</Box>
             </Flex>
             <Table variant='simple'>
                 <TableHead header={header} sort={sort} setSort={setSort}/>
@@ -85,9 +102,10 @@ const TableHead = ({header, sort, setSort}: {
 
     return (
         <Thead>
-            <Tr key={uuid()}>
+            <Tr>
                 {header.cells.map((cell, index) =>
                     <Th
+                        key={uuid()}
                         overflowX={"hidden"}
                         maxWidth={cell.width}
                         isNumeric={cell.numerical}

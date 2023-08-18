@@ -7,14 +7,13 @@ import {useEffect} from "react";
 
 export interface BackendProps {
     getUserDetails(): Promise<UserDetails>
-    getData(state: DataStatus[]): Promise<DataView[]>
+    getData(id: String): Promise<DataView | undefined>
+    queryData(state: DataStatus[]): Promise<DataView[]>
     createData(entry: DataEntry): Promise<DataView>
 }
 
 export const useBackend = (): BackendProps => {
-
     const auth = useAuthService()
-
     const backendUrl : string = window.location.protocol + "//" + window.location.host
 
     useEffect(() => {
@@ -28,9 +27,13 @@ export const useBackend = (): BackendProps => {
         axios.get<UserDetails>(backendUrl + "/user")
             .then(result => result.data)
 
-    const getData = (status: DataStatus[]): Promise<DataView[]> =>
+    const getData = (id: String): Promise<DataView | undefined> =>
         new Promise(resolve => setTimeout(resolve, 2000))
-            .then(_ => homePageRows)
+            .then(_ => inboxRow.find(row => row.id === id))
+
+    const queryData = (status: DataStatus[]): Promise<DataView[]> =>
+        new Promise(resolve => setTimeout(resolve, 2000))
+            .then(_ => inboxRow)
             .then(rows => rows.filter(row => status.includes(row.status)))
 
     const createData = (entry: DataEntry): Promise<DataView> =>
@@ -39,18 +42,19 @@ export const useBackend = (): BackendProps => {
 
     return {
         getUserDetails,
-        getData: getData,
-        createData: createData,
+        getData,
+        queryData,
+        createData,
     }
 }
 
 export default useBackend
 
-const homePageRows : DataView[] = [
-    {id: uuid(), status: DataStatus.open, company: 'Pikobello B.V.', time: new Date()},
-    {id: uuid(), status: DataStatus.open, company: 'Bandel B.V.', time: new Date(2023, 4, 4, 10, 0, 0)},
-    {id: uuid(), status: DataStatus.running, company: 'Jantje B.V.', time: new Date(2023, 4, 4, 9, 0, 0)},
-    {id: uuid(), status: DataStatus.running, company: 'Oke B.V.', time: new Date(2023, 4, 3, 10, 0, 0)},
-    {id: uuid(), status: DataStatus.cancelled, company: 'Altijd optijd B.V.', time: new Date(2023, 4, 3, 10, 15, 0)},
-    {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
+const inboxRow : DataView[] = [
+    {id: "25c83a41-4918-46bf-9f20-4f15f1651a17", status: DataStatus.open, company: 'Pikobello B.V.', time: new Date()},
+    {id: "f111ad08-1b28-4862-ba7a-3296859de416", status: DataStatus.open, company: 'Bandel B.V.', time: new Date(2023, 4, 4, 10, 0, 0)},
+    {id: "ca299b6b-8ac0-4614-a32d-6167f1299e69", status: DataStatus.running, company: 'Jantje B.V.', time: new Date(2023, 4, 4, 9, 0, 0)},
+    {id: "f1f153a9-d46e-409b-a7e4-576bae900b9d", status: DataStatus.running, company: 'Oke B.V.', time: new Date(2023, 4, 3, 10, 0, 0)},
+    {id: "abe4deea-ff10-4668-9b8c-7ee8e9d9117c", status: DataStatus.cancelled, company: 'Altijd optijd B.V.', time: new Date(2023, 4, 3, 10, 15, 0)},
+    {id: "5684af58-469e-4b29-98e4-1ec22c9eeda1", status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
 ]
