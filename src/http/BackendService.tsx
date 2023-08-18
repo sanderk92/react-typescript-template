@@ -53,5 +53,15 @@ const homePageRows : DataView[] = [
     {id: uuid(), status: DataStatus.running, company: 'Oke B.V.', time: new Date(2023, 4, 3, 10, 0, 0)},
     {id: uuid(), status: DataStatus.cancelled, company: 'Altijd optijd B.V.', time: new Date(2023, 4, 3, 10, 15, 0)},
     {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
-    {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 2, 2, 10, 0, 0)}
+    // {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
+    // {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
+    // {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
+    // {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
+    // {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
+    // {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
+    // {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
+    // {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
+    // {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
+    // {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 3, 2, 10, 0, 0)},
+    // {id: uuid(), status: DataStatus.finished, company: 'Minder B.V.', time: new Date(2023, 2, 2, 10, 0, 0)}
 ]

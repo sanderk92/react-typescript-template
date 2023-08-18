@@ -1,5 +1,5 @@
 import React, {ReactNode, useState} from 'react';
-import {Flex, Icon, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
+import {Box, Divider, Flex, Icon, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
 import {CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./components.css"
 import { v4 as uuid } from 'uuid';
@@ -30,6 +30,7 @@ export interface TableComponentProps {
     header: TableHeader
     rows: TableRow[] | undefined
     onSelect: (row: TableRow) => void
+    children?: React.JSX.Element
 }
 
 interface SortState {
@@ -37,17 +38,18 @@ interface SortState {
     column: number
 }
 
-export default function GenericTable({header, rows, onSelect}: TableComponentProps) {
+export default function GenericTable({header, rows, onSelect, children}: TableComponentProps) {
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<SortState>({column: 0, direction: true})
 
     return rows == null ? <SpinnerCentered/> : rows.length === 0 ? <NoResultDisplay/> :
-        <TableContainer p="2">
-            <SearchField search={search} onSearch={setSearch}/>
-            <Table variant='simple'>
-                <TableHead header={header} sort={sort} setSort={setSort}/>
-                <TableRows rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/>
-            </Table>
+        <TableContainer>
+                <Table variant='simple'>
+                    <TableHead header={header} sort={sort} setSort={setSort}/>
+                    <TableBody rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/>
+                </Table>
+                <SearchField search={search} onSearch={setSearch}/>
+                {children}
         </TableContainer>
 }
 
@@ -58,15 +60,18 @@ const SearchField = ({search, onSearch}: {
     const colorScheme = useColorModeValue('white', 'gray.900')
 
     return (
-        <InputGroup pb="2" size='md' width={"100%"}>
-            <InputLeftElement>
-                <SearchIcon/>
-            </InputLeftElement>
-            <Input bg={colorScheme} value={search} onChange={event => onSearch(event.target.value)}/>
-            <InputRightElement>
-                <CloseIcon className={"clickable"} background={colorScheme} onClick={() => onSearch("")}/>
-            </InputRightElement>
-        </InputGroup>
+        <Flex pt="2" justifyContent={"right"} >
+            <InputGroup width={"100%"} size='md'>
+                <InputLeftElement>
+                    <SearchIcon/>
+                </InputLeftElement>
+                <Input bg={colorScheme} value={search} onChange={event => onSearch(event.target.value)} placeholder={"Search"}/>
+                <InputRightElement>
+                    <CloseIcon className={"clickable"} background={colorScheme} onClick={() => onSearch("")}/>
+                </InputRightElement>
+            </InputGroup>
+        </Flex>
+
     )
 }
 
@@ -114,7 +119,7 @@ const TableHead = ({header, sort, setSort}: {
     }
 }
 
-const TableRows = ({rows, onSelect}: {
+const TableBody = ({rows, onSelect}: {
     rows: TableRow[]
     onSelect: (row: TableRow) => void
 }) => {

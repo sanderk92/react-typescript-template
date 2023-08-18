@@ -10,7 +10,7 @@ import {RiPlayCircleFill} from "react-icons/ri";
 import {dateShortFormatted, isSameDate, timeShortFormatted} from "../../utils/Date";
 import {DataStatus, DataView} from "../../http/model/Data";
 import FiltersModal from "./FiltersModal";
-import {Box, Flex, IconButton} from "@chakra-ui/react";
+import {Box, Divider, Flex, IconButton, Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react";
 
 export interface HomeFilter {
     status: DataStatus[]
@@ -41,23 +41,43 @@ export default function HomePage() {
 
     return (
         <Box>
-            <Flex pt="2" alignItems={"flex-end"} justifyContent={"flex-end"}>
-                <IconButton mr="2" icon={<RiAddLine/>} aria-label={"create"} onClick={navigateCreate}/>
-                <IconButton mr="2" icon={<RiFilterLine/>} aria-label={"filter"} onClick={navigateFilters}/>
-                <IconButton mr="2" icon={<RiRefreshLine/>} aria-label={"refresh"} onClick={() => setRefreshing(!refresh)}/>
-            </Flex>
-            <GenericTable header={tableHeader()} onSelect={navigateDetails} rows={rows?.map(tableRow)}/>
-            <Routes>
-                <Route path=":id" element={
-                    <DetailsDrawer isOpen={true} onClose={navigateBase} input={rows!!}/>
-                }/>
-                <Route path="create" element={
-                    <CreateModal isOpen={true} onClose={navigateBase} onCreated={data => { rows?.push(data) }}/>
-                }/>
-                <Route path="filters" element={
-                    <FiltersModal isOpen={true} onClose={navigateBase} filter={filter} setFilter={setFilter}/>
-                }/>
-            </Routes>
+            <Tabs isFitted variant='enclosed' >
+                <TabList mb='1em'>
+                    <Tab>Inbox</Tab>
+                    <Tab>Outbox</Tab>
+                </TabList>
+                <TabPanels>
+                    <TabPanel>
+                        <GenericTable
+                            header={tableHeader()}
+                            onSelect={navigateDetails}
+                            rows={rows?.map(tableRow)}
+                            children={
+                                <Flex pt="2" alignItems={"flex-end"} justifyContent={"flex-end"}>
+                                    <IconButton mr="2" icon={<RiAddLine/>} aria-label={"create"} onClick={navigateCreate}/>
+                                    <IconButton mr="2" icon={<RiFilterLine/>} aria-label={"filter"} onClick={navigateFilters}/>
+                                    <IconButton mr="2" icon={<RiRefreshLine/>} aria-label={"refresh"} onClick={() => setRefreshing(!refresh)}/>
+                                </Flex>
+                            }
+                        />
+
+                        <Routes>
+                            <Route path=":id" element={
+                                <DetailsDrawer isOpen={true} onClose={navigateBase} input={rows!!}/>
+                            }/>
+                            <Route path="create" element={
+                                <CreateModal isOpen={true} onClose={navigateBase} onCreated={data => { rows?.push(data) }}/>
+                            }/>
+                            <Route path="filters" element={
+                                <FiltersModal isOpen={true} onClose={navigateBase} filter={filter} setFilter={setFilter}/>
+                            }/>
+                        </Routes>
+                    </TabPanel>
+                    <TabPanel>
+                        <p>WIP</p>
+                    </TabPanel>
+                </TabPanels>
+            </Tabs>
         </Box>
     )
 }
@@ -91,7 +111,7 @@ const statusCell = (status: DataStatus): TableCell => {
     } else if (status === DataStatus.cancelled) {
         return {sortValue: 2, width: firstColumnWidth, value: <RiCloseCircleFill color={"red"}/>}
     } else {
-        return {sortValue: 3, width: firstColumnWidth, value: <RiCheckboxCircleFill color={"grey"}/>}
+        return {sortValue: 3, width: firstColumnWidth, value: <RiCheckboxCircleFill color={"darkgoldenrod"}/>}
     }
 }
 
