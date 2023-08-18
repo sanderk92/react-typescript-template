@@ -1,8 +1,9 @@
 import useAuthService from "../auth/AuthService";
 import axios from "axios";
 import {v4 as uuid} from 'uuid';
-import {DataEntry, DataStatus, DataView} from "./model/DataView";
+import {DataEntry, DataStatus, DataView} from "./model/Data";
 import {UserDetails} from "./model/UserDetails";
+import {useEffect} from "react";
 
 export interface BackendProps {
     getUserDetails(): Promise<UserDetails>
@@ -16,29 +17,25 @@ export const useBackend = (): BackendProps => {
 
     const backendUrl : string = window.location.protocol + "//" + window.location.host
 
-    const setAuthorization = () => {
+    useEffect(() => {
         axios.interceptors.request.use(config => {
             config.headers.Authorization = "Bearer " + auth.getUser()?.access_token;
             return config;
         });
-    }
+    })
 
-    const getUserDetails = (): Promise<UserDetails> => {
-        setAuthorization()
-        return axios.get<UserDetails>(backendUrl + "/user")
+    const getUserDetails = (): Promise<UserDetails> =>
+        axios.get<UserDetails>(backendUrl + "/user")
             .then(result => result.data)
-    }
 
-    const getData = (status: DataStatus[]): Promise<DataView[]> => {
-        return new Promise(resolve => setTimeout(resolve, 2000))
+    const getData = (status: DataStatus[]): Promise<DataView[]> =>
+        new Promise(resolve => setTimeout(resolve, 2000))
             .then(_ => homePageRows)
             .then(rows => rows.filter(row => status.includes(row.status)))
-    }
 
-    const createData = (entry: DataEntry): Promise<DataView> => {
-        return new Promise(resolve => setTimeout(resolve, 2000))
-            .then(_ => ({id: uuid(), status: DataStatus.open, company: entry.company, time: new Date()}));
-    }
+    const createData = (entry: DataEntry): Promise<DataView> =>
+        new Promise(resolve => setTimeout(resolve, 2000))
+            .then(_ => ({id: uuid(), status: DataStatus.open, company: entry.company, time: new Date()}))
 
     return {
         getUserDetails,
@@ -46,6 +43,8 @@ export const useBackend = (): BackendProps => {
         createData: createData,
     }
 }
+
+export default useBackend
 
 const homePageRows : DataView[] = [
     {id: uuid(), status: DataStatus.open, company: 'Pikobello B.V.', time: new Date()},

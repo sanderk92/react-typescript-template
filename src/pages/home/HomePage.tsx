@@ -2,20 +2,13 @@ import GenericTable, {TableCell, TableRow} from "../../components/GenericTable";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Route, Routes, useNavigate} from "react-router-dom";
-import {useBackend} from "../../http/BackendService";
+import useBackend from "../../http/BackendService";
 import DetailsDrawer from "./DetailsDrawer";
 import CreateModal from "./CreateModal";
-import {
-    RiAddCircleFill,
-    RiAddLine,
-    RiCheckboxCircleFill,
-    RiCloseCircleFill,
-    RiFilterLine,
-    RiRefreshLine
-} from "react-icons/all";
+import {RiAddCircleFill, RiAddLine, RiCheckboxCircleFill, RiCloseCircleFill, RiFilterLine, RiRefreshLine} from "react-icons/all";
 import {RiPlayCircleFill} from "react-icons/ri";
 import {dateShortFormatted, isSameDate, timeShortFormatted} from "../../utils/Date";
-import {DataStatus, DataView} from "../../http/model/DataView";
+import {DataStatus, DataView} from "../../http/model/Data";
 import FiltersModal from "./FiltersModal";
 import {Box, Flex, IconButton} from "@chakra-ui/react";
 
@@ -43,14 +36,15 @@ export default function HomePage() {
     useEffect(() => {
         setRows(undefined)
         backend.getData(filter.status).then(setRows)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refresh, filter])
 
     return (
         <Box>
             <Flex pt="2" alignItems={"flex-end"} justifyContent={"flex-end"}>
-                <IconButton mr="2" icon={<RiRefreshLine/>} aria-label={"refresh"} onClick={() => setRefreshing(!refresh)}/>
-                <IconButton mr="2" icon={<RiFilterLine/>} aria-label={"filter"} onClick={navigateFilters}/>
                 <IconButton mr="2" icon={<RiAddLine/>} aria-label={"create"} onClick={navigateCreate}/>
+                <IconButton mr="2" icon={<RiFilterLine/>} aria-label={"filter"} onClick={navigateFilters}/>
+                <IconButton mr="2" icon={<RiRefreshLine/>} aria-label={"refresh"} onClick={() => setRefreshing(!refresh)}/>
             </Flex>
             <GenericTable header={tableHeader()} onSelect={navigateDetails} rows={rows?.map(tableRow)}/>
             <Routes>

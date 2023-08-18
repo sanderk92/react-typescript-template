@@ -1,22 +1,10 @@
-import {
-    Button,
-    Checkbox,
-    Flex,
-    FormControl,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalHeader,
-    ModalOverlay,
-    Text,
-} from "@chakra-ui/react";
+import {Button, Checkbox, Flex, FormControl, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text,} from "@chakra-ui/react";
 import * as React from "react";
 import {useState} from "react";
-import {RiAddCircleFill, RiCheckboxFill, RiCheckboxIndeterminateFill} from "react-icons/all";
-import {RiPlayCircleFill} from "react-icons/ri";
+import {RiAddCircleFill} from "react-icons/all";
+import {RiCheckboxCircleFill, RiCloseCircleFill, RiPlayCircleFill} from "react-icons/ri";
 import {HomeFilter} from "./HomePage";
-import {DataStatus} from "../../http/model/DataView";
+import {DataStatus} from "../../http/model/Data";
 
 export interface FiltersDrawerProps {
     isOpen: boolean
@@ -59,7 +47,7 @@ export default function FiltersModal({isOpen, onClose, filter, setFilter}: Filte
                     <FormControl>
                         <Checkbox m={2} size={"lg"} isChecked={cancelled} onChange={() => setCancelled(!cancelled)}>
                             <Flex>
-                                <RiCheckboxIndeterminateFill color={"red"}/>
+                                <RiCloseCircleFill color={"red"}/>
                                 <Text m={1}>Cancelled</Text>
                             </Flex>
                         </Checkbox>
@@ -67,7 +55,7 @@ export default function FiltersModal({isOpen, onClose, filter, setFilter}: Filte
                     <FormControl>
                         <Checkbox m={2} size={"lg"} isChecked={finished} onChange={() => setFinished(!finished)}>
                             <Flex>
-                                <RiCheckboxFill color={"grey"}></RiCheckboxFill>
+                                <RiCheckboxCircleFill color={"grey"}></RiCheckboxCircleFill>
                                 <Text m={1}>Completed</Text>
                             </Flex>
                         </Checkbox>

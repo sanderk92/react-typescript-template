@@ -2,7 +2,7 @@ import {Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButto
 import {useBackend} from "../../http/BackendService";
 import * as React from "react";
 import {useState} from "react";
-import {DataView} from "../../http/model/DataView";
+import {DataView} from "../../http/model/Data";
 
 export interface CreateDrawerProps {
     isOpen: boolean
