@@ -41,7 +41,7 @@ export default function HomePage() {
 
     return (
         <Box>
-            <Tabs isFitted variant='enclosed' >
+            <Tabs isFitted variant='line' size={"md"}>
                 <TabList mb='1em'>
                     <Tab>Inbox</Tab>
                     <Tab>Outbox</Tab>
@@ -53,7 +53,7 @@ export default function HomePage() {
                             onSelect={navigateDetails}
                             rows={rows?.map(tableRow)}
                             children={
-                                <Flex pt="2" alignItems={"flex-end"} justifyContent={"flex-end"}>
+                                <Flex alignItems={"flex-end"} justifyContent={"flex-end"}>
                                     <IconButton mr="2" icon={<RiAddLine/>} aria-label={"create"} onClick={navigateCreate}/>
                                     <IconButton mr="2" icon={<RiFilterLine/>} aria-label={"filter"} onClick={navigateFilters}/>
                                     <IconButton mr="2" icon={<RiRefreshLine/>} aria-label={"refresh"} onClick={() => setRefreshing(!refresh)}/>

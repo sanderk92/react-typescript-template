@@ -44,12 +44,14 @@ export default function GenericTable({header, rows, onSelect, children}: TableCo
 
     return rows == null ? <SpinnerCentered/> : rows.length === 0 ? <NoResultDisplay/> :
         <TableContainer>
-                <Table variant='simple'>
-                    <TableHead header={header} sort={sort} setSort={setSort}/>
-                    <TableBody rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/>
-                </Table>
-                <SearchField search={search} onSearch={setSearch}/>
-                {children}
+            <Flex justifyContent={"flex-end"}>
+                <Box m={"2"}><SearchField search={search} onSearch={setSearch}/></Box>
+                <Box m={"2"}>{children}</Box>
+            </Flex>
+            <Table variant='simple'>
+                <TableHead header={header} sort={sort} setSort={setSort}/>
+                <TableBody rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/>
+            </Table>
         </TableContainer>
 }
 
@@ -57,21 +59,18 @@ const SearchField = ({search, onSearch}: {
     search: string
     onSearch: (query: string) => void
 }) => {
-    const colorScheme = useColorModeValue('white', 'gray.900')
+    const colorScheme = useColorModeValue('gray.50', 'gray.700')
 
     return (
-        <Flex pt="2" justifyContent={"right"} >
-            <InputGroup width={"100%"} size='md'>
-                <InputLeftElement>
-                    <SearchIcon/>
-                </InputLeftElement>
-                <Input bg={colorScheme} value={search} onChange={event => onSearch(event.target.value)} placeholder={"Search"}/>
-                <InputRightElement>
-                    <CloseIcon className={"clickable"} background={colorScheme} onClick={() => onSearch("")}/>
-                </InputRightElement>
-            </InputGroup>
-        </Flex>
-
+        <InputGroup size='md'>
+            <InputLeftElement>
+                <SearchIcon/>
+            </InputLeftElement>
+            <Input variant={"filled"} bg={colorScheme} value={search} onChange={event => onSearch(event.target.value)} placeholder={"Search"}/>
+            <InputRightElement>
+                <CloseIcon className={"clickable"} onClick={() => onSearch("")}/>
+            </InputRightElement>
+        </InputGroup>
     )
 }
 
