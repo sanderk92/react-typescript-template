@@ -14,16 +14,16 @@ export interface DetailsDrawerProps {
 
 export default function InboxDetailsDrawer({isOpen, onClose}: DetailsDrawerProps) {
     const [selected, setSelected] = useState<DataView | undefined>()
-    const [isLoading, setLoading] = useState<boolean>(true)
+    const [isLoading, setIsLoading] = useState<boolean>(true)
 
     const backend = useBackend()
     const { id } = useParams();
 
     useEffect(() => {
-        setLoading(true)
+        setIsLoading(true)
         backend.getData(id!!)
             .then(setSelected)
-            .then(() => setLoading(false))
+            .then(() => setIsLoading(false))
     }, [id])
 
     return (
