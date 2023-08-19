@@ -24,7 +24,6 @@ export default function InboxDetailsDrawer({isOpen, onClose}: DetailsDrawerProps
         backend.getData(id!!)
             .then(setSelected)
             .then(() => setLoading(false))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id])
 
     return (

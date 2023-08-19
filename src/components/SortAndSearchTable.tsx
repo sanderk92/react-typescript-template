@@ -1,22 +1,5 @@
 import React, {ReactNode, useState} from 'react';
-import {
-    Box,
-    Flex,
-    Icon,
-    Input,
-    InputGroup,
-    InputLeftElement,
-    InputRightElement,
-    Table,
-    TableContainer,
-    Tbody,
-    Td,
-    Text,
-    Th,
-    Thead,
-    Tr,
-    useColorModeValue
-} from '@chakra-ui/react';
+import {Box, Flex, Icon, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
 import {CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "./components.css"
 import { v4 as uuid } from 'uuid';

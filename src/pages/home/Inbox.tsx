@@ -43,7 +43,6 @@ export default function Inbox() {
     useEffect(() => {
         setRows(undefined)
         backend.queryData(filter.status).then(setRows)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refresh, filter])
 
     return (

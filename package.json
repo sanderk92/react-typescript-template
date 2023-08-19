@@ -48,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "rules": {
+    "react-hooks/exhaustive-deps": ["debug", "useBackend"]
   }
 }

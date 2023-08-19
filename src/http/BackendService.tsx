@@ -5,6 +5,7 @@ import {DataEntry, DataStatus, DataView} from "./model/Data";
 import {UserDetails} from "./model/UserDetails";
 import {useEffect} from "react";
 
+// eslint-disable react-hooks/exhaustive-deps
 export interface BackendProps {
     getUserDetails(): Promise<UserDetails>
     getData(id: String): Promise<DataView | undefined>
