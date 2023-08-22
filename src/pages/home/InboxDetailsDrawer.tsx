@@ -1,5 +1,14 @@
 import {useParams} from "react-router-dom";
-import {Drawer, DrawerBody, DrawerCloseButton, DrawerContent, FormControl, FormLabel, Input,} from "@chakra-ui/react";
+import {
+    Drawer,
+    DrawerBody,
+    DrawerCloseButton,
+    DrawerContent,
+    DrawerHeader,
+    FormControl,
+    FormLabel,
+    Input,
+} from "@chakra-ui/react";
 import * as React from "react";
 import {DataView} from "../../http/model/Data";
 import MissingResultDisplay from "../../components/MissingResultDisplay";
@@ -29,6 +38,7 @@ export default function InboxDetailsDrawer({isOpen, onClose}: DetailsDrawerProps
     return (
         <Drawer isOpen={isOpen} onClose={onClose}>
             <DrawerContent>
+                <DrawerHeader>Details</DrawerHeader>
                 { isLoading ? <SpinnerCentered/> : !selected ? <MissingResultDisplay/> :
                     <DrawerBody>
                         <FormControl >

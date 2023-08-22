@@ -1,4 +1,15 @@
-import {Button, Checkbox, Flex, FormControl, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text,} from "@chakra-ui/react";
+import {
+    Button,
+    Checkbox,
+    Drawer,
+    DrawerBody,
+    DrawerCloseButton,
+    DrawerContent,
+    DrawerHeader,
+    Flex,
+    FormControl,
+    Text,
+} from "@chakra-ui/react";
 import * as React from "react";
 import {useState} from "react";
 import {RiAddCircleFill} from "react-icons/all";
@@ -13,20 +24,17 @@ export interface FiltersDrawerProps {
     setFilter: (filter: InboxFilter) => void
 }
 
-export default function InboxFiltersModal({isOpen, onClose, filter, setFilter}: FiltersDrawerProps) {
+export default function InboxFiltersDrawer({isOpen, onClose, filter, setFilter}: FiltersDrawerProps) {
     const [open, setOpen] = useState(filter.status.includes(DataStatus.open))
     const [running, setRunning] = useState(filter.status.includes(DataStatus.running))
     const [cancelled, setCancelled] = useState(filter.status.includes(DataStatus.cancelled))
     const [finished, setFinished] = useState(filter.status.includes(DataStatus.finished))
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay/>
-            <ModalContent>
-                <ModalHeader>Filters</ModalHeader>
-                <ModalCloseButton/>
-                <ModalBody pb={6}>
-
+        <Drawer isOpen={isOpen} onClose={onClose}>
+            <DrawerContent>
+                <DrawerHeader>Filters</DrawerHeader>
+                <DrawerBody pb={6}>
                     <Text as={"b"}>Status</Text>
                     <FormControl  >
                         <Checkbox m={2} size={"lg"} isChecked={open} onChange={() => setOpen(!open)}>
@@ -66,9 +74,10 @@ export default function InboxFiltersModal({isOpen, onClose, filter, setFilter}: 
                             onClose()}}
                         >Apply</Button>
                     </FormControl>
-                </ModalBody>
-            </ModalContent>
-        </Modal>
+                </DrawerBody>
+                <DrawerCloseButton/>
+            </DrawerContent>
+        </Drawer>
     )
 
     function extractStatus() : DataStatus[] {

@@ -16,7 +16,7 @@ import {
 import {RiPlayCircleFill} from "react-icons/ri";
 import {dateShortFormatted, isSameDate, timeShortFormatted} from "../../utils/Date";
 import {DataStatus, DataView} from "../../http/model/Data";
-import InboxFiltersModal from "./InboxFiltersModal";
+import InboxFiltersDrawer from "./InboxFiltersDrawer";
 import {Box, Flex, IconButton} from "@chakra-ui/react";
 
 export interface InboxFilter {
@@ -68,7 +68,7 @@ export default function Inbox() {
                     <InboxCreateModal isOpen={true} onClose={navigateBase} onCreated={data => { rows?.push(data) }}/>
                 }/>
                 <Route path="filters" element={
-                    <InboxFiltersModal isOpen={true} onClose={navigateBase} filter={filter} setFilter={setFilter}/>
+                    <InboxFiltersDrawer isOpen={true} onClose={navigateBase} filter={filter} setFilter={setFilter}/>
                 }/>
             </Routes>
         </Box>
