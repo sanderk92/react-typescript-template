@@ -42,17 +42,21 @@ export default function SortAndSearchTable({header, rows, onSelect, buttons}: Ta
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<SortState>({column: 0, direction: false})
 
-    return rows == null ? <SpinnerCentered/> : rows.length === 0 ? <EmptyResultDisplay/> :
+    return (
         <TableContainer>
             <Flex justifyContent={"flex-end"}>
                 <Box m={"2"}><SearchField search={search} onSearch={setSearch}/></Box>
                 <Box m={"2"}>{buttons}</Box>
             </Flex>
-            <Table variant='simple'>
-                <TableHead header={header} sort={sort} setSort={setSort}/>
-                <TableBody rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/>
-            </Table>
+            {
+                rows == null ? <SpinnerCentered/> : rows.length === 0 ? <EmptyResultDisplay/> :
+                    <Table variant='simple'>
+                        <TableHead header={header} sort={sort} setSort={setSort}/>
+                        <TableBody rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/>
+                    </Table>
+            }
         </TableContainer>
+    )
 }
 
 const SearchField = ({search, onSearch}: {
@@ -98,11 +102,9 @@ const TableHead = ({header, sort, setSort}: {
                         _active={ isSortable(cell) ? {background: activeColorScheme} : {backgroundColorScheme}}
                         onClick={() => {if (isSortable(cell)) setSort({direction: !sort.direction, column: index})}}
                     >
-                        <Flex
-                            display={"flex"}
-                            justifyContent={"space-between"}>
+                        <Flex>
                             {cell.value}
-                            {sort.column === index ? sortIcon() : <Icon visibility={"hidden"}/>}
+                            {sort.column === index ? sortIcon() : <Icon visibility={"hidden"} boxSize={2}/>}
                         </Flex>
                     </Th>
                 )}
@@ -111,7 +113,7 @@ const TableHead = ({header, sort, setSort}: {
     )
 
     function sortIcon() {
-        return sort.direction ? <TriangleUpIcon/> : <TriangleDownIcon/>;
+        return sort.direction ? <TriangleUpIcon boxSize={2}/> : <TriangleDownIcon boxSize={2}/>;
     }
 
     function isSortable(cell: TableHeaderCell): boolean {
