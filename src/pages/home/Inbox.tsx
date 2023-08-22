@@ -14,17 +14,21 @@ import {
     RiRefreshLine
 } from "react-icons/all";
 import {RiPlayCircleFill} from "react-icons/ri";
-import {dateShortFormatted, isSameDate, timeShortFormatted} from "../../utils/Date";
+import {dateShortFormatted, isSameDate, minusMonths, timeShortFormatted} from "../../utils/Date";
 import {DataStatus, DataView} from "../../http/model/Data";
 import InboxFiltersDrawer from "./InboxFiltersDrawer";
 import {Box, Flex, IconButton} from "@chakra-ui/react";
 
 export interface InboxFilter {
-    status: DataStatus[]
+    status: DataStatus[],
+    from: Date,
+    until: Date,
 }
 
 const defaultHomeFilter : InboxFilter = {
-    status: [DataStatus.open, DataStatus.running]
+    status: [DataStatus.open, DataStatus.running],
+    from: minusMonths(new Date(), 3),
+    until: new Date(),
 }
 
 export default function Inbox() {
@@ -42,7 +46,7 @@ export default function Inbox() {
 
     useEffect(() => {
         setRows(undefined)
-        backend.queryData(filter.status).then(setRows)
+        backend.queryData(filter.status, filter.from, filter.until).then(setRows)
     }, [refresh, filter])
 
     return (

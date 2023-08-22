@@ -12,6 +12,8 @@ import {useBackend} from "./http/BackendService";
 import ErrorBoundary from "./ErrorBoundary";
 import {UserDetails} from "./http/model/UserDetails";
 
+import "react-datepicker/dist/react-datepicker.css";
+
 export function App() {
     return (
         <ErrorBoundary>

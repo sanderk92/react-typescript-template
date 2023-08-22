@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Checkbox,
     Drawer,
@@ -16,6 +17,7 @@ import {RiAddCircleFill} from "react-icons/all";
 import {RiCheckboxCircleFill, RiCloseCircleFill, RiPlayCircleFill} from "react-icons/ri";
 import {InboxFilter} from "./Inbox";
 import {DataStatus} from "../../http/model/Data";
+import DatePicker from "react-datepicker";
 
 export interface FiltersDrawerProps {
     isOpen: boolean
@@ -25,43 +27,74 @@ export interface FiltersDrawerProps {
 }
 
 export default function InboxFiltersDrawer({isOpen, onClose, filter, setFilter}: FiltersDrawerProps) {
+    const [from, setFrom] = useState(filter.from)
+    const [until, setUntil] = useState(filter.until)
+
     const [open, setOpen] = useState(filter.status.includes(DataStatus.open))
     const [running, setRunning] = useState(filter.status.includes(DataStatus.running))
     const [cancelled, setCancelled] = useState(filter.status.includes(DataStatus.cancelled))
     const [finished, setFinished] = useState(filter.status.includes(DataStatus.finished))
 
+    const initialFocus = React.useRef(null)
+
     return (
-        <Drawer isOpen={isOpen} onClose={onClose}>
+        <Drawer isOpen={isOpen} onClose={onClose} initialFocusRef={initialFocus}>
             <DrawerContent>
                 <DrawerHeader>Filters</DrawerHeader>
-                <DrawerBody pb={6}>
+                <DrawerBody>
+                    <FormControl pb={4}>
+                        <Flex>
+                            <Box>
+                                <Text as={"b"}>From</Text>
+                                <DatePicker
+                                    maxDate={until}
+                                    dateFormat={"dd-MM-yyyy"}
+                                    customInput={<Button>{from.toLocaleDateString()}</Button>}
+                                    selected={from}
+                                    onChange={date=> setFrom(date ?? from)}>
+                                </DatePicker>
+                            </Box>
+                            <Box>
+                                <Text as={"b"}>Until</Text>
+                                <DatePicker
+                                    minDate={from}
+                                    maxDate={new Date()}
+                                    onChangeRaw={e => e.preventDefault()}
+                                    dateFormat={"dd-MM-yyyy"}
+                                    customInput={<Button>{until.toLocaleDateString()}</Button>}
+                                    selected={until}
+                                    onChange={date => setUntil(date ?? until)}>
+                                </DatePicker>
+                            </Box>
+                        </Flex>
+                    </FormControl>
                     <Text as={"b"}>Status</Text>
-                    <FormControl  >
-                        <Checkbox m={2} size={"lg"} isChecked={open} onChange={() => setOpen(!open)}>
+                    <FormControl pb={4}>
+                        <Checkbox size={"lg"} isChecked={open} onChange={() => setOpen(!open)}>
                             <Flex>
                                 <RiAddCircleFill color={"green"}/>
                                 <Text m={1}>Open</Text>
                             </Flex>
                         </Checkbox>
                     </FormControl>
-                    <FormControl>
-                        <Checkbox m={2} size={"lg"} isChecked={running} onChange={() => setRunning(!running)}>
+                    <FormControl pb={4}>
+                        <Checkbox size={"lg"} isChecked={running} onChange={() => setRunning(!running)}>
                             <Flex>
                                 <RiPlayCircleFill color={"dodgerblue"}/>
                                 <Text m={1}>Running</Text>
                             </Flex>
                         </Checkbox>
                     </FormControl>
-                    <FormControl>
-                        <Checkbox m={2} size={"lg"} isChecked={cancelled} onChange={() => setCancelled(!cancelled)}>
+                    <FormControl pb={4}>
+                        <Checkbox size={"lg"} isChecked={cancelled} onChange={() => setCancelled(!cancelled)}>
                             <Flex>
                                 <RiCloseCircleFill color={"red"}/>
                                 <Text m={1}>Cancelled</Text>
                             </Flex>
                         </Checkbox>
                     </FormControl>
-                    <FormControl>
-                        <Checkbox m={2} size={"lg"} isChecked={finished} onChange={() => setFinished(!finished)}>
+                    <FormControl pb={4}>
+                        <Checkbox size={"lg"} isChecked={finished} onChange={() => setFinished(!finished)}>
                             <Flex>
                                 <RiCheckboxCircleFill color={"grey"}></RiCheckboxCircleFill>
                                 <Text m={1}>Completed</Text>
@@ -69,9 +102,10 @@ export default function InboxFiltersDrawer({isOpen, onClose, filter, setFilter}:
                         </Checkbox>
                     </FormControl>
                     <FormControl>
-                        <Button onClick={() => {
-                            setFilter({status : extractStatus()})
-                            onClose()}}
+                        <Button ref={initialFocus} onClick={() => {
+                            setFilter({status : extractStatus(), from: from, until: until})
+                            onClose()}
+                        }
                         >Apply</Button>
                     </FormControl>
                 </DrawerBody>

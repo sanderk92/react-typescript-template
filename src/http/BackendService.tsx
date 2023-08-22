@@ -9,7 +9,7 @@ import {useEffect} from "react";
 export interface BackendProps {
     getUserDetails(): Promise<UserDetails>
     getData(id: String): Promise<DataView | undefined>
-    queryData(state: DataStatus[]): Promise<DataView[]>
+    queryData(state: DataStatus[], start: Date, end: Date): Promise<DataView[]>
     createData(entry: DataEntry): Promise<DataView>
 }
 
@@ -32,10 +32,12 @@ export const useBackend = (): BackendProps => {
         new Promise(resolve => setTimeout(resolve, 2000))
             .then(_ => inboxRow.find(row => row.id === id))
 
-    const queryData = (status: DataStatus[]): Promise<DataView[]> =>
+    const queryData = (status: DataStatus[], start: Date, end: Date): Promise<DataView[]> =>
         new Promise(resolve => setTimeout(resolve, 2000))
             .then(_ => inboxRow)
             .then(rows => rows.filter(row => status.includes(row.status)))
+            .then(rows => rows.filter(row => row.time.getTime() >= start.getTime()))
+            .then(rows => rows.filter(row => row.time.getTime() <= end.getTime()))
 
     const createData = (entry: DataEntry): Promise<DataView> =>
         new Promise(resolve => setTimeout(resolve, 2000))
