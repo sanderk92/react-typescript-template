@@ -14,7 +14,7 @@ import {
     RiRefreshLine
 } from "react-icons/all";
 import {RiPlayCircleFill} from "react-icons/ri";
-import {dateShortFormatted, isSameDate, minusMonths, timeShortFormatted} from "../../utils/Date";
+import {isSameDate, minusMonths} from "../../utils/Date";
 import {DataStatus, DataView} from "../../http/model/Data";
 import InboxFiltersDrawer from "./InboxFiltersDrawer";
 import {Box, Flex, IconButton} from "@chakra-ui/react";
@@ -80,14 +80,14 @@ export default function Inbox() {
 }
 
 const firstColumnWidth = "20"
-const secondColumnWidth = "40"
+const secondColumnWidth = "60"
 const thirdColumnWidth = "20"
 
 const tableHeader = () => ({
     cells: [
-        {value: "time", width: thirdColumnWidth},
+        {value: "time", width: firstColumnWidth},
         {value: "sender", width: secondColumnWidth},
-        {value: "status", width: firstColumnWidth},
+        {value: "status", width: thirdColumnWidth},
     ]
 });
 
@@ -96,16 +96,23 @@ const tableRow = (data: DataView): TableRow => ({
     cells: [
         timeCell(data.time),
         companyCell(data.company),
-        statusCell(data.status),
+        statusCell(data.status)
     ],
 })
 
 const timeCell = (date: Date): TableCell => {
     return {
         sortValue: date.getTime(),
-        width: thirdColumnWidth,
-        numerical: true,
-        value: isSameDate(new Date(), date) ? timeShortFormatted(date) : dateShortFormatted(date),
+        width: firstColumnWidth,
+        value: isSameDate(new Date(), date) ? date.toLocaleTimeString() : date.toLocaleDateString(),
+    }
+}
+
+const companyCell = (name: string): TableCell => {
+    return {
+        sortValue: name,
+        width: secondColumnWidth,
+        value: name,
     }
 }
 
@@ -121,10 +128,3 @@ const statusCell = (status: DataStatus): TableCell => {
     }
 }
 
-const companyCell = (name: string): TableCell => {
-    return {
-        sortValue: name,
-        width: secondColumnWidth,
-        value: name,
-    }
-}

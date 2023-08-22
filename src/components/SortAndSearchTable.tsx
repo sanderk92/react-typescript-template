@@ -44,13 +44,13 @@ export default function SortAndSearchTable({header, rows, onSelect, buttons}: Ta
 
     return (
         <TableContainer>
-            <Flex justifyContent={"flex-end"}>
+            <Flex mb={"2"} justifyContent={"flex-end"}>
                 <Box m={"2"}><SearchField search={search} onSearch={setSearch}/></Box>
                 <Box m={"2"}>{buttons}</Box>
             </Flex>
             {
                 rows == null ? <SpinnerCentered/> : rows.length === 0 ? <EmptyResultDisplay/> :
-                    <Table variant='simple'>
+                    <Table variant='simple' size={{base: "sm", md: "md"}}>
                         <TableHead header={header} sort={sort} setSort={setSort}/>
                         <TableBody rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/>
                     </Table>
