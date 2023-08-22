@@ -100,6 +100,15 @@ const tableRow = (data: DataView): TableRow => ({
     ],
 })
 
+const timeCell = (date: Date): TableCell => {
+    return {
+        sortValue: date.getTime(),
+        width: thirdColumnWidth,
+        numerical: true,
+        value: isSameDate(new Date(), date) ? timeShortFormatted(date) : dateShortFormatted(date),
+    }
+}
+
 const statusCell = (status: DataStatus): TableCell => {
     if (status === DataStatus.open) {
         return {sortValue: 3, width: firstColumnWidth, value: <RiAddCircleFill color={"green"}/>}
@@ -117,14 +126,5 @@ const companyCell = (name: string): TableCell => {
         sortValue: name,
         width: secondColumnWidth,
         value: name,
-    }
-}
-
-const timeCell = (date: Date): TableCell => {
-    return {
-        sortValue: date.getTime(),
-        width: thirdColumnWidth,
-        numerical: true,
-        value: isSameDate(new Date(), date) ? timeShortFormatted(date) : dateShortFormatted(date),
     }
 }

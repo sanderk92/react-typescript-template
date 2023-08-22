@@ -96,7 +96,7 @@ export default function InboxFiltersDrawer({isOpen, onClose, filter, setFilter}:
                     <FormControl pb={4}>
                         <Checkbox size={"lg"} isChecked={finished} onChange={() => setFinished(!finished)}>
                             <Flex>
-                                <RiCheckboxCircleFill color={"grey"}></RiCheckboxCircleFill>
+                                <RiCheckboxCircleFill color={"darkgoldenrod"}></RiCheckboxCircleFill>
                                 <Text m={1}>Completed</Text>
                             </Flex>
                         </Checkbox>
