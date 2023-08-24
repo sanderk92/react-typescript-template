@@ -14,7 +14,7 @@ import {
     RiRefreshLine
 } from "react-icons/all";
 import {RiPlayCircleFill} from "react-icons/ri";
-import {isSameDate, minusMonths} from "../../utils/Date";
+import {isSameDate, minusMonths, timeAgoIndicator} from "../../utils/Date";
 import {DataStatus, DataView} from "../../http/model/Data";
 import InboxFiltersDrawer from "./InboxFiltersDrawer";
 import {Box, Flex, IconButton} from "@chakra-ui/react";
@@ -55,6 +55,7 @@ export default function Inbox() {
                 header={tableHeader()}
                 onSelect={navigateDetails}
                 rows={rows?.map(tableRow)}
+                defaultSort={{ direction: false, column: 1 }}
                 buttons={
                     <Flex alignItems={"flex-end"} justifyContent={"flex-end"}>
                         <IconButton mr="2" icon={<RiAddLine/>} aria-label={"create"} onClick={navigateCreate}/>
@@ -79,52 +80,53 @@ export default function Inbox() {
     )
 }
 
-const firstColumnWidth = "20"
-const secondColumnWidth = "60"
-const thirdColumnWidth = "20"
+const firstColumnWidth = "50%"
+const secondColumnWidth = "50%"
 
 const tableHeader = () => ({
     cells: [
-        {value: "time", width: firstColumnWidth},
-        {value: "sender", width: secondColumnWidth},
-        {value: "status", width: thirdColumnWidth},
+        {value: "sender", maxWidth: firstColumnWidth},
+        {value: "time", maxWidth: secondColumnWidth},
     ]
 });
 
 const tableRow = (data: DataView): TableRow => ({
     id: data.id,
     cells: [
-        timeCell(data.time),
         companyCell(data.company),
-        statusCell(data.status)
+        timeCell(data),
     ],
 })
 
-const timeCell = (date: Date): TableCell => {
+const timeCell = (data: DataView): TableCell => {
     return {
-        sortValue: date.getTime(),
-        width: firstColumnWidth,
-        value: isSameDate(new Date(), date) ? date.toLocaleTimeString() : date.toLocaleDateString(),
+        sortValue: data.time.getTime(),
+        maxWidth: firstColumnWidth,
+        value:
+            <Flex justifyContent={"space-between"}>
+                { timeAgoIndicator(data.time) }
+                { statusCell(data.status) }
+            </Flex>,
     }
 }
 
 const companyCell = (name: string): TableCell => {
     return {
         sortValue: name,
-        width: secondColumnWidth,
+        maxWidth: secondColumnWidth,
         value: name,
     }
 }
 
-const statusCell = (status: DataStatus): TableCell => {
+const statusCell = (status: DataStatus): React.JSX.Element => {
     if (status === DataStatus.open) {
-        return {sortValue: 3, width: firstColumnWidth, value: <RiAddCircleFill color={"green"}/>}
+        return <RiAddCircleFill color={"green"}/>
     } else if (status === DataStatus.running) {
-        return {sortValue: 2, width: firstColumnWidth, value: <RiPlayCircleFill color={"dodgerblue"}/>}
+        return <RiPlayCircleFill color={"dodgerblue"}/>
     } else if (status === DataStatus.cancelled) {
-        return {sortValue: 1, width: firstColumnWidth, value: <RiCloseCircleFill color={"red"}/>}
+        return <RiCloseCircleFill color={"red"}/>
     } else {
-        return {sortValue: 0, width: firstColumnWidth, value: <RiCheckboxCircleFill color={"darkgoldenrod"}/>}
+        return <RiCheckboxCircleFill color={"darkgoldenrod"}/>
     }
 }
 
