@@ -22,5 +22,5 @@ export const timeAgoIndicator = (date: Date): string => {
 }
 
 const timeAgoString = (amount: number, unit: string): string => {
-    return `${amount <= 1 ? `1 ${unit} ago` : `${amount} ${unit}s ago`}`
+    return `${amount === 1 ? `1 ${unit} ago` : `${amount} ${unit}s ago`}`
 }
