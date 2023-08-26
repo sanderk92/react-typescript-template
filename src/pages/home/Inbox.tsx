@@ -18,7 +18,6 @@ import {minusMonths, timeAgoIndicator} from "../../utils/Date";
 import {DataStatus, DataView} from "../../http/model/Data";
 import InboxFiltersDrawer from "./InboxFiltersDrawer";
 import {Box, Flex, IconButton} from "@chakra-ui/react";
-import SearchDropdown from "../../components/SearchDropdown";
 
 export interface InboxFilter {
     status: DataStatus[],
