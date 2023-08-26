@@ -18,7 +18,7 @@ export const timeAgoIndicator = (date: Date): string => {
     if (daysBetween < 1) return timeAgoString(hoursBetween, "hour")
     if (daysBetween < 28) return timeAgoString(daysBetween, "day")
     if (daysBetween < 365) return timeAgoString(weeksBetween, "week")
-    return timeAgoString(yearsBetween, "yea")
+    return timeAgoString(yearsBetween, "year")
 }
 
 const timeAgoString = (amount: number, unit: string): string => {
