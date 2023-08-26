@@ -1,4 +1,4 @@
-import SortAndSearchTable, {TableCell, TableRow} from "../../components/SortAndSearchTable";
+import SelectionTable, {TableCell, TableRow} from "../../components/SelectionTable";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Route, Routes, useNavigate} from "react-router-dom";
@@ -14,10 +14,11 @@ import {
     RiRefreshLine
 } from "react-icons/all";
 import {RiPlayCircleFill} from "react-icons/ri";
-import {isSameDate, minusMonths, timeAgoIndicator} from "../../utils/Date";
+import {minusMonths, timeAgoIndicator} from "../../utils/Date";
 import {DataStatus, DataView} from "../../http/model/Data";
 import InboxFiltersDrawer from "./InboxFiltersDrawer";
 import {Box, Flex, IconButton} from "@chakra-ui/react";
+import SearchDropdown from "../../components/SearchDropdown";
 
 export interface InboxFilter {
     status: DataStatus[],
@@ -51,7 +52,7 @@ export default function Inbox() {
 
     return (
         <Box>
-            <SortAndSearchTable
+            <SelectionTable
                 header={tableHeader()}
                 onSelect={navigateDetails}
                 rows={rows?.map(tableRow)}

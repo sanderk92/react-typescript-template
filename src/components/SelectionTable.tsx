@@ -39,7 +39,7 @@ interface SortState {
     column: number
 }
 
-export default function SortAndSearchTable({header, rows, onSelect, buttons, defaultSort}: TableComponentProps) {
+export default function SelectionTable({header, rows, onSelect, buttons, defaultSort}: TableComponentProps) {
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<SortState>(defaultSort ?? {column: 0, direction: false})
 
