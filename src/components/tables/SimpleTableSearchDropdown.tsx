@@ -24,10 +24,10 @@ export interface SimpleTableDropdownProps {
     isLoading: boolean
 }
 
-// TODO fix dark mode
+// TODO Improve dark mode
 export default function SimpleTableSearchDropdown({rows, onSearch, selections, onSelect, onUnselect, onClose, tagValue, isLoading}: SimpleTableDropdownProps) {
     const [search, setSearch] = useState<string>('')
-    const colorScheme = useColorModeValue('gray.50', 'gray.700')
+    const colorScheme = useColorModeValue('gray.50', 'gray.600')
 
     const reset = () => {
         setSearch("")
