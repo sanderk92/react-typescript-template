@@ -24,7 +24,8 @@ export interface SimpleTableDropdownProps {
     isLoading: boolean
 }
 
-export default function SimpleTableDropdown({rows, onSearch, selections, onSelect, onUnselect, onClose, tagValue, isLoading}: SimpleTableDropdownProps) {
+// TODO fix dark mode
+export default function SimpleTableSearchDropdown({rows, onSearch, selections, onSelect, onUnselect, onClose, tagValue, isLoading}: SimpleTableDropdownProps) {
     const [search, setSearch] = useState<string>('')
     const colorScheme = useColorModeValue('gray.50', 'gray.700')
 
@@ -35,23 +36,19 @@ export default function SimpleTableDropdown({rows, onSearch, selections, onSelec
 
     return <Box>
         <Flex mb={"1"} justifyContent={"space-between"}>
-            <InputGroup size='md' >
+            <InputGroup size='md'>
                 <InputLeftElement>
                     <SearchIcon/>
                 </InputLeftElement>
-                <Input variant={"outline"} value={search} onChange={event => setSearch(event.target.value)}/>
+                <Input variant={"outline"} value={search}
+                       onChange={event => setSearch(event.target.value)}
+                       onKeyDown={e=> {if (e.key === 'Enter') onSearch(search)}}/>
                 <InputRightElement>
                     <CloseIcon className={"clickable"} onClick={() => reset()}/>
                 </InputRightElement>
             </InputGroup>
             <Button isLoading={isLoading} onClick={() => onSearch(search)}>Search</Button>
         </Flex>
-        { selections.map(row =>
-            <Tag size={"sm"} mr={"1"}>
-                <TagLabel>{tagValue(row)}</TagLabel>
-                <TagCloseButton onClick={() => onUnselect(row)}></TagCloseButton>
-            </Tag>
-        )}
         <Card position={"absolute"} zIndex={999} bg={colorScheme} width={"100%"}>
             <SimpleTable
                 maxHeight={"30vh"}
@@ -59,5 +56,11 @@ export default function SimpleTableDropdown({rows, onSearch, selections, onSelec
                 onSelect={row => {onSelect(row); reset()}}
             />
         </Card>
+        { selections.map(row =>
+            <Tag size={"sm"} mr={"1"}>
+                <TagLabel>{tagValue(row)}</TagLabel>
+                <TagCloseButton onClick={() => onUnselect(row)}></TagCloseButton>
+            </Tag>
+        )}
     </Box>
 }

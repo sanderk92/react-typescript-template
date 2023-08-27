@@ -1,7 +1,6 @@
 import React, {ReactNode, useState} from 'react';
 import {Flex, Icon, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
 import {TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
-import "../components.css"
 import {v4 as uuid} from 'uuid';
 
 export interface TableCell {

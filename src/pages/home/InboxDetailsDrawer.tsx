@@ -15,6 +15,7 @@ import {DataView} from "../../http/model/Data";
 import useBackend from "../../http/BackendService";
 import {useEffect, useState} from "react";
 import SpinnerCentered from "../../components/SpinnerCentered";
+import "../../styles.css"
 
 export interface DetailsDrawerProps {
     isOpen: boolean

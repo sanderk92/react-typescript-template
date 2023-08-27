@@ -24,7 +24,7 @@ export const useBackend = (): BackendProps => {
         });
     })
 
-    const getUserDetails = (): Promise<UserDetails> =>
+    const getUser = (): Promise<UserDetails> =>
         axios.get<UserDetails>(backendUrl + "/user")
             .then(result => result.data)
 
@@ -41,10 +41,10 @@ export const useBackend = (): BackendProps => {
 
     const createData = (entry: DataEntry): Promise<DataView> =>
         new Promise(resolve => setTimeout(resolve, 2000))
-            .then(_ => ({id: uuid(), status: DataStatus.open, company: entry.company, time: new Date()}))
+            .then(_ => ({id: uuid(), status: DataStatus.open, company: entry.input, time: new Date()}))
 
     return {
-        getUserDetails,
+        getUserDetails: getUser,
         getData,
         queryData,
         createData,

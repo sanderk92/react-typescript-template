@@ -1,10 +1,24 @@
-import {Button, FormControl, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useToast,} from "@chakra-ui/react";
+import {
+    Button,
+    FormControl,
+    FormLabel,
+    Input,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Select,
+    useToast,
+} from "@chakra-ui/react";
 import {useBackend} from "../../http/BackendService";
 import * as React from "react";
 import {useState} from "react";
 import {DataView} from "../../http/model/Data";
-import { TableRow } from "../../components/tables/SimpleTable";
-import SimpleTableDropdown from "../../components/tables/SimpleTableDropdown";
+import {TableRow} from "../../components/tables/SimpleTable";
+import SimpleTableSearchDropdown from "../../components/tables/SimpleTableSearchDropdown";
 
 export interface CreateDrawerProps {
     isOpen: boolean
@@ -12,12 +26,13 @@ export interface CreateDrawerProps {
     onCreated: (data: DataView) => void
 }
 
+// TODO move user retrieval to backend
 export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDrawerProps) {
     const toast = useToast()
     const backend = useBackend()
 
     const [isCreating, setIsCreating] = useState(false)
-    const [companyInput, setCompanyInput] = useState("")
+    const [companyInput, setInput] = useState("")
     const [selection, setSelection] = useState<TableRow | undefined>()
     const [rows, setRows] = useState<TableRow[] | undefined>()
 
@@ -30,7 +45,7 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
                 <ModalBody pb={6}>
                     <FormControl isRequired={true}>
                         <FormLabel>Recipient</FormLabel>
-                        <SimpleTableDropdown
+                        <SimpleTableSearchDropdown
                             rows={rows ?? []}
                             onSearch={(query: string) => setRows(createRows)}
                             selections={selection != null ? [selection] : []}
@@ -38,23 +53,27 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
                             onUnselect={() => setSelection(undefined)}
                             onClose={() => setRows(undefined)}
                             tagValue={(row: TableRow) => `${row.cells[0].value} ${row.cells[1].value}`}
-                            isLoading={rows == null}
+                            isLoading={false}
                         />
                     </FormControl>
                     <FormControl mt={4} isRequired={true}>
-                        <FormLabel>Company</FormLabel>
-                        <Input onChange={event => setCompanyInput(event.target.value)}/>
-                    </FormControl>
-                    <FormControl mt={4}>
                         <FormLabel>Test</FormLabel>
-                        <Input disabled={true}/>
+                        <Select>
+                            <option value='Delivery' onClick={() => setInput("Delivery")}>Delivery</option>
+                            <option value='Pickup' onClick={() => setInput("Pickup")}>Pickup</option>
+                            <option value='Move' onClick={() => setInput("Move")}>Move</option>
+                        </Select>
                     </FormControl>
-                    <FormControl mt={4}>
+                    <FormControl mt={4} isRequired={true}>
                         <FormLabel>Test</FormLabel>
-                        <Input disabled={true}/>
+                        <Input/>
+                    </FormControl>
+                    <FormControl mt={4} isRequired={true}>
+                        <FormLabel>Test</FormLabel>
+                        <Input/>
                     </FormControl>
                     <ModalFooter>
-                        <Button ml={4} isDisabled={companyInput.length === 0} isLoading={isCreating} onClick={create}>Create</Button>
+                        <Button ml={4} isDisabled={selection === undefined} isLoading={isCreating} onClick={create}>Create</Button>
                     </ModalFooter>
                 </ModalBody>
             </ModalContent>
@@ -63,7 +82,7 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
 
     function create() {
         setIsCreating(true)
-        backend.createData({company: companyInput})
+        backend.createData({input: companyInput})
             .then(row => {onCreated(row); onClose()})
             .then(_ => {toast({title: "Successfully created!", status: 'success', isClosable: true})})
             .catch(_ => toast({title: "Error creating.", status: 'error', isClosable: true}))
@@ -74,7 +93,7 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
 function createRows(): TableRow[] {
     return [
         { id: "a", cells: [{ value: "sander" }, {value: "krabbenborg"}]},
-        { id: "b",cells: [{ value: "vincent" }, {value: "krabbenborg"}]},
+        { id: "b", cells: [{ value: "vincent" }, {value: "krabbenborg"}]},
         { id: "c", cells: [{ value: "laura" }, {value: "krabbenborg"}]},
         { id: "d", cells: [{ value: "ellen" }, {value: "krabbenborg"}]},
         { id: "e", cells: [{ value: "jacqueline" }, {value: "krabbenborg"}]},

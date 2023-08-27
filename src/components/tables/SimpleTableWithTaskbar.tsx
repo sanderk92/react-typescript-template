@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import {CloseIcon, SearchIcon} from "@chakra-ui/icons";
 import SpinnerCentered from "../SpinnerCentered";
+import "../../styles.css"
 
 export interface SearchableTableComponentProps extends TableComponentProps {
     buttons?: React.JSX.Element

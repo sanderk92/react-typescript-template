@@ -13,5 +13,5 @@ export interface DataView {
 }
 
 export interface DataEntry {
-    company: string,
+    input: string,
 }
