@@ -3,6 +3,8 @@ import {useBackend} from "../../http/BackendService";
 import * as React from "react";
 import {useState} from "react";
 import {DataView} from "../../http/model/Data";
+import SimpleTableDropdown from "../../components/tables/SimpleTableDropdown";
+import { TableRow } from "../../components/tables/SimpleTable";
 
 export interface CreateDrawerProps {
     isOpen: boolean
@@ -16,6 +18,8 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
 
     const [isCreating, setIsCreating] = useState(false)
     const [companyInput, setCompanyInput] = useState("")
+    const [selection, setSelection] = useState<TableRow | undefined>()
+    const [rows, setRows] = useState<TableRow[] | undefined>()
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -25,6 +29,18 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
                 <ModalCloseButton/>
                 <ModalBody pb={6}>
                     <FormControl isRequired={true}>
+                        <FormLabel>Recipient</FormLabel>
+                        <SimpleTableDropdown
+                            rows={rows ?? []}
+                            onSearch={(query) => setRows(createRows)}
+                            selections={selection != null ? [selection] : []}
+                            onSelect={(row) => { setSelection(row); setRows(undefined) }}
+                            onUnselect={() => setSelection(undefined)}
+                            tagValue={row => `${row.cells[0].value} ${row.cells[1].value}`}
+                            isLoading={false}
+                        />
+                    </FormControl>
+                    <FormControl mt={4} isRequired={true}>
                         <FormLabel>Company name</FormLabel>
                         <Input placeholder='Name' onChange={event => setCompanyInput(event.target.value)}/>
                     </FormControl>
@@ -52,4 +68,16 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
             .catch(_ => toast({title: "Error creating.", status: 'error', isClosable: true}))
             .finally(() => setIsCreating(false))
     }
+}
+
+function createRows(): TableRow[] {
+    return [
+        { id: "a", cells: [{ value: "sander" }, {value: "krabbenborg"}]},
+        { id: "b",cells: [{ value: "vincent" }, {value: "krabbenborg"}]},
+        { id: "c", cells: [{ value: "laura" }, {value: "krabbenborg"}]},
+        { id: "d", cells: [{ value: "ellen" }, {value: "krabbenborg"}]},
+        { id: "e", cells: [{ value: "jacqueline" }, {value: "krabbenborg"}]},
+        { id: "f", cells: [{ value: "john" }, {value: "krabbenborg"}]},
+        { id: "g", cells: [{ value: "martin" }, {value: "krabbenborg"}]},
+    ]
 }

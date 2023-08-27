@@ -1,24 +1,17 @@
-import SimpleTable, {TableCell, TableRow} from "../../components/tables/SimpleTable";
+import {TableCell, TableRow} from "../../components/tables/SimpleTable";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import useBackend from "../../http/BackendService";
 import InboxDetailsDrawer from "./InboxDetailsDrawer";
 import InboxCreateModal from "./InboxCreateModal";
-import {
-    RiAddCircleFill,
-    RiAddLine,
-    RiCheckboxCircleFill,
-    RiCloseCircleFill,
-    RiFilterLine,
-    RiRefreshLine
-} from "react-icons/all";
+import {RiAddCircleFill, RiAddLine, RiCheckboxCircleFill, RiCloseCircleFill, RiFilterLine, RiRefreshLine} from "react-icons/all";
 import {RiPlayCircleFill} from "react-icons/ri";
 import {minusMonths, timeAgoIndicator} from "../../utils/Date";
 import {DataStatus, DataView} from "../../http/model/Data";
 import InboxFiltersDrawer from "./InboxFiltersDrawer";
 import {Box, Flex, IconButton} from "@chakra-ui/react";
-import SearchableTable from "../../components/tables/SearchableTable";
+import SimpleTableWithTaskbar from "../../components/tables/SimpleTableWithTaskbar";
 
 export interface InboxFilter {
     status: DataStatus[],
@@ -52,10 +45,10 @@ export default function Inbox() {
 
     return (
         <Box>
-            <SearchableTable
-                header={tableHeader()}
+            <SimpleTableWithTaskbar
                 onSelect={navigateDetails}
                 rows={rows?.map(tableRow)}
+                header={tableHeader()}
                 defaultSort={{ direction: false, column: 1 }}
                 buttons={
                     <Flex alignItems={"flex-end"} justifyContent={"flex-end"}>
@@ -99,18 +92,6 @@ const tableRow = (data: DataView): TableRow => ({
     ],
 })
 
-const timeCell = (data: DataView): TableCell => {
-    return {
-        sortValue: data.time.getTime(),
-        maxWidth: firstColumnWidth,
-        value:
-            <Flex justifyContent={"space-between"}>
-                { timeAgoIndicator(data.time) }
-                { statusCell(data.status) }
-            </Flex>,
-    }
-}
-
 const companyCell = (name: string): TableCell => {
     return {
         sortValue: name,
@@ -119,7 +100,19 @@ const companyCell = (name: string): TableCell => {
     }
 }
 
-const statusCell = (status: DataStatus): React.JSX.Element => {
+const timeCell = (data: DataView): TableCell => {
+    return {
+        sortValue: data.time.getTime(),
+        maxWidth: firstColumnWidth,
+        value:
+            <Flex justifyContent={"space-between"}>
+                { timeAgoIndicator(data.time) }
+                { statusIndicator(data.status) }
+            </Flex>,
+    }
+}
+
+const statusIndicator = (status: DataStatus): React.JSX.Element => {
     if (status === DataStatus.open) {
         return <RiAddCircleFill color={"green"}/>
     } else if (status === DataStatus.running) {

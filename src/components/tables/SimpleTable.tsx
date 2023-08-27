@@ -3,8 +3,6 @@ import {Flex, Icon, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorMod
 import {TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import "../components.css"
 import {v4 as uuid} from 'uuid';
-import SpinnerCentered from "../SpinnerCentered";
-import EmptyResultDisplay from "../EmptyResultDisplay";
 
 export interface TableCell {
     value: ReactNode
@@ -27,11 +25,11 @@ export interface TableHeader {
 }
 
 export interface TableComponentProps {
-    header: TableHeader
-    rows: TableRow[] | undefined
-    onSelect: (row: TableRow) => void
-    buttons?: React.JSX.Element
+    rows?: TableRow[]
+    header?: TableHeader
     defaultSort?: SortState
+    maxHeight?: string
+    onSelect: (row: TableRow) => void
 }
 
 interface SortState {
@@ -39,16 +37,17 @@ interface SortState {
     column: number
 }
 
-export default function SimpleTable({header, rows, onSelect, defaultSort}: TableComponentProps) {
+export default function SimpleTable({header, rows, onSelect, defaultSort, maxHeight}: TableComponentProps) {
     const [sort, setSort] = useState<SortState>(defaultSort ?? {column: 0, direction: false})
 
-    return rows == null ? <SpinnerCentered/> : rows.length === 0 ? <EmptyResultDisplay/> :
-        <TableContainer>
+    return (
+        <TableContainer maxH={maxHeight} overflowY={"scroll"}>
             <Table variant='simple' size="md">
-                <TableHead header={header} sort={sort} setSort={setSort}/>
-                <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/>
+                {header ? <TableHead header={header} sort={sort} setSort={setSort}/> : null}
+                {rows ? <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/> : null}
             </Table>
         </TableContainer>
+    )
 }
 
 const TableHead = ({header, sort, setSort}: {
