@@ -7,7 +7,7 @@ export interface SearchableTableComponentProps extends TableComponentProps {
     buttons?: React.JSX.Element
 }
 
-export default function SearchableTable({header, rows, onSelect, defaultSort, buttons}: SearchableTableComponentProps) {
+export default function SimpleTableWithTaskbar({header, rows, onSelect, defaultSort, buttons}: SearchableTableComponentProps) {
     const [search, setSearch] = useState<string>('')
     const colorScheme = useColorModeValue('gray.50', 'gray.700')
 
