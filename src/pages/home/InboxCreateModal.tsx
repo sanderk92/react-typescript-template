@@ -3,8 +3,8 @@ import {useBackend} from "../../http/BackendService";
 import * as React from "react";
 import {useState} from "react";
 import {DataView} from "../../http/model/Data";
-import SimpleTableDropdown from "../../components/tables/SimpleTableDropdown";
 import { TableRow } from "../../components/tables/SimpleTable";
+import SimpleTableDropdown from "../../components/tables/SimpleTableDropdown";
 
 export interface CreateDrawerProps {
     isOpen: boolean
@@ -32,11 +32,11 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
                         <FormLabel>Recipient</FormLabel>
                         <SimpleTableDropdown
                             rows={rows ?? []}
-                            onSearch={(query) => setRows(createRows)}
+                            onSearch={(query: string) => setRows(createRows)}
                             selections={selection != null ? [selection] : []}
-                            onSelect={(row) => { setSelection(row); setRows(undefined) }}
+                            onSelect={(row: TableRow) => { setSelection(row); setRows(undefined) }}
                             onUnselect={() => setSelection(undefined)}
-                            tagValue={row => `${row.cells[0].value} ${row.cells[1].value}`}
+                            tagValue={(row: TableRow) => `${row.cells[0].value} ${row.cells[1].value}`}
                             isLoading={false}
                         />
                     </FormControl>
