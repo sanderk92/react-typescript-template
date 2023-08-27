@@ -1,10 +1,10 @@
 import React, {ReactNode, useState} from 'react';
-import {Box, Flex, Icon, Input, InputGroup, InputLeftElement, InputRightElement, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
-import {CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
-import "./components.css"
-import { v4 as uuid } from 'uuid';
-import SpinnerCentered from "./SpinnerCentered";
-import EmptyResultDisplay from "./EmptyResultDisplay";
+import {Flex, Icon, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
+import {TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
+import "../components.css"
+import {v4 as uuid} from 'uuid';
+import SpinnerCentered from "../SpinnerCentered";
+import EmptyResultDisplay from "../EmptyResultDisplay";
 
 export interface TableCell {
     value: ReactNode
@@ -39,44 +39,16 @@ interface SortState {
     column: number
 }
 
-export default function SelectionTable({header, rows, onSelect, buttons, defaultSort}: TableComponentProps) {
-    const [search, setSearch] = useState<string>('')
+export default function SimpleTable({header, rows, onSelect, defaultSort}: TableComponentProps) {
     const [sort, setSort] = useState<SortState>(defaultSort ?? {column: 0, direction: false})
 
-    return (
+    return rows == null ? <SpinnerCentered/> : rows.length === 0 ? <EmptyResultDisplay/> :
         <TableContainer>
-            <Flex mb={"2"} justifyContent={"flex-end"}>
-                <Box m={"2"}><SearchField search={search} onSearch={setSearch}/></Box>
-                <Box m={"2"}>{buttons}</Box>
-            </Flex>
-            {
-                rows == null ? <SpinnerCentered/> : rows.length === 0 ? <EmptyResultDisplay/> :
-                    <Table variant='simple' size="md">
-                        <TableHead header={header} sort={sort} setSort={setSort}/>
-                        <TableBody rows={filterAndSort(rows, search, sort)} onSelect={onSelect}/>
-                    </Table>
-            }
+            <Table variant='simple' size="md">
+                <TableHead header={header} sort={sort} setSort={setSort}/>
+                <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/>
+            </Table>
         </TableContainer>
-    )
-}
-
-const SearchField = ({search, onSearch}: {
-    search: string
-    onSearch: (query: string) => void
-}) => {
-    const colorScheme = useColorModeValue('gray.50', 'gray.700')
-
-    return (
-        <InputGroup size='md'>
-            <InputLeftElement>
-                <SearchIcon/>
-            </InputLeftElement>
-            <Input variant={"filled"} bg={colorScheme} value={search} onChange={event => onSearch(event.target.value)} placeholder={"Search"}/>
-            <InputRightElement>
-                <CloseIcon className={"clickable"} onClick={() => onSearch("")}/>
-            </InputRightElement>
-        </InputGroup>
-    )
 }
 
 const TableHead = ({header, sort, setSort}: {
@@ -98,10 +70,12 @@ const TableHead = ({header, sort, setSort}: {
                         maxWidth={cell.maxWidth}
                         isNumeric={cell.numerical}
                         bg={backgroundColorScheme}
-                        className={ isSortable(cell) ? "unselectable clickable" : "unselectable" }
-                        _hover={ isSortable(cell) ? {background: hoverColorScheme} : {backgroundColorScheme}}
-                        _active={ isSortable(cell) ? {background: activeColorScheme} : {backgroundColorScheme}}
-                        onClick={() => {if (isSortable(cell)) setSort({direction: !sort.direction, column: index})}}
+                        className={isSortable(cell) ? "unselectable clickable" : "unselectable"}
+                        _hover={isSortable(cell) ? {background: hoverColorScheme} : {backgroundColorScheme}}
+                        _active={isSortable(cell) ? {background: activeColorScheme} : {backgroundColorScheme}}
+                        onClick={() => {
+                            if (isSortable(cell)) setSort({direction: !sort.direction, column: index})
+                        }}
                     >
                         <Flex justifyContent="space-between">
                             {cell.value}
@@ -155,17 +129,9 @@ const TableBody = ({rows, onSelect}: {
     )
 }
 
-function filterAndSort(rows: TableRow[], search: string, sort: SortState) {
+function sorted(rows: TableRow[], sort: SortState) {
     const collator = Intl.Collator([], {numeric: true})
-
-    return rows
-        .filter(row => {
-            const cells = row.cells.map(cell => cell.value)
-            return Object.values(cells).join(" ").toLowerCase().includes(search.toLowerCase())
-        })
-        .sort((a, b) =>
-            compare(getSortValue(a), getSortValue(b))
-        )
+    return rows.sort((a, b) => compare(getSortValue(a), getSortValue(b)))
 
     function getSortValue(a: TableRow): ReactNode {
         const cell = a.cells[sort.column]

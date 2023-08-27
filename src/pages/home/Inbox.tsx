@@ -1,4 +1,4 @@
-import SelectionTable, {TableCell, TableRow} from "../../components/SelectionTable";
+import SimpleTable, {TableCell, TableRow} from "../../components/tables/SimpleTable";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Route, Routes, useNavigate} from "react-router-dom";
@@ -18,6 +18,7 @@ import {minusMonths, timeAgoIndicator} from "../../utils/Date";
 import {DataStatus, DataView} from "../../http/model/Data";
 import InboxFiltersDrawer from "./InboxFiltersDrawer";
 import {Box, Flex, IconButton} from "@chakra-ui/react";
+import SearchableTable from "../../components/tables/SearchableTable";
 
 export interface InboxFilter {
     status: DataStatus[],
@@ -51,7 +52,7 @@ export default function Inbox() {
 
     return (
         <Box>
-            <SelectionTable
+            <SearchableTable
                 header={tableHeader()}
                 onSelect={navigateDetails}
                 rows={rows?.map(tableRow)}
