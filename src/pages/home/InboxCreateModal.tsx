@@ -34,23 +34,24 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
                             rows={rows ?? []}
                             onSearch={(query: string) => setRows(createRows)}
                             selections={selection != null ? [selection] : []}
-                            onSelect={(row: TableRow) => { setSelection(row); setRows(undefined) }}
+                            onSelect={setSelection}
                             onUnselect={() => setSelection(undefined)}
+                            onClose={() => setRows(undefined)}
                             tagValue={(row: TableRow) => `${row.cells[0].value} ${row.cells[1].value}`}
-                            isLoading={false}
+                            isLoading={rows == null}
                         />
                     </FormControl>
                     <FormControl mt={4} isRequired={true}>
-                        <FormLabel>Company name</FormLabel>
-                        <Input placeholder='Name' onChange={event => setCompanyInput(event.target.value)}/>
+                        <FormLabel>Company</FormLabel>
+                        <Input onChange={event => setCompanyInput(event.target.value)}/>
                     </FormControl>
                     <FormControl mt={4}>
                         <FormLabel>Test</FormLabel>
-                        <Input placeholder='Test' disabled={true}/>
+                        <Input disabled={true}/>
                     </FormControl>
                     <FormControl mt={4}>
                         <FormLabel>Test</FormLabel>
-                        <Input placeholder='Test'  disabled={true}/>
+                        <Input disabled={true}/>
                     </FormControl>
                     <ModalFooter>
                         <Button ml={4} isDisabled={companyInput.length === 0} isLoading={isCreating} onClick={create}>Create</Button>

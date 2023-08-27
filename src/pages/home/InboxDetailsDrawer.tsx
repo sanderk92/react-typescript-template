@@ -1,5 +1,6 @@
 import {useParams} from "react-router-dom";
 import {
+    Box,
     Drawer,
     DrawerBody,
     DrawerCloseButton,
@@ -7,11 +8,10 @@ import {
     DrawerHeader,
     FormControl,
     FormLabel,
-    Input,
+    Input, Text,
 } from "@chakra-ui/react";
 import * as React from "react";
 import {DataView} from "../../http/model/Data";
-import MissingResultDisplay from "../../components/MissingResultDisplay";
 import useBackend from "../../http/BackendService";
 import {useEffect, useState} from "react";
 import SpinnerCentered from "../../components/SpinnerCentered";
@@ -60,3 +60,10 @@ export default function InboxDetailsDrawer({isOpen, onClose}: DetailsDrawerProps
         </Drawer>
     )
 }
+
+function MissingResultDisplay() {
+    return <Box className={"centered-parent"}>
+        <Text as={"em"} className={"centered-child"}>The requested data was not found</Text>
+    </Box>
+}
+

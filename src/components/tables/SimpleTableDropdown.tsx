@@ -1,6 +1,6 @@
 import {
     Box,
-    Button,
+    Button, Card,
     Flex,
     Input,
     InputGroup,
@@ -19,39 +19,45 @@ export interface SimpleTableDropdownProps {
     selections: TableRow[]
     onSelect: (row: TableRow) => void
     onUnselect: (row: TableRow) => void
+    onClose: () => void
     tagValue: (row: TableRow) => string
     isLoading: boolean
 }
 
-export default function SimpleTableDropdown({rows, onSearch, selections, onSelect, onUnselect, tagValue, isLoading}: SimpleTableDropdownProps) {
+export default function SimpleTableDropdown({rows, onSearch, selections, onSelect, onUnselect, onClose, tagValue, isLoading}: SimpleTableDropdownProps) {
     const [search, setSearch] = useState<string>('')
     const colorScheme = useColorModeValue('gray.50', 'gray.700')
 
+    const reset = () => {
+        setSearch("")
+        onClose()
+    }
+
     return <Box>
-        { selections.map((row) =>
+        <Flex mb={"1"} justifyContent={"space-between"}>
+            <InputGroup size='md' >
+                <InputLeftElement>
+                    <SearchIcon/>
+                </InputLeftElement>
+                <Input variant={"outline"} value={search} onChange={event => setSearch(event.target.value)}/>
+                <InputRightElement>
+                    <CloseIcon className={"clickable"} onClick={() => reset()}/>
+                </InputRightElement>
+            </InputGroup>
+            <Button isLoading={isLoading} onClick={() => onSearch(search)}>Search</Button>
+        </Flex>
+        { selections.map(row =>
             <Tag size={"sm"} mr={"1"}>
                 <TagLabel>{tagValue(row)}</TagLabel>
                 <TagCloseButton onClick={() => onUnselect(row)}></TagCloseButton>
             </Tag>
         )}
-        <Flex justifyContent={"space-between"}>
-            <InputGroup size='md'>
-                <InputLeftElement>
-                    <SearchIcon/>
-                </InputLeftElement>
-                <Input variant={"filled"} bg={colorScheme} value={search} onChange={event => setSearch(event.target.value)}/>
-                <InputRightElement>
-                    <CloseIcon className={"clickable"} onClick={() => setSearch("")}/>
-                </InputRightElement>
-            </InputGroup>
-            <Button isLoading={isLoading} onClick={() => onSearch(search)}>Search</Button>
-        </Flex>
-        <Box>
+        <Card position={"absolute"} zIndex={999} bg={colorScheme} width={"100%"}>
             <SimpleTable
                 maxHeight={"30vh"}
                 rows={rows}
-                onSelect={row => {onSelect(row); setSearch("")}}
+                onSelect={row => {onSelect(row); reset()}}
             />
-        </Box>
+        </Card>
     </Box>
 }

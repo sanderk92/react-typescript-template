@@ -1,8 +1,16 @@
 import React, {useState} from "react";
 import SimpleTable, {TableComponentProps, TableRow} from "./SimpleTable";
-import {Box, Flex, Input, InputGroup, InputLeftElement, InputRightElement, useColorModeValue} from "@chakra-ui/react";
+import {
+    Box,
+    Flex,
+    Input,
+    InputGroup,
+    InputLeftElement,
+    InputRightElement,
+    Text,
+    useColorModeValue
+} from "@chakra-ui/react";
 import {CloseIcon, SearchIcon} from "@chakra-ui/icons";
-import EmptyResultDisplay from "../EmptyResultDisplay";
 import SpinnerCentered from "../SpinnerCentered";
 
 export interface SearchableTableComponentProps extends TableComponentProps {
@@ -29,8 +37,7 @@ export default function SimpleTableWithTaskbar({header, rows, onSelect, defaultS
                 </Box>
                 <Box>{buttons}</Box>
             </Flex>
-            {
-                rows == null ? <SpinnerCentered/> : rows.length === 0 ? <EmptyResultDisplay/> :
+            { rows == null ? <SpinnerCentered/> : rows.length === 0 ? <EmptyResultDisplay/> :
                 <SimpleTable
                     rows={rows?.filter(row => filter(row, search))}
                     onSelect={onSelect}
@@ -47,3 +54,8 @@ function filter(row: TableRow, search: string): boolean {
     return Object.values(cells).join(" ").toLowerCase().includes(search.toLowerCase())
 }
 
+function EmptyResultDisplay() {
+    return <Box className={"centered-parent"}>
+        <Text as={"em"} className={"centered-child"}>Nothing to see here!</Text>
+    </Box>
+}
