@@ -50,7 +50,7 @@ export default function SimpleTableDropdown({rows, onSearch, selections, onSelec
             <SimpleTable
                 maxHeight={"30vh"}
                 rows={rows}
-                onSelect={row => {onSelect(row); onSelect(row)}}
+                onSelect={row => {onSelect(row); setSearch("")}}
             />
         </Box>
     </Box>
