@@ -51,7 +51,6 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
                             selections={selection != null ? [selection] : []}
                             onSelect={setSelection}
                             onUnselect={() => setSelection(undefined)}
-                            onClose={() => setRows(undefined)}
                             tagValue={(row: TableRow) => `${row.cells[0].value} ${row.cells[1].value}`}
                             isLoading={false}
                         />
