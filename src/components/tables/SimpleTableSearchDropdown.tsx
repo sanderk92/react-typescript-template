@@ -22,11 +22,10 @@ export interface SimpleTableDropdownProps {
     selections: TableRow[]
     onSelect: (row: TableRow) => void
     onUnselect: (row: TableRow) => void
-    tagValue: (row: TableRow) => string
     isLoading: boolean
 }
 
-export default function SimpleTableSearchDropdown({rows, onSearch, selections, onSelect, onUnselect, tagValue, isLoading}: SimpleTableDropdownProps) {
+export default function SimpleTableSearchDropdown({rows, onSearch, selections, onSelect, onUnselect, isLoading}: SimpleTableDropdownProps) {
     const [search, setSearch] = useState<string>("")
     const [isOpen, setIsOpen] = useState<boolean>(false)
 
@@ -84,7 +83,7 @@ export default function SimpleTableSearchDropdown({rows, onSearch, selections, o
             </Card>
             { selections.map(row =>
                 <Tag size={"sm"} mr={"1"}>
-                    <TagLabel>{tagValue(row)}</TagLabel>
+                    <TagLabel>{row.cells.map(cell => cell.value).join(" ")}</TagLabel>
                     <TagCloseButton onClick={() => onUnselect(row)}></TagCloseButton>
                 </Tag>
             )}
