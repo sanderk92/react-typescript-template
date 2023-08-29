@@ -17,33 +17,33 @@ import SimpleTable, {TableRow} from "./SimpleTable";
 import {CloseIcon, SearchIcon} from "@chakra-ui/icons";
 
 export interface SimpleTableDropdownProps {
-    rows: TableRow[]
-    onSearch: (query: string) => void
+    onSearch: (query: string) => Promise<TableRow[]>
     selections: TableRow[]
     onSelect: (row: TableRow) => void
     onUnselect: (row: TableRow) => void
-    isLoading: boolean
 }
 
-export default function SimpleTableSearchDropdown({rows, onSearch, selections, onSelect, onUnselect, isLoading}: SimpleTableDropdownProps) {
-    const [search, setSearch] = useState<string>("")
+export default function SimpleTableSearchDropdown({onSearch, selections, onSelect, onUnselect}: SimpleTableDropdownProps) {
+    const [rows, setRows] = useState<TableRow[]>([])
+    const [query, setQuery] = useState<string>("")
+
     const [isOpen, setIsOpen] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const colorScheme = useColorModeValue('gray.50', 'gray.600')
     const outsideClickRef = useRef<HTMLDivElement>(null);
 
-    const open = (query: string) => {
-        onSearch(query)
-        setIsOpen(true)
+    const requestSearch = () => {
+        setIsLoading(true)
     }
 
-    const select = (row: TableRow) => {
+    const selectRow = (row: TableRow) => {
         onSelect(row)
-        reset()
+        resetInput()
     }
 
-    const reset = () => {
-        setSearch("");
+    const resetInput = () => {
+        setQuery("");
         setIsOpen(false)
     }
 
@@ -58,6 +58,15 @@ export default function SimpleTableSearchDropdown({rows, onSearch, selections, o
         return () => document.removeEventListener("mousedown", handleOutsideClick)
     })
 
+    useEffect(() => {
+        if (isLoading) {
+            onSearch(query)
+                .then(setRows)
+                .then(() => setIsOpen(true))
+                .then(() => setIsLoading(false))
+        }
+    }, [isLoading, onSearch, query])
+
     return (
         <Box ref={outsideClickRef}>
             <Flex mb={"1"} justifyContent={"space-between"}>
@@ -65,21 +74,17 @@ export default function SimpleTableSearchDropdown({rows, onSearch, selections, o
                     <InputLeftElement>
                         <SearchIcon/>
                     </InputLeftElement>
-                    <Input variant={"outline"} value={search}
-                           onChange={event => setSearch(event.target.value)}
-                           onKeyDown={e=> {if (e.key === 'Enter') open(search)}}/>
+                    <Input variant={"outline"} value={query}
+                           onChange={event => setQuery(event.target.value)}
+                           onKeyDown={e=> {if (e.key === 'Enter') requestSearch()}}/>
                     <InputRightElement>
-                        <CloseIcon className={"clickable"} onClick={reset}/>
+                        <CloseIcon className={"clickable"} onClick={resetInput}/>
                     </InputRightElement>
                 </InputGroup>
-                <Button isLoading={isLoading} onClick={() => open(search)}>Search</Button>
+                <Button isLoading={isLoading} onClick={requestSearch}>Search</Button>
             </Flex>
             <Card position={"absolute"} zIndex={999} bg={colorScheme} width={"100%"} hidden={!isOpen}>
-                <SimpleTable
-                    maxHeight={"30vh"}
-                    rows={rows}
-                    onSelect={select}
-                />
+                <SimpleTable maxHeight={"30vh"} rows={rows} onSelect={selectRow}/>
             </Card>
             { selections.map(row =>
                 <Tag size={"sm"} mr={"1"}>

@@ -19,6 +19,7 @@ import {useState} from "react";
 import {DataView} from "../../http/model/Data";
 import {TableRow} from "../../components/tables/SimpleTable";
 import SimpleTableSearchDropdown from "../../components/tables/SimpleTableSearchDropdown";
+import {UserDetails} from "../../http/model/CurrentUserDetails";
 
 export interface CreateDrawerProps {
     isOpen: boolean
@@ -26,15 +27,14 @@ export interface CreateDrawerProps {
     onCreated: (data: DataView) => void
 }
 
-// TODO move user retrieval to backend
 export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDrawerProps) {
     const toast = useToast()
     const backend = useBackend()
 
-    const [isCreating, setIsCreating] = useState(false)
     const [companyInput, setInput] = useState("")
-    const [selection, setSelection] = useState<TableRow | undefined>()
-    const [rows, setRows] = useState<TableRow[] | undefined>()
+    const [userSelection, setUserSelection] = useState<TableRow | undefined>()
+
+    const [isCreating, setIsCreating] = useState(false)
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -46,12 +46,10 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
                     <FormControl isRequired={true}>
                         <FormLabel>Recipient</FormLabel>
                         <SimpleTableSearchDropdown
-                            rows={rows ?? []}
-                            onSearch={(query: string) => setRows(createRows)}
-                            selections={selection != null ? [selection] : []}
-                            onSelect={setSelection}
-                            onUnselect={() => setSelection(undefined)}
-                            isLoading={false}
+                            onSearch={fetchUsers}
+                            selections={userSelection != null ? [userSelection] : []}
+                            onSelect={setUserSelection}
+                            onUnselect={() => setUserSelection(undefined)}
                         />
                     </FormControl>
                     <FormControl mt={4} isRequired={true}>
@@ -71,7 +69,7 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
                         <Input/>
                     </FormControl>
                     <ModalFooter>
-                        <Button ml={4} isDisabled={selection === undefined} isLoading={isCreating} onClick={create}>Create</Button>
+                        <Button ml={4} isDisabled={userSelection === undefined} isLoading={isCreating} onClick={create}>Create</Button>
                     </ModalFooter>
                 </ModalBody>
             </ModalContent>
@@ -86,16 +84,14 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
             .catch(_ => toast({title: "Error creating.", status: 'error', isClosable: true}))
             .finally(() => setIsCreating(false))
     }
-}
 
-function createRows(): TableRow[] {
-    return [
-        { id: "a", cells: [{ value: "sander" }, {value: "krabbenborg"}]},
-        { id: "b", cells: [{ value: "vincent" }, {value: "krabbenborg"}]},
-        { id: "c", cells: [{ value: "laura" }, {value: "krabbenborg"}]},
-        { id: "d", cells: [{ value: "ellen" }, {value: "krabbenborg"}]},
-        { id: "e", cells: [{ value: "jacqueline" }, {value: "krabbenborg"}]},
-        { id: "f", cells: [{ value: "john" }, {value: "krabbenborg"}]},
-        { id: "g", cells: [{ value: "martin" }, {value: "krabbenborg"}]},
-    ]
+    function fetchUsers(name: string): Promise<TableRow[]> {
+        return backend.queryUsers(name)
+            .then(users => users.map(user => asTableRow(user)))
+            .catch(_ => { toast({title: "Error fetching users.", status: 'error', isClosable: true}); return []})
+    }
+
+    function asTableRow(user: UserDetails): TableRow {
+        return { id: user.id, cells: [{value: user.firstName}, {value:user.lastName}]}
+    }
 }

@@ -10,7 +10,7 @@ import ContactPage from "./pages/contact/ContactPage";
 import useAuthService from "./auth/AuthService";
 import {useBackend} from "./http/BackendService";
 import ErrorBoundary from "./ErrorBoundary";
-import {UserDetails} from "./http/model/UserDetails";
+import {CurrentUserDetails} from "./http/model/CurrentUserDetails";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -28,7 +28,7 @@ export function UserInterface() {
     const authService = useAuthService()
     const backendService = useBackend()
 
-    const [user, setUser] = useState<UserDetails>({id: "sander", roles:[]})
+    const [user, setUser] = useState<CurrentUserDetails>({id: "sander", roles:[]})
 
     // useEffect(() => {
     //     if (!authService.isLoading() && !authService.isLoggedIn()) {

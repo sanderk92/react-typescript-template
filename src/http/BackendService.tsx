@@ -2,12 +2,12 @@ import useAuthService from "../auth/AuthService";
 import axios from "axios";
 import {v4 as uuid} from 'uuid';
 import {DataEntry, DataStatus, DataView} from "./model/Data";
-import {UserDetails} from "./model/UserDetails";
+import {CurrentUserDetails, UserDetails} from "./model/CurrentUserDetails";
 import {useEffect} from "react";
 
-// eslint-disable react-hooks/exhaustive-deps
 export interface BackendProps {
-    getUserDetails(): Promise<UserDetails>
+    getUser(): Promise<CurrentUserDetails>
+    queryUsers(name: string): Promise<UserDetails[]>
     getData(id: String): Promise<DataView | undefined>
     queryData(state: DataStatus[], start: Date, end: Date): Promise<DataView[]>
     createData(entry: DataEntry): Promise<DataView>
@@ -24,27 +24,33 @@ export const useBackend = (): BackendProps => {
         });
     })
 
-    const getUser = (): Promise<UserDetails> =>
-        axios.get<UserDetails>(backendUrl + "/user")
+    const getUser = (): Promise<CurrentUserDetails> =>
+        axios.get<CurrentUserDetails>(backendUrl + "/user")
             .then(result => result.data)
+
+    const queryUsers = (name: string): Promise<UserDetails[]> =>
+        new Promise(resolve => setTimeout(resolve, 2000))
+            .then(_ => users)
+            .then(users => users.filter(user => user.firstName.includes(name) || user.lastName.includes(name)))
 
     const getData = (id: String): Promise<DataView | undefined> =>
         new Promise(resolve => setTimeout(resolve, 2000))
-            .then(_ => inboxRow.find(row => row.id === id))
+            .then(_ => inbox.find(row => row.id === id))
 
     const queryData = (status: DataStatus[], start: Date, end: Date): Promise<DataView[]> =>
         new Promise(resolve => setTimeout(resolve, 2000))
-            .then(_ => inboxRow)
-            .then(rows => rows.filter(row => status.includes(row.status)))
-            .then(rows => rows.filter(row => row.time.getTime() >= start.getTime()))
-            .then(rows => rows.filter(row => row.time.getTime() <= end.getTime()))
+            .then(_ => inbox)
+            .then(inbox => inbox.filter(row => status.includes(row.status)))
+            .then(inbox => inbox.filter(row => row.time.getTime() >= start.getTime()))
+            .then(inbox => inbox.filter(row => row.time.getTime() <= end.getTime()))
 
     const createData = (entry: DataEntry): Promise<DataView> =>
         new Promise(resolve => setTimeout(resolve, 2000))
             .then(_ => ({id: uuid(), status: DataStatus.open, company: entry.input, time: new Date()}))
 
     return {
-        getUserDetails: getUser,
+        getUser,
+        queryUsers,
         getData,
         queryData,
         createData,
@@ -53,7 +59,7 @@ export const useBackend = (): BackendProps => {
 
 export default useBackend
 
-const inboxRow : DataView[] = [
+const inbox : DataView[] = [
     {id: "25c83a41-4918-46bf-9f20-4f15f1651a17", status: DataStatus.open, company: 'Pikobello B.V.', time: new Date()},
     {id: "f111ad08-1b28-4862-ba7a-3296859de416", status: DataStatus.open, company: 'Bandel B.V.', time: new Date(2023, 4, 4, 10, 0, 0)},
     {id: "ca299b6b-8ac0-4614-a32d-6167f1299e69", status: DataStatus.running, company: 'Jantje B.V.', time: new Date(2023, 4, 4, 9, 0, 0)},
@@ -72,4 +78,13 @@ const inboxRow : DataView[] = [
     {id: "9170623e-a204-478a-972b-3cbe7e012ec5", status: DataStatus.finished, company: 'Vrouwen B.V.', time: new Date(2022, 4, 2, 10, 0, 0)},
     {id: "d6710dfa-8e4d-4f4c-b29f-33672117e5ed", status: DataStatus.finished, company: 'Kinder B.V.', time: new Date(2022, 3, 2, 10, 0, 0)},
     {id: "2a8cc34c-accd-47ff-ade4-f5faff94184f", status: DataStatus.finished, company: 'Ouder B.V.', time: new Date(2022, 2, 2, 10, 0, 0)},
+]
+
+const users: UserDetails[] = [
+    { id: "c151c267-4227-43a7-85d9-7f0689ef2299", firstName: "sander", lastName: "krabbenborg"},
+    { id: "64336a50-1d07-4922-a840-06da0f0ac0bf", firstName: "laura", lastName: "krabbenborg"},
+    { id: "156eadae-5c8e-421a-8310-461d77bda8e1", firstName: "vincent", lastName: "krabbenborg"},
+    { id: "cc8868e8-d4ec-47a5-a8c3-1872c9bfbc42", firstName: "jan", lastName: "smit"},
+    { id: "18b42e8f-0049-4286-98a0-5257597e86c1", firstName: "kai", lastName: "smit"},
+    { id: "5bfcc9fc-77cb-4126-ad0e-54a41f632c98", firstName: "ian", lastName: "smit"},
 ]
