@@ -79,7 +79,7 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
     function create() {
         setIsCreating(true)
         backend.createData({input: companyInput})
-            .then(row => {onCreated(row); onClose()})
+            .then(data => {onCreated(data); onClose()})
             .then(_ => {toast({title: "Successfully created!", status: 'success', isClosable: true})})
             .catch(_ => toast({title: "Error creating.", status: 'error', isClosable: true}))
             .finally(() => setIsCreating(false))

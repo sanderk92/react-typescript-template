@@ -13,7 +13,7 @@ import {
     useColorModeValue
 } from "@chakra-ui/react";
 import React, {useEffect, useRef, useState} from "react";
-import SimpleTable, {TableRow} from "./SimpleTable";
+import SimpleTable, {TableHeader, TableRow} from "./SimpleTable";
 import {CloseIcon, SearchIcon} from "@chakra-ui/icons";
 
 export interface SimpleTableDropdownProps<T extends TableRow> {
@@ -21,10 +21,11 @@ export interface SimpleTableDropdownProps<T extends TableRow> {
     selections: T[]
     onSelect: (row: T) => void
     onUnselect: (row: T) => void
+    header?: TableHeader
 }
 
 export default function SimpleTableSearchDropdown<T extends TableRow>(
-    {onSearch, selections, onSelect, onUnselect}: SimpleTableDropdownProps<T>
+    {onSearch, selections, onSelect, onUnselect, header}: SimpleTableDropdownProps<T>
 ) {
     const [rows, setRows] = useState<T[]>([])
     const [query, setQuery] = useState<string>("")
@@ -86,7 +87,7 @@ export default function SimpleTableSearchDropdown<T extends TableRow>(
                 <Button isLoading={isLoading} onClick={requestSearch}>Search</Button>
             </Flex>
             <Card position={"absolute"} zIndex={999} bg={colorScheme} width={"100%"} hidden={!isOpen}>
-                <SimpleTable maxHeight={"30vh"} rows={rows} onSelect={selectRow}/>
+                <SimpleTable maxHeight={"30vh"} rows={rows} onSelect={selectRow} header={header}/>
             </Card>
             { selections.map(row =>
                 <Tag size={"sm"} mr={"1"}>
