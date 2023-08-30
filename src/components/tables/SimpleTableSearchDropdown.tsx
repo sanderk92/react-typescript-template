@@ -16,15 +16,17 @@ import React, {useEffect, useRef, useState} from "react";
 import SimpleTable, {TableRow} from "./SimpleTable";
 import {CloseIcon, SearchIcon} from "@chakra-ui/icons";
 
-export interface SimpleTableDropdownProps {
-    onSearch: (query: string) => Promise<TableRow[]>
-    selections: TableRow[]
-    onSelect: (row: TableRow) => void
-    onUnselect: (row: TableRow) => void
+export interface SimpleTableDropdownProps<T extends TableRow> {
+    onSearch: (query: string) => Promise<T[]>
+    selections: T[]
+    onSelect: (row: T) => void
+    onUnselect: (row: T) => void
 }
 
-export default function SimpleTableSearchDropdown({onSearch, selections, onSelect, onUnselect}: SimpleTableDropdownProps) {
-    const [rows, setRows] = useState<TableRow[]>([])
+export default function SimpleTableSearchDropdown<T extends TableRow>(
+    {onSearch, selections, onSelect, onUnselect}: SimpleTableDropdownProps<T>
+) {
+    const [rows, setRows] = useState<T[]>([])
     const [query, setQuery] = useState<string>("")
 
     const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -37,7 +39,7 @@ export default function SimpleTableSearchDropdown({onSearch, selections, onSelec
         setIsLoading(true)
     }
 
-    const selectRow = (row: TableRow) => {
+    const selectRow = (row: T) => {
         onSelect(row)
         resetInput()
     }

@@ -32,7 +32,7 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
     const backend = useBackend()
 
     const [companyInput, setInput] = useState("")
-    const [userSelection, setUserSelection] = useState<TableRow | undefined>()
+    const [userSelection, setUserSelection] = useState<UserDetails | undefined>()
 
     const [isCreating, setIsCreating] = useState(false)
 
@@ -47,8 +47,8 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
                         <FormLabel>Recipient</FormLabel>
                         <SimpleTableSearchDropdown
                             onSearch={fetchUsers}
-                            selections={userSelection != null ? [userSelection] : []}
-                            onSelect={setUserSelection}
+                            selections={userSelection != null ? [asTableRow(userSelection)] : []}
+                            onSelect={row => setUserSelection(row.user)}
                             onUnselect={() => setUserSelection(undefined)}
                         />
                     </FormControl>
@@ -85,13 +85,17 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
             .finally(() => setIsCreating(false))
     }
 
-    function fetchUsers(name: string): Promise<TableRow[]> {
+    function fetchUsers(name: string): Promise<UserTableRow[]> {
         return backend.queryUsers(name)
             .then(users => users.map(user => asTableRow(user)))
             .catch(_ => { toast({title: "Error fetching users.", status: 'error', isClosable: true}); return []})
     }
 
-    function asTableRow(user: UserDetails): TableRow {
-        return { id: user.id, cells: [{value: user.firstName}, {value:user.lastName}]}
+    function asTableRow(user: UserDetails): UserTableRow {
+        return { id: user.id, user: user, cells: [{value: user.firstName}, {value:user.lastName}]}
     }
+}
+
+interface UserTableRow extends TableRow {
+    user: UserDetails
 }

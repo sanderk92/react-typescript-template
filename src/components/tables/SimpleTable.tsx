@@ -23,12 +23,12 @@ export interface TableHeader {
     cells: TableHeaderCell[]
 }
 
-export interface TableComponentProps {
-    rows?: TableRow[]
+export interface TableComponentProps<T extends TableRow> {
+    rows?: T[]
     header?: TableHeader
     defaultSort?: SortState
     maxHeight?: string
-    onSelect: (row: TableRow) => void
+    onSelect: (row: T) => void
 }
 
 interface SortState {
@@ -36,7 +36,9 @@ interface SortState {
     column: number
 }
 
-export default function SimpleTable({header, rows, onSelect, defaultSort, maxHeight}: TableComponentProps) {
+export default function SimpleTable<T extends TableRow>(
+    {header, rows, onSelect, defaultSort, maxHeight}: TableComponentProps<T>
+) {
     const [sort, setSort] = useState<SortState>(defaultSort ?? {column: 0, direction: false})
 
     return (
@@ -49,11 +51,13 @@ export default function SimpleTable({header, rows, onSelect, defaultSort, maxHei
     )
 }
 
-const TableHead = ({header, sort, setSort}: {
+interface TableHeadProps {
     header: TableHeader
     sort: SortState
     setSort: (sort: SortState) => void
-}) => {
+}
+
+function TableHead({header, sort, setSort}: TableHeadProps): React.JSX.Element {
     const backgroundColorScheme = useColorModeValue('gray.200', 'gray.800')
     const hoverColorScheme = useColorModeValue('gray.300', 'gray.700')
     const activeColorScheme = useColorModeValue('gray.400', 'gray.600')
@@ -94,10 +98,12 @@ const TableHead = ({header, sort, setSort}: {
     }
 }
 
-const TableBody = ({rows, onSelect}: {
-    rows: TableRow[]
-    onSelect: (row: TableRow) => void
-}) => {
+interface TableBodyProps<T extends TableRow> {
+    rows: T[]
+    onSelect: (row: T) => void
+}
+
+function TableBody<T extends TableRow>({rows, onSelect}: TableBodyProps<T>): React.JSX.Element {
     const hoverColorScheme = useColorModeValue('gray.100', 'gray.700')
     const activeColorScheme = useColorModeValue('gray.200', 'gray.600')
 
@@ -127,7 +133,7 @@ const TableBody = ({rows, onSelect}: {
     )
 }
 
-function sorted(rows: TableRow[], sort: SortState) {
+function sorted<T extends TableRow>(rows: T[], sort: SortState): T[] {
     const collator = Intl.Collator([], {numeric: true})
     return rows.sort((a, b) => compare(getSortValue(a), getSortValue(b)))
 

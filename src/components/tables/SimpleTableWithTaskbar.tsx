@@ -14,11 +14,13 @@ import {CloseIcon, SearchIcon} from "@chakra-ui/icons";
 import SpinnerCentered from "../SpinnerCentered";
 import "../../styles.css"
 
-export interface SearchableTableComponentProps extends TableComponentProps {
+export interface SimpleTableWithTaskbarProps<T extends TableRow> extends TableComponentProps<T> {
     buttons?: React.JSX.Element
 }
 
-export default function SimpleTableWithTaskbar({header, rows, onSelect, defaultSort, buttons}: SearchableTableComponentProps) {
+export default function SimpleTableWithTaskbar<T extends TableRow>(
+    {header, rows, onSelect, defaultSort, buttons}: SimpleTableWithTaskbarProps<T>
+) {
     const [search, setSearch] = useState<string>('')
     const colorScheme = useColorModeValue('gray.50', 'gray.700')
 

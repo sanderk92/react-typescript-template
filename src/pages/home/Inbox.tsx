@@ -36,7 +36,7 @@ export default function Inbox() {
     const navigateBase = () => navigate("/inbox")
     const navigateCreate = () => navigate("create")
     const navigateFilters = () => navigate("filters")
-    const navigateDetails = (row: TableRow) => navigate(row.id)
+    const navigateDetails = (id: string) => navigate(id)
 
     useEffect(() => {
         setRows(undefined)
@@ -46,7 +46,7 @@ export default function Inbox() {
     return (
         <Box>
             <SimpleTableWithTaskbar
-                onSelect={navigateDetails}
+                onSelect={(row: TableRow) => navigateDetails(row.id)}
                 rows={rows?.map(tableRow)}
                 header={tableHeader()}
                 defaultSort={{ direction: false, column: 1 }}
