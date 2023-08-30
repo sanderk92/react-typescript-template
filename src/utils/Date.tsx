@@ -6,7 +6,7 @@ export const minusMonths = (date: Date, months: number): Date => {
     return newDate
 }
 
-export const timeAgoIndicator = (date: Date): string => {
+export const timeIndicator = (date: Date): string => {
     const now = new Date()
     const minutesBetween = Math.round((now.getTime() - date.getTime()) / 1000 / 60)
     const hoursBetween = Math.round(minutesBetween / 60)
