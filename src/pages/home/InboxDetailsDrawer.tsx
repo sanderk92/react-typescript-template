@@ -1,15 +1,5 @@
 import {useParams} from "react-router-dom";
-import {
-    Box,
-    Drawer,
-    DrawerBody,
-    DrawerCloseButton,
-    DrawerContent,
-    DrawerHeader,
-    FormControl,
-    FormLabel,
-    Input, Text, useBoolean,
-} from "@chakra-ui/react";
+import {Box, Drawer, DrawerBody, DrawerContent, DrawerHeader, FormControl, FormLabel, Input, Text, useBoolean,} from "@chakra-ui/react";
 import * as React from "react";
 import {DataView} from "../../http/model/Data";
 import useBackend from "../../http/BackendService";
@@ -58,6 +48,7 @@ export default function InboxDetailsDrawer({isOpen, onClose}: DetailsDrawerProps
                         <FormControl mt={4}>
                             <FormLabel>Images</FormLabel>
                             <Collage
+                                imagesPerRow={2}
                                 photos={[
                                     "https://images.unsplash.com/photo-1602271886918-bafecc837c7a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=435&q=80 435w",
                                     "https://images.unsplash.com/photo-1602271886918-bafecc837c7a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=435&q=80 435w",
