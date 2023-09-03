@@ -2,7 +2,6 @@ import {
     Button,
     FormControl,
     FormLabel,
-    Input,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -10,16 +9,18 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
-    Select, useBoolean,
+    Textarea,
+    useBoolean,
     useToast,
 } from "@chakra-ui/react";
 import {useBackend} from "../../http/BackendService";
 import * as React from "react";
 import {useState} from "react";
 import {DataView} from "../../http/model/Data";
-import {TableRow} from "../../components/tables/SimpleTable";
-import SimpleTableSearchDropdown from "../../components/tables/SimpleTableSearchDropdown";
+import {TableRow} from "../../components/SimpleTable";
+import SimpleTableSearchDropdown from "../../components/SimpleTableSearchDropdown";
 import {UserDetails} from "../../http/model/CurrentUserDetails";
+import SimpleTableDropdown from "../../components/SimpleTableDropdown";
 
 export interface CreateDrawerProps {
     isOpen: boolean
@@ -31,10 +32,15 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
     const toast = useToast()
     const backend = useBackend()
 
-    const [companyInput, setInput] = useState("")
     const [userSelection, setUserSelection] = useState<UserDetails | undefined>()
+    const [companySelection, setCompanySelection] = useState<TableRow | undefined>()
+    const [assignment, setAssignment] = useState<string | undefined>(undefined)
 
     const [isCreating, setCreating] = useBoolean()
+
+    const isComplete = () : boolean => {
+        return userSelection !== undefined && companySelection !== undefined && assignment !== undefined
+    }
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -53,23 +59,23 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
                         />
                     </FormControl>
                     <FormControl mt={4} isRequired={true}>
-                        <FormLabel>Test</FormLabel>
-                        <Select>
-                            <option value='Delivery' onClick={() => setInput("Delivery")}>Delivery</option>
-                            <option value='Pickup' onClick={() => setInput("Pickup")}>Pickup</option>
-                            <option value='Move' onClick={() => setInput("Move")}>Move</option>
-                        </Select>
+                        <FormLabel>Type</FormLabel>
+                        <SimpleTableDropdown
+                            selection={companySelection != null ? companySelection : undefined}
+                            rows={[
+                                {id: "Delivery", cells: [{value: "Delivery"}]},
+                                {id: "Move", cells: [{value: "Move"}]},
+                                {id: "Destruction", cells: [{value: "Destruction"}]},
+                            ]}
+                            onSelect={row => setCompanySelection(row)}
+                        />
                     </FormControl>
                     <FormControl mt={4} isRequired={true}>
-                        <FormLabel>Test</FormLabel>
-                        <Input/>
-                    </FormControl>
-                    <FormControl mt={4} isRequired={true}>
-                        <FormLabel>Test</FormLabel>
-                        <Input/>
+                        <FormLabel>Assignment</FormLabel>
+                        <Textarea placeholder={"Please write an assignment"} onChange={event => setAssignment(event.target.value)}/>
                     </FormControl>
                     <ModalFooter>
-                        <Button ml={4} isDisabled={userSelection === undefined} isLoading={isCreating} onClick={create}>Create</Button>
+                        <Button ml={4} isDisabled={!isComplete()} isLoading={isCreating} onClick={create}>Create</Button>
                     </ModalFooter>
                 </ModalBody>
             </ModalContent>
@@ -78,7 +84,7 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
 
     function create() {
         setCreating.on()
-        backend.createData({input: companyInput})
+        backend.createData({input: companySelection?.id ?? "joe"})
             .then(data => {onCreated(data); onClose()})
             .then(_ => {toast({title: "Successfully created!", status: 'success', isClosable: true})})
             .catch(_ => toast({title: "Error creating.", status: 'error', isClosable: true}))

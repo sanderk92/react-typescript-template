@@ -16,7 +16,7 @@ import React, {useEffect, useRef, useState} from "react";
 import SimpleTable, {TableHeader, TableRow} from "./SimpleTable";
 import {CloseIcon, SearchIcon} from "@chakra-ui/icons";
 
-export interface SimpleTableDropdownProps<T extends TableRow> {
+export interface SimpleTableSearchDropdownProps<T extends TableRow> {
     onSearch: (query: string) => Promise<T[]>
     selections: T[]
     onSelect: (row: T) => void
@@ -25,7 +25,7 @@ export interface SimpleTableDropdownProps<T extends TableRow> {
 }
 
 export default function SimpleTableSearchDropdown<T extends TableRow>(
-    {onSearch, selections, onSelect, onUnselect, header}: SimpleTableDropdownProps<T>
+    {onSearch, selections, onSelect, onUnselect, header}: SimpleTableSearchDropdownProps<T>
 ) {
     const [rows, setRows] = useState<T[]>([])
     const [query, setQuery] = useState<string>("")
@@ -77,9 +77,11 @@ export default function SimpleTableSearchDropdown<T extends TableRow>(
                     <InputLeftElement>
                         <SearchIcon/>
                     </InputLeftElement>
-                    <Input variant={"outline"} value={query}
-                           onChange={event => setQuery(event.target.value)}
-                           onKeyDown={e=> {if (e.key === 'Enter') requestSearch()}}/>
+                    <Input
+                        placeholder={"Please enter a query"}
+                        variant={"outline"} value={query}
+                        onChange={event => setQuery(event.target.value)}
+                        onKeyDown={e=> {if (e.key === 'Enter') requestSearch()}}/>
                     <InputRightElement>
                         <CloseIcon className={"clickable"} onClick={resetInput}/>
                     </InputRightElement>

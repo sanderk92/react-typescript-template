@@ -11,8 +11,8 @@ import {
     useColorModeValue
 } from "@chakra-ui/react";
 import {CloseIcon, SearchIcon} from "@chakra-ui/icons";
-import SpinnerCentered from "../SpinnerCentered";
-import "../../styles.css"
+import SpinnerCentered from "./SpinnerCentered";
+import "../styles.css"
 
 export interface SimpleTableWithTaskbarProps<T extends TableRow> extends TableComponentProps<T> {
     buttons?: React.JSX.Element

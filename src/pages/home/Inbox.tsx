@@ -1,4 +1,4 @@
-import {TableCell, TableRow} from "../../components/tables/SimpleTable";
+import {TableCell, TableRow} from "../../components/SimpleTable";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Route, Routes, useNavigate} from "react-router-dom";
@@ -11,7 +11,7 @@ import {minusMonths, timeIndicator} from "../../utils/Date";
 import {DataStatus, DataView} from "../../http/model/Data";
 import InboxFiltersDrawer from "./InboxFiltersDrawer";
 import {Box, Flex, IconButton, useBoolean} from "@chakra-ui/react";
-import SimpleTableWithTaskbar from "../../components/tables/SimpleTableWithTaskbar";
+import SimpleTableWithTaskbar from "../../components/SimpleTableWithTaskbar";
 
 export interface InboxFilter {
     status: DataStatus[],
