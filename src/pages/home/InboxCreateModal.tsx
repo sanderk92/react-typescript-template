@@ -63,9 +63,9 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
                         <SimpleTableDropdown
                             selection={companySelection != null ? companySelection : undefined}
                             rows={[
+                                {id: "Destruction", cells: [{value: "Destruction"}]},
                                 {id: "Delivery", cells: [{value: "Delivery"}]},
                                 {id: "Move", cells: [{value: "Move"}]},
-                                {id: "Destruction", cells: [{value: "Destruction"}]},
                             ]}
                             onSelect={row => setCompanySelection(row)}
                         />
