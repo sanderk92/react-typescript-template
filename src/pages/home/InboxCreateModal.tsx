@@ -10,7 +10,7 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
-    Select,
+    Select, useBoolean,
     useToast,
 } from "@chakra-ui/react";
 import {useBackend} from "../../http/BackendService";
@@ -34,7 +34,7 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
     const [companyInput, setInput] = useState("")
     const [userSelection, setUserSelection] = useState<UserDetails | undefined>()
 
-    const [isCreating, setIsCreating] = useState(false)
+    const [isCreating, setCreating] = useBoolean()
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -77,12 +77,12 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
     )
 
     function create() {
-        setIsCreating(true)
+        setCreating.on()
         backend.createData({input: companyInput})
             .then(data => {onCreated(data); onClose()})
             .then(_ => {toast({title: "Successfully created!", status: 'success', isClosable: true})})
             .catch(_ => toast({title: "Error creating.", status: 'error', isClosable: true}))
-            .finally(() => setIsCreating(false))
+            .finally(() => setCreating.off())
     }
 
     function fetchUsers(name: string): Promise<UserTableRow[]> {

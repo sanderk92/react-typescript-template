@@ -9,7 +9,7 @@ import {
     InputRightElement,
     Tag,
     TagCloseButton,
-    TagLabel,
+    TagLabel, useBoolean,
     useColorModeValue
 } from "@chakra-ui/react";
 import React, {useEffect, useRef, useState} from "react";
@@ -30,14 +30,14 @@ export default function SimpleTableSearchDropdown<T extends TableRow>(
     const [rows, setRows] = useState<T[]>([])
     const [query, setQuery] = useState<string>("")
 
-    const [isOpen, setIsOpen] = useState<boolean>(false)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isOpen, setOpen] = useBoolean()
+    const [isLoading, setLoading] = useBoolean()
 
     const colorScheme = useColorModeValue('gray.50', 'gray.600')
     const outsideClickRef = useRef<HTMLDivElement>(null);
 
     const requestSearch = () => {
-        setIsLoading(true)
+        setLoading.on()
     }
 
     const selectRow = (row: T) => {
@@ -47,12 +47,12 @@ export default function SimpleTableSearchDropdown<T extends TableRow>(
 
     const resetInput = () => {
         setQuery("");
-        setIsOpen(false)
+        setOpen.off()
     }
 
     const handleOutsideClick = (event: MouseEvent) => {
         if (outsideClickRef.current && !outsideClickRef.current.contains(event.target as HTMLElement)) {
-            setIsOpen(false)
+            setOpen.off()
         }
     }
 
@@ -65,8 +65,8 @@ export default function SimpleTableSearchDropdown<T extends TableRow>(
         if (isLoading) {
             onSearch(query)
                 .then(setRows)
-                .then(() => setIsOpen(true))
-                .then(() => setIsLoading(false))
+                .then(() => setOpen.on())
+                .then(() => setLoading.off())
         }
     }, [isLoading, onSearch, query])
 

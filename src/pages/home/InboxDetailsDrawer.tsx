@@ -8,7 +8,7 @@ import {
     DrawerHeader,
     FormControl,
     FormLabel,
-    Input, Text,
+    Input, Text, useBoolean,
 } from "@chakra-ui/react";
 import * as React from "react";
 import {DataView} from "../../http/model/Data";
@@ -16,6 +16,7 @@ import useBackend from "../../http/BackendService";
 import {useEffect, useState} from "react";
 import SpinnerCentered from "../../components/SpinnerCentered";
 import "../../styles.css"
+import Collage from "../../components/Collage";
 
 export interface DetailsDrawerProps {
     isOpen: boolean
@@ -24,16 +25,16 @@ export interface DetailsDrawerProps {
 
 export default function InboxDetailsDrawer({isOpen, onClose}: DetailsDrawerProps) {
     const [selected, setSelected] = useState<DataView | undefined>()
-    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const [isLoading, setLoading] = useBoolean()
 
     const backend = useBackend()
     const { id } = useParams();
 
     useEffect(() => {
-        setIsLoading(true)
+        setLoading.on()
         backend.getData(id!!)
             .then(setSelected)
-            .then(() => setIsLoading(false))
+            .then(() => setLoading.off())
     }, [id])
 
     return (
@@ -54,7 +55,18 @@ export default function InboxDetailsDrawer({isOpen, onClose}: DetailsDrawerProps
                             <FormLabel>Time</FormLabel>
                             <Input isDisabled={true} value={selected.time.toLocaleString()} placeholder='Time'/>
                         </FormControl>
-                        <DrawerCloseButton/>
+                        <FormControl mt={4}>
+                            <FormLabel>Images</FormLabel>
+                            <Collage
+                                photos={[
+                                    "https://images.unsplash.com/photo-1602271886918-bafecc837c7a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=435&q=80 435w",
+                                    "https://images.unsplash.com/photo-1602271886918-bafecc837c7a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=435&q=80 435w",
+                                    "https://images.unsplash.com/photo-1602271886918-bafecc837c7a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=435&q=80 435w",
+                                    "https://images.unsplash.com/photo-1602271886918-bafecc837c7a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=435&q=80 435w",
+                                ]}
+                            />
+                        </FormControl>
+
                     </DrawerBody>
                 }
             </DrawerContent>

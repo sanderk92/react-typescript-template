@@ -10,7 +10,7 @@ import {RiPlayCircleFill} from "react-icons/ri";
 import {minusMonths, timeIndicator} from "../../utils/Date";
 import {DataStatus, DataView} from "../../http/model/Data";
 import InboxFiltersDrawer from "./InboxFiltersDrawer";
-import {Box, Flex, IconButton} from "@chakra-ui/react";
+import {Box, Flex, IconButton, useBoolean} from "@chakra-ui/react";
 import SimpleTableWithTaskbar from "../../components/tables/SimpleTableWithTaskbar";
 
 export interface InboxFilter {
@@ -28,7 +28,7 @@ const defaultHomeFilter : InboxFilter = {
 export default function Inbox() {
     const [rows, setRows] = useState<DataView[] | undefined>(undefined)
     const [filter, setFilter] = useState<InboxFilter>(defaultHomeFilter)
-    const [refresh, setRefreshing] = useState(false)
+    const [refresh, setRefreshing] = useBoolean()
 
     const backend = useBackend()
     const navigate = useNavigate()
@@ -54,7 +54,7 @@ export default function Inbox() {
                     <Flex alignItems={"flex-end"} justifyContent={"flex-end"}>
                         <IconButton mr="2" icon={<RiAddLine/>} aria-label={"create"} onClick={navigateCreate}/>
                         <IconButton mr="2" icon={<RiFilterLine/>} aria-label={"filter"} onClick={navigateFilters}/>
-                        <IconButton mr="2" icon={<RiRefreshLine/>} aria-label={"refresh"} onClick={() => setRefreshing(!refresh)}/>
+                        <IconButton mr="2" icon={<RiRefreshLine/>} aria-label={"refresh"} onClick={() => setRefreshing.toggle()}/>
                     </Flex>
                 }
             />
