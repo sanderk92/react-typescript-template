@@ -8,7 +8,7 @@ import {
     DrawerContent,
     DrawerHeader,
     Flex,
-    FormControl,
+    FormControl, FormLabel,
     Text,
 } from "@chakra-ui/react";
 import * as React from "react";
@@ -42,34 +42,32 @@ export default function InboxFiltersDrawer({isOpen, onClose, filter, setFilter}:
             <DrawerContent>
                 <DrawerHeader>Filters</DrawerHeader>
                 <DrawerBody>
+                    <Flex>
+                        <FormControl pb={4}>
+                            <FormLabel>From</FormLabel>
+                            <DatePicker
+                                maxDate={until}
+                                dateFormat={"dd-MM-yyyy"}
+                                customInput={<Button>{from.toLocaleDateString()}</Button>}
+                                selected={from}
+                                onChange={date=> setFrom(date ?? from)}>
+                            </DatePicker>
+                        </FormControl>
+                        <FormControl pb={4}>
+                            <FormLabel>Until</FormLabel>
+                            <DatePicker
+                                minDate={from}
+                                maxDate={new Date()}
+                                onChangeRaw={e => e.preventDefault()}
+                                dateFormat={"dd-MM-yyyy"}
+                                customInput={<Button>{until.toLocaleDateString()}</Button>}
+                                selected={until}
+                                onChange={date => setUntil(date ?? until)}>
+                            </DatePicker>
+                        </FormControl>
+                    </Flex>
                     <FormControl pb={4}>
-                        <Flex>
-                            <Box>
-                                <Text as={"b"}>From</Text>
-                                <DatePicker
-                                    maxDate={until}
-                                    dateFormat={"dd-MM-yyyy"}
-                                    customInput={<Button>{from.toLocaleDateString()}</Button>}
-                                    selected={from}
-                                    onChange={date=> setFrom(date ?? from)}>
-                                </DatePicker>
-                            </Box>
-                            <Box>
-                                <Text as={"b"}>Until</Text>
-                                <DatePicker
-                                    minDate={from}
-                                    maxDate={new Date()}
-                                    onChangeRaw={e => e.preventDefault()}
-                                    dateFormat={"dd-MM-yyyy"}
-                                    customInput={<Button>{until.toLocaleDateString()}</Button>}
-                                    selected={until}
-                                    onChange={date => setUntil(date ?? until)}>
-                                </DatePicker>
-                            </Box>
-                        </Flex>
-                    </FormControl>
-                    <Text as={"b"}>Status</Text>
-                    <FormControl pb={4}>
+                        <FormLabel>Status</FormLabel>
                         <Checkbox size={"lg"} isChecked={open} onChange={() => setOpen(!open)}>
                             <Flex>
                                 <RiAddCircleFill color={"green"}/>
