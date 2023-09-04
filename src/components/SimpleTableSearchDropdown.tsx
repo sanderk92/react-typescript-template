@@ -29,15 +29,14 @@ export default function SimpleTableSearchDropdown<T extends TableRow>(
 ) {
     const [rows, setRows] = useState<T[]>([])
     const [query, setQuery] = useState<string>("")
-
-    const [isOpen, setOpen] = useBoolean()
-    const [isLoading, setLoading] = useBoolean()
+    const [isOpen, setOpen] = useState(false)
+    const [isLoading, setLoading] = useState(false)
 
     const colorScheme = useColorModeValue('gray.50', 'gray.600')
     const outsideClickRef = useRef<HTMLDivElement>(null);
 
     const requestSearch = () => {
-        setLoading.on()
+        setLoading(true)
     }
 
     const selectRow = (row: T) => {
@@ -47,28 +46,28 @@ export default function SimpleTableSearchDropdown<T extends TableRow>(
 
     const resetInput = () => {
         setQuery("");
-        setOpen.off()
+        setOpen(false)
     }
-
-    const handleOutsideClick = (event: MouseEvent) => {
-        if (outsideClickRef.current && !outsideClickRef.current.contains(event.target as HTMLElement)) {
-            setOpen.off()
-        }
-    }
-
-    useEffect(() => {
-        document.addEventListener("mousedown", handleOutsideClick);
-        return () => document.removeEventListener("mousedown", handleOutsideClick)
-    })
 
     useEffect(() => {
         if (isLoading) {
             onSearch(query)
                 .then(setRows)
-                .then(() => setOpen.on())
-                .then(() => setLoading.off())
+                .then(() => setOpen(true))
+                .then(() => setLoading(false))
         }
     }, [isLoading, onSearch, query])
+
+    useEffect(() => {
+        const handleOutsideClick = (event: MouseEvent) => {
+            if (outsideClickRef.current && !outsideClickRef.current.contains(event.target as HTMLElement)) {
+                setOpen(false)
+            }
+        }
+
+        document.addEventListener("mousedown", handleOutsideClick);
+        return () => document.removeEventListener("mousedown", handleOutsideClick)
+    }, [])
 
     return (
         <Box ref={outsideClickRef}>

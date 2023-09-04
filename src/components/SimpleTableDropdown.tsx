@@ -11,7 +11,7 @@ import {
     useBoolean,
     useColorModeValue
 } from "@chakra-ui/react";
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import SimpleTable, {TableHeader, TableRow} from "./SimpleTable";
 
 export interface SimpleTableDropdownProps<T extends TableRow> {
@@ -24,26 +24,26 @@ export interface SimpleTableDropdownProps<T extends TableRow> {
 export default function SimpleTableSearchDropdown<T extends TableRow>(
     {rows, selection, onSelect, header}: SimpleTableDropdownProps<T>
 ) {
-    const [isOpen, setOpen] = useBoolean()
-
+    const [isOpen, setOpen] = useState(false)
     const colorScheme = useColorModeValue('gray.50', 'gray.600')
     const outsideClickRef = useRef<HTMLDivElement>(null);
 
     const selectRow = (row: T) => {
         onSelect(row)
-        setOpen.off()
-    }
-
-    const handleOutsideClick = (event: MouseEvent) => {
-        if (outsideClickRef.current && !outsideClickRef.current.contains(event.target as HTMLElement)) {
-            setOpen.off()
-        }
+        setOpen(false)
     }
 
     useEffect(() => {
+        const handleOutsideClick = (event: MouseEvent) => {
+            if (outsideClickRef.current && !outsideClickRef.current.contains(event.target as HTMLElement)) {
+                setOpen(false)
+            }
+        }
+
         document.addEventListener("mousedown", handleOutsideClick);
         return () => document.removeEventListener("mousedown", handleOutsideClick)
     }, [])
+
 
     return (
         <Box ref={outsideClickRef}>
@@ -54,7 +54,7 @@ export default function SimpleTableSearchDropdown<T extends TableRow>(
                         placeholder={"Please make a selection"}
                         variant={"outline"}
                         value={selection?.cells.map(cell => cell.value).join(" ") ?? ""}
-                        onClick={() => setOpen.on()}/>
+                        onClick={() => setOpen(true)}/>
                 </InputGroup>
             </Flex>
             <Card position={"absolute"} zIndex={999} bg={colorScheme} width={"100%"} hidden={!isOpen}>
