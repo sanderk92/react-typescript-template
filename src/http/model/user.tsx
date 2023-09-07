@@ -1,10 +1,9 @@
 export interface User {
     id: string,
-    roles: string[],
-}
-
-export interface UserDetails {
-    id: string,
     firstName: string,
     lastName: string,
+}
+
+export interface LoggedInUser extends User {
+    roles: string[],
 }

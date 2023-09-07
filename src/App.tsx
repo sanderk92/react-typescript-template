@@ -9,7 +9,7 @@ import HomePage from "./pages/home/HomePage";
 import ContactPage from "./pages/contact/ContactPage";
 import useAuthService from "./auth/AuthService";
 import ErrorBoundary from "./ErrorBoundary";
-import {User} from "./http/model/user";
+import {LoggedInUser} from "./http/model/user";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {fetchUser} from "./http/backendService";
@@ -27,7 +27,7 @@ export function App() {
 export function UserInterface() {
     // const authService = useAuthService()
 
-    const [user, setUser] = useState<User | undefined>({id: "sander", roles: []})
+    const [user, setUser] = useState<LoggedInUser | undefined>({id: "abc", firstName: "sander", lastName: "krabbenborg", roles: []})
 
     // useEffect(() => {
     //     if (!authService.isLoading() && !authService.isLoggedIn()) {

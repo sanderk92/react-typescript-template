@@ -17,7 +17,7 @@ import {useState} from "react";
 import {DataView} from "../../http/model/data";
 import {TableRow} from "../../components/SimpleTable";
 import SimpleTableSearchDropdown from "../../components/SimpleTableSearchDropdown";
-import {UserDetails} from "../../http/model/user";
+import {User} from "../../http/model/user";
 import SimpleTableDropdown from "../../components/SimpleTableDropdown";
 import { submitData, findUsers } from "../../http/backendService";
 
@@ -30,7 +30,7 @@ export interface CreateDrawerProps {
 export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDrawerProps) {
     const toast = useToast()
 
-    const [userSelection, setUserSelection] = useState<UserDetails | undefined>()
+    const [userSelection, setUserSelection] = useState<User | undefined>()
     const [companySelection, setCompanySelection] = useState<TableRow | undefined>()
     const [assignment, setAssignment] = useState<string | undefined>(undefined)
 
@@ -95,11 +95,11 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
             .catch(_ => { toast({title: "Error fetching users.", status: 'error', isClosable: true}); return []})
     }
 
-    function asTableRow(user: UserDetails): UserTableRow {
+    function asTableRow(user: User): UserTableRow {
         return { id: user.id, user: user, cells: [{value: user.firstName}, {value:user.lastName}]}
     }
 }
 
 interface UserTableRow extends TableRow {
-    user: UserDetails
+    user: User
 }

@@ -1,7 +1,7 @@
 import axios from "axios";
 import {v4 as uuid} from 'uuid';
 import {DataEntry, DataStatus, DataView} from "./model/data";
-import {User, UserDetails} from "./model/user";
+import {LoggedInUser, User} from "./model/user";
 import useAuthService from "../auth/AuthService";
 
 const backendUrl : string = window.location.protocol + "//" + window.location.host
@@ -13,11 +13,11 @@ backendClient.interceptors.request.use(config => {
     return config
 });
 
-export const fetchUser = (): Promise<User> =>
-    backendClient.get<User>("/user")
+export const fetchUser = (): Promise<LoggedInUser> =>
+    backendClient.get<LoggedInUser>("/user")
         .then(result => result.data)
 
-export const findUsers = (name: string): Promise<UserDetails[]> =>
+export const findUsers = (name: string): Promise<User[]> =>
     new Promise(resolve => setTimeout(resolve, 2000))
         .then(_ => users)
         .then(users => users.filter(user => user.firstName.includes(name) || user.lastName.includes(name)))
@@ -58,7 +58,7 @@ const inbox : DataView[] = [
     {id: "2a8cc34c-accd-47ff-ade4-f5faff94184f", status: DataStatus.finished, company: 'Ouder B.V.', time: new Date(2022, 2, 2, 10, 0, 0)},
 ]
 
-const users: UserDetails[] = [
+const users: User[] = [
     { id: "c151c267-4227-43a7-85d9-7f0689ef2299", firstName: "sander", lastName: "krabbenborg"},
     { id: "64336a50-1d07-4922-a840-06da0f0ac0bf", firstName: "laura", lastName: "krabbenborg"},
     { id: "156eadae-5c8e-421a-8310-461d77bda8e1", firstName: "vincent", lastName: "krabbenborg"},
