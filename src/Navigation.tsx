@@ -8,10 +8,10 @@ import useAuthService from "./auth/AuthService";
 import {Logo} from "./Logo";
 import {onResize} from "./utils/Resize";
 import {onBack} from "./utils/History";
-import {LoggedInUser} from "./http/model/LoggedInUser";
+import {User} from "./http/model/user";
 
 export interface NavigationProps {
-    user: LoggedInUser
+    user: User
     children: ReactNode
 }
 
@@ -104,7 +104,7 @@ const SidebarDrawer = ({isOpen, onClose, ...rest}: {
 }
 
 const TopNavigation = ({user, onOpen, ...rest}: {
-    user: LoggedInUser
+    user: User
     onOpen: () => void
 }) => {
     return (

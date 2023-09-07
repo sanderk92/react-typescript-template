@@ -1,7 +1,7 @@
 import axios from "axios";
 import {v4 as uuid} from 'uuid';
 import {DataEntry, DataStatus, DataView} from "./model/Data";
-import {LoggedInUser, UserDetails} from "./model/LoggedInUser";
+import {User, UserDetails} from "./model/user";
 import useAuthService from "../auth/AuthService";
 
 const backendUrl : string = window.location.protocol + "//" + window.location.host
@@ -13,8 +13,8 @@ backendClient.interceptors.request.use(config => {
     return config
 });
 
-export const fetchUser = (): Promise<LoggedInUser> =>
-    backendClient.get<LoggedInUser>("/user")
+export const fetchUser = (): Promise<User> =>
+    backendClient.get<User>("/user")
         .then(result => result.data)
 
 export const findUsers = (name: string): Promise<UserDetails[]> =>

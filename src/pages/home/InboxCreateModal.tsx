@@ -17,7 +17,7 @@ import {useState} from "react";
 import {DataView} from "../../http/model/Data";
 import {TableRow} from "../../components/SimpleTable";
 import SimpleTableSearchDropdown from "../../components/SimpleTableSearchDropdown";
-import {UserDetails} from "../../http/model/LoggedInUser";
+import {UserDetails} from "../../http/model/user";
 import SimpleTableDropdown from "../../components/SimpleTableDropdown";
 import { submitData, findUsers } from "../../http/backendService";
 

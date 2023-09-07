@@ -9,7 +9,7 @@ import HomePage from "./pages/home/HomePage";
 import ContactPage from "./pages/contact/ContactPage";
 import useAuthService from "./auth/AuthService";
 import ErrorBoundary from "./ErrorBoundary";
-import {LoggedInUser} from "./http/model/LoggedInUser";
+import {User} from "./http/model/user";
 
 import "react-datepicker/dist/react-datepicker.css";
 import {fetchUser} from "./http/backendService";
@@ -25,21 +25,21 @@ export function App() {
 }
 
 export function UserInterface() {
-    const authService = useAuthService()
+    // const authService = useAuthService()
 
-    const [user, setUser] = useState<LoggedInUser | undefined>()
+    const [user, setUser] = useState<User | undefined>({id: "sander", roles: []})
 
-    useEffect(() => {
-        if (!authService.isLoading() && !authService.isLoggedIn()) {
-            authService.login()
-        }
-    })
-
-    useEffect(() => {
-        if (authService.isLoggedIn() && user == null) {
-            fetchUser().then((user) => setUser(user))
-        }
-    })
+    // useEffect(() => {
+    //     if (!authService.isLoading() && !authService.isLoggedIn()) {
+    //         authService.login()
+    //     }
+    // })
+    //
+    // useEffect(() => {
+    //     if (authService.isLoggedIn() && user == null) {
+    //         fetchUser().then((user) => setUser(user))
+    //     }
+    // })
 
     if (user == null) {
         return <></>

@@ -1,4 +1,4 @@
-export interface LoggedInUser {
+export interface User {
     id: string,
     roles: string[],
 }
