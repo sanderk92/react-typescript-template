@@ -8,11 +8,11 @@ import {authSettings} from "./auth/AuthSettings";
 import HomePage from "./pages/home/HomePage";
 import ContactPage from "./pages/contact/ContactPage";
 import useAuthService from "./auth/AuthService";
-import {useBackend} from "./http/BackendService";
 import ErrorBoundary from "./ErrorBoundary";
-import {CurrentUserDetails} from "./http/model/CurrentUserDetails";
+import {LoggedInUser} from "./http/model/LoggedInUser";
 
 import "react-datepicker/dist/react-datepicker.css";
+import {fetchUser} from "./http/backendService";
 
 export function App() {
     return (
@@ -26,21 +26,20 @@ export function App() {
 
 export function UserInterface() {
     const authService = useAuthService()
-    const backendService = useBackend()
 
-    const [user, setUser] = useState<CurrentUserDetails>({id: "sander", roles:[]})
+    const [user, setUser] = useState<LoggedInUser | undefined>()
 
-    // useEffect(() => {
-    //     if (!authService.isLoading() && !authService.isLoggedIn()) {
-    //         authService.login()
-    //     }
-    // })
-    //
-    // useEffect(() => {
-    //     if (authService.isLoggedIn() && user == null) {
-    //         backendService.getUserDetails().then((user) => setUser(user))
-    //     }
-    // })
+    useEffect(() => {
+        if (!authService.isLoading() && !authService.isLoggedIn()) {
+            authService.login()
+        }
+    })
+
+    useEffect(() => {
+        if (authService.isLoggedIn() && user == null) {
+            fetchUser().then((user) => setUser(user))
+        }
+    })
 
     if (user == null) {
         return <></>

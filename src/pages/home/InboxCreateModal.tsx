@@ -10,17 +10,16 @@ import {
     ModalHeader,
     ModalOverlay,
     Textarea,
-    useBoolean,
     useToast,
 } from "@chakra-ui/react";
-import {useBackend} from "../../http/BackendService";
 import * as React from "react";
 import {useState} from "react";
 import {DataView} from "../../http/model/Data";
 import {TableRow} from "../../components/SimpleTable";
 import SimpleTableSearchDropdown from "../../components/SimpleTableSearchDropdown";
-import {UserDetails} from "../../http/model/CurrentUserDetails";
+import {UserDetails} from "../../http/model/LoggedInUser";
 import SimpleTableDropdown from "../../components/SimpleTableDropdown";
+import { submitData, findUsers } from "../../http/backendService";
 
 export interface CreateDrawerProps {
     isOpen: boolean
@@ -30,13 +29,12 @@ export interface CreateDrawerProps {
 
 export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDrawerProps) {
     const toast = useToast()
-    const backend = useBackend()
 
     const [userSelection, setUserSelection] = useState<UserDetails | undefined>()
     const [companySelection, setCompanySelection] = useState<TableRow | undefined>()
     const [assignment, setAssignment] = useState<string | undefined>(undefined)
 
-    const [isCreating, setCreating] = useBoolean()
+    const [isCreating, setCreating] = useState(false)
 
     const isComplete = () : boolean => {
         return userSelection !== undefined && companySelection !== undefined && assignment !== undefined
@@ -83,16 +81,16 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
     )
 
     function create() {
-        setCreating.on()
-        backend.createData({input: companySelection?.id ?? "joe"})
+        setCreating(true)
+        submitData({input: companySelection?.id ?? "joe"})
             .then(data => {onCreated(data); onClose()})
             .then(_ => {toast({title: "Successfully created!", status: 'success', isClosable: true})})
             .catch(_ => toast({title: "Error creating.", status: 'error', isClosable: true}))
-            .finally(() => setCreating.off())
+            .finally(() => setCreating(false))
     }
 
     function fetchUsers(name: string): Promise<UserTableRow[]> {
-        return backend.queryUsers(name)
+        return findUsers(name)
             .then(users => users.map(user => asTableRow(user)))
             .catch(_ => { toast({title: "Error fetching users.", status: 'error', isClosable: true}); return []})
     }

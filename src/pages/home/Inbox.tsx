@@ -2,7 +2,7 @@ import {TableCell, TableRow} from "../../components/SimpleTable";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Route, Routes, useNavigate} from "react-router-dom";
-import useBackend from "../../http/BackendService";
+import { findData } from "../../http/backendService";
 import InboxDetailsDrawer from "./InboxDetailsDrawer";
 import InboxCreateModal from "./InboxCreateModal";
 import {RiAddCircleFill, RiAddLine, RiCheckboxCircleFill, RiCloseCircleFill, RiFilterLine, RiRefreshLine} from "react-icons/all";
@@ -30,7 +30,6 @@ export default function Inbox() {
     const [filter, setFilter] = useState<InboxFilter>(defaultHomeFilter)
     const [refresh, setRefreshing] = useBoolean()
 
-    const backend = useBackend()
     const navigate = useNavigate()
 
     const navigateBase = () => navigate("/inbox")
@@ -40,7 +39,7 @@ export default function Inbox() {
 
     useEffect(() => {
         setRows(undefined)
-        backend.queryData(filter.status, filter.from, filter.until).then(setRows)
+        findData(filter.status, filter.from, filter.until).then(setRows)
     }, [refresh, filter])
 
     return (

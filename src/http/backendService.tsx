@@ -1,63 +1,41 @@
-import useAuthService from "../auth/AuthService";
 import axios from "axios";
 import {v4 as uuid} from 'uuid';
 import {DataEntry, DataStatus, DataView} from "./model/Data";
-import {CurrentUserDetails, UserDetails} from "./model/CurrentUserDetails";
-import {useEffect} from "react";
+import {LoggedInUser, UserDetails} from "./model/LoggedInUser";
+import useAuthService from "../auth/AuthService";
 
-export interface BackendProps {
-    getUser(): Promise<CurrentUserDetails>
-    queryUsers(name: string): Promise<UserDetails[]>
-    getData(id: String): Promise<DataView | undefined>
-    queryData(state: DataStatus[], start: Date, end: Date): Promise<DataView[]>
-    createData(entry: DataEntry): Promise<DataView>
-}
+const backendUrl : string = window.location.protocol + "//" + window.location.host
 
-export const useBackend = (): BackendProps => {
-    const auth = useAuthService()
-    const backendUrl : string = window.location.protocol + "//" + window.location.host
+const backendClient = axios.create({baseURL: backendUrl})
 
-    useEffect(() => {
-        axios.interceptors.request.use(config => {
-            config.headers.Authorization = "Bearer " + auth.getUser()?.access_token;
-            return config;
-        });
-    })
+backendClient.interceptors.request.use(config => {
+    config.headers.Authorization = "Bearer " + useAuthService().getUser()?.access_token
+    return config
+});
 
-    const getUser = (): Promise<CurrentUserDetails> =>
-        axios.get<CurrentUserDetails>(backendUrl + "/user")
-            .then(result => result.data)
+export const fetchUser = (): Promise<LoggedInUser> =>
+    backendClient.get<LoggedInUser>("/user")
+        .then(result => result.data)
 
-    const queryUsers = (name: string): Promise<UserDetails[]> =>
-        new Promise(resolve => setTimeout(resolve, 2000))
-            .then(_ => users)
-            .then(users => users.filter(user => user.firstName.includes(name) || user.lastName.includes(name)))
+export const findUsers = (name: string): Promise<UserDetails[]> =>
+    new Promise(resolve => setTimeout(resolve, 2000))
+        .then(_ => users)
+        .then(users => users.filter(user => user.firstName.includes(name) || user.lastName.includes(name)))
 
-    const getData = (id: String): Promise<DataView | undefined> =>
-        new Promise(resolve => setTimeout(resolve, 2000))
-            .then(_ => inbox.find(row => row.id === id))
+export const fetchData = (id: String): Promise<DataView | undefined> =>
+    new Promise(resolve => setTimeout(resolve, 2000))
+        .then(_ => inbox.find(row => row.id === id))
 
-    const queryData = (status: DataStatus[], start: Date, end: Date): Promise<DataView[]> =>
-        new Promise(resolve => setTimeout(resolve, 2000))
-            .then(_ => inbox)
-            .then(inbox => inbox.filter(row => status.includes(row.status)))
-            .then(inbox => inbox.filter(row => row.time.getTime() >= start.getTime()))
-            .then(inbox => inbox.filter(row => row.time.getTime() <= end.getTime()))
+export const findData = (status: DataStatus[], start: Date, end: Date): Promise<DataView[]> =>
+    new Promise(resolve => setTimeout(resolve, 2000))
+        .then(_ => inbox)
+        .then(inbox => inbox.filter(row => status.includes(row.status)))
+        .then(inbox => inbox.filter(row => row.time.getTime() >= start.getTime()))
+        .then(inbox => inbox.filter(row => row.time.getTime() <= end.getTime()))
 
-    const createData = (entry: DataEntry): Promise<DataView> =>
-        new Promise(resolve => setTimeout(resolve, 2000))
-            .then(_ => ({id: uuid(), status: DataStatus.open, company: entry.input, time: new Date()}))
-
-    return {
-        getUser,
-        queryUsers,
-        getData,
-        queryData,
-        createData,
-    }
-}
-
-export default useBackend
+export const submitData = (entry: DataEntry): Promise<DataView> =>
+    new Promise(resolve => setTimeout(resolve, 2000))
+        .then(_ => ({id: uuid(), status: DataStatus.open, company: entry.input, time: new Date()}))
 
 const inbox : DataView[] = [
     {id: "25c83a41-4918-46bf-9f20-4f15f1651a17", status: DataStatus.open, company: 'Pikobello B.V.', time: new Date()},

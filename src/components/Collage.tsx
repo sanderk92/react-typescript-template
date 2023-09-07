@@ -1,4 +1,4 @@
-import {Box, Flex, Image, Modal, ModalContent, ModalOverlay, useBoolean} from "@chakra-ui/react"
+import {Box, Flex, Image, Modal, ModalContent, ModalOverlay} from "@chakra-ui/react"
 import React, {useState} from "react";
 
 export interface CollageProps {
@@ -7,7 +7,7 @@ export interface CollageProps {
 }
 
 export default function Collage({photos, imagesPerRow}: CollageProps) {
-    const [open, setOpen] = useBoolean()
+    const [open, setOpen] = useState(false)
     const [selection, setSelection] = useState<string | undefined>(undefined);
 
     return (
@@ -16,14 +16,14 @@ export default function Collage({photos, imagesPerRow}: CollageProps) {
                 {
                     photos.map((photo, index) =>
                         <Box flex={`${100 / imagesPerRow}%`} _hover={{cursor: "zoom-in"}}>
-                            <Image borderRadius="md" src={photo} alt="photo" p={0.4} onClick={() => {setOpen.on(); setSelection(photo)}}/>
+                            <Image borderRadius="md" src={photo} alt="photo" p={0.4} onClick={() => {setOpen(true); setSelection(photo)}}/>
                         </Box>
                     )
                 }
             </Flex>
             {
                 !open ? null :
-                    <Modal isOpen={open} onClose={() => setOpen.off()}>
+                    <Modal isOpen={open} onClose={() => setOpen(false)}>
                         <ModalOverlay/>
                         <ModalContent>
                             <Image src={selection}></Image>

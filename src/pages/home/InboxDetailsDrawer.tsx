@@ -1,9 +1,19 @@
 import {useParams} from "react-router-dom";
-import {Box, Drawer, DrawerBody, DrawerContent, DrawerHeader, FormControl, FormLabel, Input, Text, useBoolean,} from "@chakra-ui/react";
+import {
+    Box,
+    Drawer,
+    DrawerBody,
+    DrawerContent,
+    DrawerHeader,
+    FormControl,
+    FormLabel,
+    Input,
+    Text,
+} from "@chakra-ui/react";
 import * as React from "react";
-import {DataView} from "../../http/model/Data";
-import useBackend from "../../http/BackendService";
 import {useEffect, useState} from "react";
+import {DataView} from "../../http/model/Data";
+import {fetchData} from "../../http/backendService";
 import SpinnerCentered from "../../components/SpinnerCentered";
 import "../../styles.css"
 import Collage from "../../components/Collage";
@@ -15,16 +25,15 @@ export interface DetailsDrawerProps {
 
 export default function InboxDetailsDrawer({isOpen, onClose}: DetailsDrawerProps) {
     const [selected, setSelected] = useState<DataView | undefined>()
-    const [isLoading, setLoading] = useBoolean()
+    const [isLoading, setLoading] = useState(false)
 
-    const backend = useBackend()
     const { id } = useParams();
 
     useEffect(() => {
-        setLoading.on()
-        backend.getData(id!!)
+        setLoading(true)
+        fetchData(id!!)
             .then(setSelected)
-            .then(() => setLoading.off())
+            .then(() => setLoading(false))
     }, [id])
 
     return (
@@ -57,7 +66,6 @@ export default function InboxDetailsDrawer({isOpen, onClose}: DetailsDrawerProps
                                 ]}
                             />
                         </FormControl>
-
                     </DrawerBody>
                 }
             </DrawerContent>

@@ -33,7 +33,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "dev": "vite serve",
+    "dev": "vite serve --host",
     "preview": "vite preview"
   },
   "eslintConfig": {

@@ -1,4 +1,4 @@
-export interface CurrentUserDetails {
+export interface LoggedInUser {
     id: string,
     roles: string[],
 }

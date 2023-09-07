@@ -1,5 +1,4 @@
 import {
-    Box,
     Button,
     Checkbox,
     Drawer,
@@ -8,7 +7,8 @@ import {
     DrawerContent,
     DrawerHeader,
     Flex,
-    FormControl, FormLabel,
+    FormControl,
+    FormLabel,
     Text,
 } from "@chakra-ui/react";
 import * as React from "react";

@@ -9,7 +9,7 @@ import {
     InputRightElement,
     Tag,
     TagCloseButton,
-    TagLabel, useBoolean,
+    TagLabel,
     useColorModeValue
 } from "@chakra-ui/react";
 import React, {useEffect, useRef, useState} from "react";

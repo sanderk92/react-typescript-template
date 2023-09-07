@@ -1,16 +1,4 @@
-import {
-    Box,
-    Button,
-    Card,
-    Flex,
-    Input,
-    InputGroup,
-    Tag,
-    TagCloseButton,
-    TagLabel,
-    useBoolean,
-    useColorModeValue
-} from "@chakra-ui/react";
+import {Box, Card, Flex, Input, InputGroup, useColorModeValue} from "@chakra-ui/react";
 import React, {useEffect, useRef, useState} from "react";
 import SimpleTable, {TableHeader, TableRow} from "./SimpleTable";
 
