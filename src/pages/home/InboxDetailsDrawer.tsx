@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {DataView} from "../../http/model/Data";
+import {DataView} from "../../http/model/data";
 import {fetchData} from "../../http/backendService";
 import SpinnerCentered from "../../components/SpinnerCentered";
 import "../../styles.css"

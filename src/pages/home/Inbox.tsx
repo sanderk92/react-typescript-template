@@ -8,7 +8,7 @@ import InboxCreateModal from "./InboxCreateModal";
 import {RiAddCircleFill, RiAddLine, RiCheckboxCircleFill, RiCloseCircleFill, RiFilterLine, RiRefreshLine} from "react-icons/all";
 import {RiPlayCircleFill} from "react-icons/ri";
 import {minusMonths, timeIndicator} from "../../utils/Date";
-import {DataStatus, DataView} from "../../http/model/Data";
+import {DataStatus, DataView} from "../../http/model/data";
 import InboxFiltersDrawer from "./InboxFiltersDrawer";
 import {Box, Flex, IconButton, useBoolean} from "@chakra-ui/react";
 import SimpleTableWithTaskbar from "../../components/SimpleTableWithTaskbar";

@@ -1,6 +1,6 @@
 import axios from "axios";
 import {v4 as uuid} from 'uuid';
-import {DataEntry, DataStatus, DataView} from "./model/Data";
+import {DataEntry, DataStatus, DataView} from "./model/data";
 import {User, UserDetails} from "./model/user";
 import useAuthService from "../auth/AuthService";
 

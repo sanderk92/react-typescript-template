@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import {useState} from "react";
-import {DataView} from "../../http/model/Data";
+import {DataView} from "../../http/model/data";
 import {TableRow} from "../../components/SimpleTable";
 import SimpleTableSearchDropdown from "../../components/SimpleTableSearchDropdown";
 import {UserDetails} from "../../http/model/user";
