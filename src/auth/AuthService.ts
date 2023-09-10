@@ -3,6 +3,7 @@ import {useAuth} from "react-oidc-context";
 
 export interface AuthServiceProps {
     getUser(): User | null | undefined
+    getAccessToken(): string | undefined
     isLoading(): boolean
     isLoggedIn(): boolean
     login(): void
@@ -15,6 +16,10 @@ export const useAuthService = (): AuthServiceProps => {
 
     const getUser = (): User | null | undefined => {
         return auth.user
+    }
+
+    const getAccessToken = (): string | undefined => {
+        return auth.user?.access_token
     }
 
     const isLoading = (): boolean => {
@@ -37,6 +42,7 @@ export const useAuthService = (): AuthServiceProps => {
 
     return {
         getUser,
+        getAccessToken,
         isLoading,
         isLoggedIn,
         login,

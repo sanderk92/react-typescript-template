@@ -147,7 +147,7 @@ const TopNavigation = ({user, onOpen, ...rest}: {
                                     alignItems="flex-start"
                                     spacing="1px"
                                     ml="2">
-                                    <Text fontSize="sm" color={"white"}>{user.id}</Text>=
+                                    <Text fontSize="sm" color={"white"}>{`${user.firstName} ${user.lastName}`}</Text>=
                                 </VStack>
                                 <Box display={{base: 'none', md: 'flex'}}>
                                     <FiChevronDown color={"white"}/>

@@ -19,7 +19,7 @@ import {TableRow} from "../../components/SimpleTable";
 import SimpleTableSearchDropdown from "../../components/SimpleTableSearchDropdown";
 import {User} from "../../http/model/user";
 import SimpleTableDropdown from "../../components/SimpleTableDropdown";
-import { submitData, findUsers } from "../../http/backendService";
+import { submitData, searchUsers } from "../../http/backendService";
 
 export interface CreateDrawerProps {
     isOpen: boolean
@@ -50,7 +50,7 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
                     <FormControl isRequired={true}>
                         <FormLabel>Recipient</FormLabel>
                         <SimpleTableSearchDropdown
-                            onSearch={fetchUsers}
+                            onSearch={findUsers}
                             selections={userSelection != null ? [asTableRow(userSelection)] : []}
                             onSelect={row => setUserSelection(row.user)}
                             onUnselect={() => setUserSelection(undefined)}
@@ -82,15 +82,15 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
 
     function create() {
         setCreating(true)
-        submitData({input: companySelection?.id ?? "joe"})
+        submitData({input: companySelection?.id!!})
             .then(data => {onCreated(data); onClose()})
             .then(_ => {toast({title: "Successfully created!", status: 'success', isClosable: true})})
             .catch(_ => toast({title: "Error creating.", status: 'error', isClosable: true}))
             .finally(() => setCreating(false))
     }
 
-    function fetchUsers(name: string): Promise<UserTableRow[]> {
-        return findUsers(name)
+    function findUsers(query: string): Promise<UserTableRow[]> {
+        return searchUsers(query)
             .then(users => users.map(user => asTableRow(user)))
             .catch(_ => { toast({title: "Error fetching users.", status: 'error', isClosable: true}); return []})
     }

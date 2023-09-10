@@ -2,25 +2,24 @@ import axios from "axios";
 import {v4 as uuid} from 'uuid';
 import {DataEntry, DataStatus, DataView} from "./model/data";
 import {LoggedInUser, User} from "./model/user";
-import useAuthService from "../auth/AuthService";
 
-const backendUrl : string = window.location.protocol + "//" + window.location.host
+const url : string = window.location.protocol + "//" + window.location.host
+const client = axios.create({baseURL: url})
 
-const backendClient = axios.create({baseURL: backendUrl})
-
-backendClient.interceptors.request.use(config => {
-    config.headers.Authorization = "Bearer " + useAuthService().getUser()?.access_token
-    return config
-});
+export const setBackendAccessToken = (accessToken: string) => {
+    client.interceptors.request.use(config => {
+        config.headers.Authorization = `Bearer ${accessToken}`
+        return config
+    });
+}
 
 export const fetchUser = (): Promise<LoggedInUser> =>
-    backendClient.get<LoggedInUser>("/user")
+    client.get<LoggedInUser>("/api/user/me")
         .then(result => result.data)
 
-export const findUsers = (name: string): Promise<User[]> =>
-    new Promise(resolve => setTimeout(resolve, 2000))
-        .then(_ => users)
-        .then(users => users.filter(user => user.firstName.includes(name) || user.lastName.includes(name)))
+export const searchUsers = (query: string): Promise<User[]> =>
+    client.get<User[]>("/api/user", {params: { query: query }})
+        .then(result => result.data)
 
 export const fetchData = (id: String): Promise<DataView | undefined> =>
     new Promise(resolve => setTimeout(resolve, 2000))
@@ -59,10 +58,10 @@ const inbox : DataView[] = [
 ]
 
 const users: User[] = [
-    { id: "c151c267-4227-43a7-85d9-7f0689ef2299", firstName: "sander", lastName: "krabbenborg"},
-    { id: "64336a50-1d07-4922-a840-06da0f0ac0bf", firstName: "laura", lastName: "krabbenborg"},
-    { id: "156eadae-5c8e-421a-8310-461d77bda8e1", firstName: "vincent", lastName: "krabbenborg"},
-    { id: "cc8868e8-d4ec-47a5-a8c3-1872c9bfbc42", firstName: "jan", lastName: "smit"},
-    { id: "18b42e8f-0049-4286-98a0-5257597e86c1", firstName: "kai", lastName: "smit"},
-    { id: "5bfcc9fc-77cb-4126-ad0e-54a41f632c98", firstName: "ian", lastName: "smit"},
+    { id: "c151c267-4227-43a7-85d9-7f0689ef2299", email: "mail", firstName: "sander", lastName: "krabbenborg"},
+    { id: "64336a50-1d07-4922-a840-06da0f0ac0bf", email: "mail", firstName: "laura", lastName: "krabbenborg"},
+    { id: "156eadae-5c8e-421a-8310-461d77bda8e1", email: "mail", firstName: "vincent", lastName: "krabbenborg"},
+    { id: "cc8868e8-d4ec-47a5-a8c3-1872c9bfbc42", email: "mail", firstName: "jan", lastName: "smit"},
+    { id: "18b42e8f-0049-4286-98a0-5257597e86c1", email: "mail", firstName: "kai", lastName: "smit"},
+    { id: "5bfcc9fc-77cb-4126-ad0e-54a41f632c98", email: "mail", firstName: "ian", lastName: "smit"},
 ]
