@@ -16,20 +16,17 @@ export default function Collage({photos, imagesPerRow}: CollageProps) {
                 {
                     photos.map((photo, index) =>
                         <Box flex={`${100 / imagesPerRow}%`} _hover={{cursor: "zoom-in"}}>
-                            <Image borderRadius="md" src={photo} alt="photo" p={0.4} onClick={() => {setOpen(true); setSelection(photo)}}/>
+                            <Image borderRadius="md" src={photo} alt="photo" p={0.5} onClick={() => {setOpen(true); setSelection(photo)}}/>
                         </Box>
                     )
                 }
             </Flex>
-            {
-                !open ? null :
-                    <Modal isOpen={open} onClose={() => setOpen(false)}>
-                        <ModalOverlay/>
-                        <ModalContent>
-                            <Image src={selection}></Image>
-                        </ModalContent>
-                    </Modal>
-            }
+            <Modal isOpen={open} onClose={() => setOpen(false)}>
+                <ModalOverlay/>
+                <ModalContent>
+                    <Image src={selection}></Image>
+                </ModalContent>
+            </Modal>
         </Box>
     )
 }
