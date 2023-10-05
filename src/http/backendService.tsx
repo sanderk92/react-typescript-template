@@ -57,12 +57,3 @@ const inbox : DataView[] = [
     {id: "d6710dfa-8e4d-4f4c-b29f-33672117e5ed", status: DataStatus.finished, company: 'Kinder B.V.', time: new Date(2022, 3, 2, 10, 0, 0)},
     {id: "2a8cc34c-accd-47ff-ade4-f5faff94184f", status: DataStatus.finished, company: 'Ouder B.V.', time: new Date(2022, 2, 2, 10, 0, 0)},
 ]
-
-const users: User[] = [
-    { id: "c151c267-4227-43a7-85d9-7f0689ef2299", email: "mail", firstName: "sander", lastName: "krabbenborg"},
-    { id: "64336a50-1d07-4922-a840-06da0f0ac0bf", email: "mail", firstName: "laura", lastName: "krabbenborg"},
-    { id: "156eadae-5c8e-421a-8310-461d77bda8e1", email: "mail", firstName: "vincent", lastName: "krabbenborg"},
-    { id: "cc8868e8-d4ec-47a5-a8c3-1872c9bfbc42", email: "mail", firstName: "jan", lastName: "smit"},
-    { id: "18b42e8f-0049-4286-98a0-5257597e86c1", email: "mail", firstName: "kai", lastName: "smit"},
-    { id: "5bfcc9fc-77cb-4126-ad0e-54a41f632c98", email: "mail", firstName: "ian", lastName: "smit"},
-]
