@@ -7,6 +7,7 @@ const url : string = window.location.protocol + "//" + window.location.host
 const client = axios.create({baseURL: url})
 
 export const setBackendAccessToken = (accessToken: string) => {
+    client.interceptors.request.clear()
     client.interceptors.request.use(config => {
         config.headers.Authorization = `Bearer ${accessToken}`
         return config
@@ -14,11 +15,11 @@ export const setBackendAccessToken = (accessToken: string) => {
 }
 
 export const fetchUser = (): Promise<LoggedInUser> =>
-    client.get<LoggedInUser>("/api/user/me")
+    client.get<LoggedInUser>("/api/users/me")
         .then(result => result.data)
 
 export const searchUsers = (query: string): Promise<User[]> =>
-    client.get<User[]>("/api/user", {params: { query: query }})
+    client.get<User[]>("/api/users", {params: { query: query }})
         .then(result => result.data)
 
 export const fetchData = (id: String): Promise<DataView | undefined> =>

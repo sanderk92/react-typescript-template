@@ -35,7 +35,7 @@ interface SidebarProps extends BoxProps {
 const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
     return (
         <Box
-            bg={useColorModeValue('gray.300', 'gray.900')}
+            bg={useColorModeValue('gray.100', 'gray.900')}
             borderRight="1px"
             borderRightColor={useColorModeValue('gray.200', 'gray.700')}
             w={{base: 'full', md: 60}}
@@ -121,7 +121,7 @@ const TopNavigation = ({user, onOpen, ...rest}: {
                 onClick={onOpen}
                 variant="outline"
                 aria-label="open menu"
-                bg={useColorModeValue('gray.300', 'gray.700')}
+                bg={useColorModeValue('gray.100', 'gray.700')}
                 icon={<FiMenu/>}
             />
 

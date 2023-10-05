@@ -3,5 +3,5 @@ export const authSettings = {
     redirect_uri: "http://localhost:5173/",
     post_logout_redirect_uri: "http://localhost:5173/",
     response_type: "code",
-    client_id: "app",
+    client_id: "frontend",
 };

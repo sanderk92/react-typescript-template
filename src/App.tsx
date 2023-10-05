@@ -40,8 +40,14 @@ export function LoginAndRoute() {
     })
 
     useEffect(() => {
-        if (authService.isLoggedIn() && user == null) {
+        if (authService.isLoggedIn() && authService.getAccessToken()) {
+            console.log("set token to " + authService.getAccessToken())
             setBackendAccessToken(authService.getAccessToken()!!)
+        }
+    }, [authService])
+
+    useEffect(() => {
+        if (authService.isLoggedIn() && user == null) {
             fetchUser()
                 .then((user) => setUser(user))
                 .catch(reason => toast({title: 'Try again later.', description: reason.toString(), status: 'error', isClosable: true}))
