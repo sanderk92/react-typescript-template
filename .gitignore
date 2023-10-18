@@ -10,8 +10,11 @@
 
 # production
 /build
+/generated
+/dist
 
 # misc
+.idea
 .DS_Store
 .env.local
 .env.development.local

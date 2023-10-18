@@ -1,5 +1,25 @@
 import React, {ReactNode, useEffect} from 'react';
-import {Avatar, Box, BoxProps, CloseButton, Drawer, DrawerContent, Flex, HStack, Icon, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, useColorModeValue, useDisclosure, VStack,} from '@chakra-ui/react';
+import {
+    Avatar,
+    Box,
+    BoxProps,
+    CloseButton,
+    Drawer,
+    DrawerContent,
+    Flex,
+    HStack,
+    Icon,
+    IconButton,
+    Menu,
+    MenuButton,
+    MenuDivider,
+    MenuItem,
+    MenuList,
+    Text,
+    useColorModeValue,
+    useDisclosure,
+    VStack,
+} from '@chakra-ui/react';
 import {FiChevronDown, FiHome, FiMenu, FiMessageCircle,} from 'react-icons/fi';
 import {IconType} from 'react-icons';
 import {ColorModeSwitcher} from "./ColorModeSwitcher";
@@ -8,10 +28,10 @@ import useAuthService from "./auth/AuthService";
 import {Logo} from "./Logo";
 import {onResize} from "./utils/Resize";
 import {onBack} from "./utils/History";
-import {LoggedInUser} from "./http/model/user";
+import {CurrentUserDto} from "../generated";
 
 export interface NavigationProps {
-    user: LoggedInUser
+    user: CurrentUserDto
     children: ReactNode
 }
 
@@ -104,7 +124,7 @@ const SidebarDrawer = ({isOpen, onClose, ...rest}: {
 }
 
 const TopNavigation = ({user, onOpen, ...rest}: {
-    user: LoggedInUser
+    user: CurrentUserDto
     onOpen: () => void
 }) => {
     return (

@@ -2,7 +2,7 @@ import {TableCell, TableRow} from "../../components/SimpleTable";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Route, Routes, useNavigate} from "react-router-dom";
-import { findData } from "../../http/backendService";
+import { findData } from "../../http/backendStubs";
 import InboxDetailsDrawer from "./InboxDetailsDrawer";
 import InboxCreateModal from "./InboxCreateModal";
 import {RiAddCircleFill, RiAddLine, RiCheckboxCircleFill, RiCloseCircleFill, RiFilterLine, RiRefreshLine} from "react-icons/all";

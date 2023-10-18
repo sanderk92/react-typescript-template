@@ -24,7 +24,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 
     public render() {
         if (this.state.hasError) {
-            return <h1>Sorry.. there was an error loading the page</h1>;
+            return <p>Could not load page, please try again later ...</p>;
         }
         return this.props.children;
     }

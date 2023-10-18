@@ -6,8 +6,8 @@ export interface AuthServiceProps {
     getAccessToken(): string | undefined
     isLoading(): boolean
     isLoggedIn(): boolean
-    login(): void
-    logout(): void
+    login(): Promise<void>
+    logout(): Promise<void>
 }
 
 export const useAuthService = (): AuthServiceProps => {
@@ -30,14 +30,12 @@ export const useAuthService = (): AuthServiceProps => {
         return auth.isAuthenticated
     }
 
-    const login = (): void => {
-        auth.signinRedirect()
-            .then(() => console.log("Login success"))
+    const login = (): Promise<void> => {
+        return auth.signinRedirect()
     }
 
-    const logout = (): void => {
-        auth.signoutRedirect()
-            .then(() => console.log("Logout success"))
+    const logout = (): Promise<void> => {
+        return auth.signoutRedirect()
     }
 
     return {

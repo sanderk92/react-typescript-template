@@ -1,6 +1,6 @@
 import * as React from "react"
 import {useEffect, useState} from "react"
-import {ChakraProvider, theme, useToast} from "@chakra-ui/react"
+import {ChakraProvider, theme} from "@chakra-ui/react"
 import Navigation from "./Navigation";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {AuthProvider} from "react-oidc-context";
@@ -8,12 +8,11 @@ import {authSettings} from "./auth/AuthSettings";
 import HomePage from "./pages/home/HomePage";
 import ContactPage from "./pages/contact/ContactPage";
 import ErrorBoundary from "./ErrorBoundary";
-import {LoggedInUser} from "./http/model/user";
 
 import "react-datepicker/dist/react-datepicker.css";
-import {fetchUser, setBackendAccessToken} from "./http/backendService";
 import useAuthService from "./auth/AuthService";
 import SpinnerCentered from "./components/SpinnerCentered";
+import {CurrentUserDto, OpenAPI, UserService} from "../generated";
 
 export function App() {
     return (
@@ -28,29 +27,24 @@ export function App() {
 }
 
 export function LoginAndRoute() {
-    const toast = useToast()
     const authService = useAuthService()
+    const [user, setUser] = useState<CurrentUserDto | undefined>()
 
-    const [user, setUser] = useState<LoggedInUser | undefined>()
+    OpenAPI.BASE = window.location.protocol + "//" + window.location.host + "/api"
+    OpenAPI.TOKEN = authService.getAccessToken();
 
     useEffect(() => {
         if (!authService.isLoading() && !authService.isLoggedIn()) {
             authService.login()
+                .catch(_ => { throw new Error() })
         }
     })
 
     useEffect(() => {
-        if (authService.isLoggedIn() && authService.getAccessToken()) {
-            console.log("set token to " + authService.getAccessToken())
-            setBackendAccessToken(authService.getAccessToken()!!)
-        }
-    }, [authService])
-
-    useEffect(() => {
         if (authService.isLoggedIn() && user == null) {
-            fetchUser()
+            UserService.getCurrentUser()
                 .then((user) => setUser(user))
-                .catch(reason => toast({title: 'Try again later.', description: reason.toString(), status: 'error', isClosable: true}))
+                .catch(_ => { throw new Error() })
         }
     })
 

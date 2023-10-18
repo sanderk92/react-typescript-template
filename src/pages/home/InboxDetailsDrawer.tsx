@@ -13,7 +13,7 @@ import {
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {DataView} from "../../http/model/data";
-import {fetchData} from "../../http/backendService";
+import {fetchData} from "../../http/backendStubs";
 import SpinnerCentered from "../../components/SpinnerCentered";
 import "../../styles.css"
 import Collage from "../../components/Collage";

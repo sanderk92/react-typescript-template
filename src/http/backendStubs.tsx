@@ -1,7 +1,6 @@
 import axios from "axios";
 import {v4 as uuid} from 'uuid';
 import {DataEntry, DataStatus, DataView} from "./model/data";
-import {LoggedInUser, User} from "./model/user";
 
 const url : string = window.location.protocol + "//" + window.location.host
 const client = axios.create({baseURL: url})
@@ -13,14 +12,6 @@ export const setBackendAccessToken = (accessToken: string) => {
         return config
     });
 }
-
-export const fetchUser = (): Promise<LoggedInUser> =>
-    client.get<LoggedInUser>("/api/users/me")
-        .then(result => result.data)
-
-export const searchUsers = (query: string): Promise<User[]> =>
-    client.get<User[]>("/api/users", {params: { query: query }})
-        .then(result => result.data)
 
 export const fetchData = (id: String): Promise<DataView | undefined> =>
     new Promise(resolve => setTimeout(resolve, 2000))
