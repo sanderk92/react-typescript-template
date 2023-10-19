@@ -12,6 +12,8 @@ the specification is retrieved from a running application, but when the template
 specifications should be published to a separate repository. In order to run this application, you should first follow
 the run instructions for the [backend](https://github.com/sanderk92/spring-kotlin-template), and then:
 
+Configure a `frontend` public client in Keycloak
+
 ```shell
 # Generate the required backend clients
 npm run generate
