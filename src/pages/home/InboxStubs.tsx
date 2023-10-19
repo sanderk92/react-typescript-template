@@ -1,16 +1,21 @@
-import axios from "axios";
 import {v4 as uuid} from 'uuid';
-import {DataEntry, DataStatus, DataView} from "./model/data";
 
-const url : string = window.location.protocol + "//" + window.location.host
-const client = axios.create({baseURL: url})
+export enum DataStatus {
+    open,
+    running,
+    cancelled,
+    finished
+}
 
-export const setBackendAccessToken = (accessToken: string) => {
-    client.interceptors.request.clear()
-    client.interceptors.request.use(config => {
-        config.headers.Authorization = `Bearer ${accessToken}`
-        return config
-    });
+export interface DataView {
+    id: string,
+    status: DataStatus,
+    company: string,
+    time: Date,
+}
+
+export interface DataEntry {
+    input: string,
 }
 
 export const fetchData = (id: String): Promise<DataView | undefined> =>

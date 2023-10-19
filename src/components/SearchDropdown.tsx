@@ -24,13 +24,14 @@ export interface SimpleTableSearchDropdownProps<T extends TableRow> {
     header?: TableHeader
 }
 
-export default function SimpleTableSearchDropdown<T extends TableRow>(
+export default function SearchDropdown<T extends TableRow>(
     {onSearch, selections, onSelect, onUnselect, header}: SimpleTableSearchDropdownProps<T>
 ) {
     const [rows, setRows] = useState<T[]>([])
     const [query, setQuery] = useState<string>("")
     const [isOpen, setOpen] = useState(false)
     const [isLoading, setLoading] = useState(false)
+    const [isError, setError] = useState(false)
 
     const colorScheme = useColorModeValue('gray.50', 'gray.600')
     const outsideClickRef = useRef<HTMLDivElement>(null);

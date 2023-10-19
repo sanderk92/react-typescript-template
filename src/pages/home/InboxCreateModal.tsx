@@ -14,11 +14,10 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import {useState} from "react";
-import {DataView} from "../../http/model/data";
 import {TableRow} from "../../components/SimpleTable";
-import SimpleTableSearchDropdown from "../../components/SimpleTableSearchDropdown";
-import SimpleTableDropdown from "../../components/SimpleTableDropdown";
-import { submitData } from "../../http/backendStubs";
+import SearchDropdown from "../../components/SearchDropdown";
+import SimpleTableDropdown from "../../components/Dropdown";
+import { submitData, DataView } from "./InboxStubs";
 import {UserDto, UserService} from "../../../generated";
 
 export interface CreateDrawerProps {
@@ -49,7 +48,7 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
                 <ModalBody pb={6}>
                     <FormControl isRequired={true}>
                         <FormLabel>Recipient</FormLabel>
-                        <SimpleTableSearchDropdown
+                        <SearchDropdown
                             onSearch={findUsers}
                             selections={userSelection != null ? [asTableRow(userSelection)] : []}
                             onSelect={row => setUserSelection(row.user)}

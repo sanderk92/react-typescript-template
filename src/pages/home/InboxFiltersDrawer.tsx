@@ -16,8 +16,8 @@ import {useState} from "react";
 import {RiAddCircleFill} from "react-icons/all";
 import {RiCheckboxCircleFill, RiCloseCircleFill, RiPlayCircleFill} from "react-icons/ri";
 import {InboxFilter} from "./Inbox";
-import {DataStatus} from "../../http/model/data";
 import DatePicker from "react-datepicker";
+import {DataStatus} from "./InboxStubs";
 
 export interface FiltersDrawerProps {
     isOpen: boolean
