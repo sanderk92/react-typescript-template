@@ -131,7 +131,7 @@ const TopNavigation = ({user, onOpen, ...rest}: {
         <Flex
             ml={{base: 0, md: 60}}
             px={{base: 4, md: 4}}
-            height="20"
+            height={{base: "10vh", md: "8vh"}}
             alignItems="center"
             bg={useColorModeValue('gray.700', 'gray.900')}
             justifyContent={{base: 'space-between', md: 'flex-end'}}
