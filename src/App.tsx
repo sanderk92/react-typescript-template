@@ -30,7 +30,7 @@ export function LoginAndRoute() {
     const authService = useAuthService()
     const [user, setUser] = useState<CurrentUserDto | undefined>()
 
-    OpenAPI.BASE = window.location.protocol + "//" + window.location.host + "/api"
+    OpenAPI.BASE = window.location.protocol + "//api." + window.location.host + "/v1"
     OpenAPI.TOKEN = authService.getAccessToken();
 
     useEffect(() => {
