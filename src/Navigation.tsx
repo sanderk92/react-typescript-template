@@ -23,7 +23,7 @@ import {
 import {FiChevronDown, FiHome, FiMenu, FiMessageCircle,} from 'react-icons/fi';
 import {IconType} from 'react-icons';
 import {ColorModeSwitcher} from "./ColorModeSwitcher";
-import {Link as RouteLink} from "react-router-dom";
+import {Link as RouteLink, useNavigate} from "react-router-dom";
 import useAuthService from "./auth/AuthService";
 import {Logo} from "./Logo";
 import {onResize} from "./utils/Resize";
@@ -127,6 +127,7 @@ const TopNavigation = ({user, onOpen, ...rest}: {
     user: CurrentUserDto
     onOpen: () => void
 }) => {
+    const navigate = useNavigate()
     return (
         <Flex
             ml={{base: 0, md: 60}}
@@ -176,7 +177,7 @@ const TopNavigation = ({user, onOpen, ...rest}: {
                         <MenuList
                             bg={useColorModeValue('white', 'gray.900')}
                             borderColor={useColorModeValue('gray.200', 'gray.700')}>
-                            <MenuItem onClick={useAuthService().logout}>Sign out</MenuItem>
+                            <MenuItem onClick={() => navigate("/logout")}>Sign out</MenuItem>
                             <MenuDivider/>
                             <ColorModeSwitcher flex={"auto"} justifySelf="center"/>
                         </MenuList>

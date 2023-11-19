@@ -11,7 +11,6 @@ export interface AuthServiceProps {
 }
 
 export const useAuthService = (): AuthServiceProps => {
-
     const auth = useAuth();
 
     const getUser = (): User | null | undefined => {

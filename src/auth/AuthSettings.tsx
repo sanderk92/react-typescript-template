@@ -1,7 +1,9 @@
+export const host = window.location.protocol + "//" + window.location.host
+
 export const authSettings = {
-    authority: "http://localhost:8081/realms/master/",
-    redirect_uri: window.location.href,
-    post_logout_redirect_uri: "http://localhost:5173/",
+    authority: "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_6wOiibFgH",
+    redirect_uri: host + "/redirect",
+    post_logout_redirect_uri: host + "/logout",
     response_type: "code",
-    client_id: "frontend",
+    client_id: "1gmag0ff95or0clk7ctvn5rgit",
 };

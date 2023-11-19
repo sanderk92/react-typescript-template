@@ -13,20 +13,27 @@ import "react-datepicker/dist/react-datepicker.css";
 import useAuthService from "./auth/AuthService";
 import SpinnerCentered from "./components/SpinnerCentered";
 import {CurrentUserDto, OpenAPI, UserService} from "../generated";
+import RedirectPage from "./pages/Redirect";
+import LogoutPage from "./pages/Logout";
 
 export function App() {
     return (
         <ErrorBoundary>
             <AuthProvider {...authSettings}>
                 <ChakraProvider theme={theme}>
-                    <LoginAndRoute/>
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path="/*" element={<AppNavigation/>}/>
+                            <Route path="/logout" element={<LogoutPage/>}/>
+                        </Routes>
+                    </BrowserRouter>
                 </ChakraProvider>
             </AuthProvider>
         </ErrorBoundary>
     )
 }
 
-export function LoginAndRoute() {
+export function AppNavigation() {
     const authService = useAuthService()
     const [user, setUser] = useState<CurrentUserDto | undefined>()
 
@@ -35,6 +42,7 @@ export function LoginAndRoute() {
 
     useEffect(() => {
         if (!authService.isLoading() && !authService.isLoggedIn()) {
+            localStorage.setItem("request-url", window.location.href)
             authService.login()
                 .catch(_ => { throw new Error() })
         }
@@ -52,14 +60,13 @@ export function LoginAndRoute() {
         return <SpinnerCentered/>
     } else {
         return (
-            <BrowserRouter>
-                <Navigation user={user}>
-                    <Routes>
-                        <Route path="/*" element={<HomePage/>}/>
-                        <Route path="/contact" element={<ContactPage/>}/>
-                    </Routes>
-                </Navigation>
-            </BrowserRouter>
+            <Navigation user={user}>
+                <Routes>
+                    <Route path="/*" element={<HomePage/>}/>
+                    <Route path="/contact" element={<ContactPage/>}/>
+                    <Route path="/redirect" element={<RedirectPage/>}/>
+                </Routes>
+            </Navigation>
         )
     }
 }
