@@ -4,6 +4,7 @@ import Inbox from "./Inbox";
 import Outbox from "./Outbox";
 import {Route, Routes, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
+import ScrollReset from "../../ScrollReset";
 
 export default function HomePage() {
     const navigate = useNavigate()
@@ -28,6 +29,7 @@ export default function HomePage() {
                     </Routes>
                 </Box>
             </Tabs>
+            <ScrollReset/>
         </Box>
     )
 

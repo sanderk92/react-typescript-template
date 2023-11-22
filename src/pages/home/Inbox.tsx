@@ -52,7 +52,7 @@ export default function Inbox() {
                     <Flex alignItems={"flex-end"} justifyContent={"flex-end"}>
                         <IconButton mr="2" icon={<RiAddLine/>} aria-label={"create"} onClick={navigateCreate}/>
                         <IconButton mr="2" icon={<RiFilterLine/>} aria-label={"filter"} onClick={navigateFilters}/>
-                        <IconButton mr="2" icon={<RiRefreshLine/>} aria-label={"refresh"} onClick={() => setRefreshing.toggle()}/>
+                        <IconButton mr="2" icon={<RiRefreshLine/>} aria-label={"refresh"} isLoading={rows == null} onClick={() => setRefreshing.toggle()}/>
                     </Flex>
                 }
             />
@@ -78,7 +78,7 @@ const secondColumnWidth = "50%"
 const tableHeader = () => ({
     cells: [
         {value: "sender", maxWidth: firstColumnWidth},
-        {value: "time", maxWidth: secondColumnWidth},
+        {value: "time ago", maxWidth: secondColumnWidth},
     ]
 });
 

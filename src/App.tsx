@@ -15,7 +15,6 @@ import SpinnerCentered from "./components/SpinnerCentered";
 import {CurrentUserDto, OpenAPI, UserService} from "../generated";
 import RedirectPage from "./pages/Redirect";
 import LogoutPage from "./pages/Logout";
-import ScrollReset from "./ScrollReset";
 
 export function App() {
     return (
@@ -67,7 +66,6 @@ export function AppNavigation() {
                     <Route path="/contact" element={<ContactPage/>}/>
                     <Route path="/redirect" element={<RedirectPage/>}/>
                 </Routes>
-                <ScrollReset/>
             </Navigation>
         )
     }

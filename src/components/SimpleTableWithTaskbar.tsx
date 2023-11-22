@@ -11,7 +11,6 @@ import {
     useColorModeValue
 } from "@chakra-ui/react";
 import {CloseIcon, SearchIcon} from "@chakra-ui/icons";
-import SpinnerCentered from "./SpinnerCentered";
 import "../styles.css"
 
 export interface SimpleTableWithTaskbarProps<T extends TableRow> extends TableComponentProps<T> {
@@ -40,7 +39,7 @@ export default function SimpleTableWithTaskbar<T extends TableRow>(
                 </Box>
                 <Box>{buttons}</Box>
             </Flex>
-            { rows == null ? <SpinnerCentered/> : rows.length === 0 ? <EmptyResultDisplay/> :
+            { rows == null ? null : rows?.length === 0 ? <EmptyResultDisplay/> :
                 <SimpleTable
                     rows={rows?.filter(row => filter(row, search))}
                     onSelect={onSelect}

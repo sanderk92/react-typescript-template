@@ -3,6 +3,6 @@ export const resetToTop = () => {
     document.documentElement.scrollTop = 0;
 }
 
-export const isScrolled = (): boolean => {
-    return document.body.scrollTop > 100 || document.documentElement.scrollTop > 100
+export const isScrolled = (px: number): boolean => {
+    return document.body.scrollTop > px || document.documentElement.scrollTop > px
 }
