@@ -1,10 +1,9 @@
 import * as React from "react";
+import {useEffect} from "react";
 import {Box, Tab, TabList, Tabs} from "@chakra-ui/react";
 import Inbox from "./Inbox";
 import Outbox from "./Outbox";
 import {Route, Routes, useNavigate} from "react-router-dom";
-import {useEffect} from "react";
-import ScrollReset from "../../ScrollReset";
 
 export default function HomePage() {
     const navigate = useNavigate()
@@ -29,7 +28,6 @@ export default function HomePage() {
                     </Routes>
                 </Box>
             </Tabs>
-            <ScrollReset/>
         </Box>
     )
 

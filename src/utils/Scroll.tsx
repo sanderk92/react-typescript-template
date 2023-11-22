@@ -3,6 +3,15 @@ export const resetToTop = () => {
     document.documentElement.scrollTop = 0;
 }
 
-export const isScrolled = (px: number): boolean => {
-    return document.body.scrollTop > px || document.documentElement.scrollTop > px
+export const resetToBottom = () => {
+    document.body.scrollTop = document.body.scrollHeight;
+    document.documentElement.scrollTop = document.body.scrollHeight;
+}
+
+export const canScrollUp = (modifier: number): boolean => {
+    return document.body.scrollTop > modifier || document.documentElement.scrollTop > modifier
+}
+
+export const canScrollDown = (modifier: number) : boolean => {
+    return window.scrollY + window.innerHeight + modifier < document.body.scrollHeight;
 }

@@ -11,6 +11,7 @@ import {minusMonths, timeIndicator} from "../../utils/Date";
 import InboxFiltersDrawer from "./InboxFiltersDrawer";
 import {Box, Flex, IconButton, useBoolean} from "@chakra-ui/react";
 import SimpleTableWithTaskbar from "../../components/SimpleTableWithTaskbar";
+import ScrollReset from "../../ScrollReset";
 
 export interface InboxFilter {
     status: DataStatus[],
@@ -68,6 +69,8 @@ export default function Inbox() {
                     <InboxFiltersDrawer isOpen={true} onClose={navigateBase} filter={filter} setFilter={setFilter}/>
                 }/>
             </Routes>
+
+            <ScrollReset clear={rows == null}/>
         </Box>
     )
 }

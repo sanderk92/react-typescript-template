@@ -1,5 +1,5 @@
 import React, {ReactNode, useState} from 'react';
-import {Flex, Icon, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
+import {Flex, Icon, SkeletonText, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
 import {TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import {v4 as uuid} from 'uuid';
 
@@ -44,8 +44,8 @@ export default function SimpleTable<T extends TableRow>(
     return (
         <TableContainer maxH={maxHeight} overflowY={"scroll"}>
             <Table variant='simple' size="md">
-                {header ? <TableHead header={header} sort={sort} setSort={setSort}/> : null}
-                {rows ? <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/> : null}
+                {header && rows ? <TableHead header={header} sort={sort} setSort={setSort}/> : header ? <TableHeadPlaceHolder/> : null }
+                {rows ? <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/> : <TableBodyPlaceHolder/>}
             </Table>
         </TableContainer>
     )
@@ -98,6 +98,18 @@ function TableHead({header, sort, setSort}: TableHeadProps): React.JSX.Element {
     }
 }
 
+function TableHeadPlaceHolder(): React.JSX.Element {
+    const backgroundColorScheme = useColorModeValue('gray.200', 'gray.800')
+
+    return (
+        <Thead>
+            <Tr bg={backgroundColorScheme}>
+                <Th><br/></Th>
+            </Tr>
+        </Thead>
+    )
+}
+
 interface TableBodyProps<T extends TableRow> {
     rows: T[]
     onSelect: (row: T) => void
@@ -130,6 +142,20 @@ function TableBody<T extends TableRow>({rows, onSelect}: TableBodyProps<T>): Rea
                 </Tr>
             )
         }</Tbody>
+    )
+}
+
+
+function TableBodyPlaceHolder(): React.JSX.Element {
+    return (
+        <Tbody>
+            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={4}/></Td></Tr>
+            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={4}/></Td></Tr>
+            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={4}/></Td></Tr>
+            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={4}/></Td></Tr>
+            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={4}/></Td></Tr>
+            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={4}/></Td></Tr>
+        </Tbody>
     )
 }
 

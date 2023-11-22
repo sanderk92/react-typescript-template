@@ -6,7 +6,8 @@ import {
     Input,
     InputGroup,
     InputLeftElement,
-    InputRightElement,
+    InputRightElement, Progress, Skeleton, SkeletonText, Spinner,
+    Stack,
     Text,
     useColorModeValue
 } from "@chakra-ui/react";
@@ -39,7 +40,7 @@ export default function SimpleTableWithTaskbar<T extends TableRow>(
                 </Box>
                 <Box>{buttons}</Box>
             </Flex>
-            { rows == null ? null : rows?.length === 0 ? <EmptyResultDisplay/> :
+            { rows?.length === 0 ? <EmptyResultDisplay/> :
                 <SimpleTable
                     rows={rows?.filter(row => filter(row, search))}
                     onSelect={onSelect}
