@@ -1,18 +1,9 @@
 import React, {useState} from "react";
 import SimpleTable, {TableComponentProps, TableRow} from "./SimpleTable";
-import {
-    Box,
-    Flex,
-    Input,
-    InputGroup,
-    InputLeftElement,
-    InputRightElement, Progress, Skeleton, SkeletonText, Spinner,
-    Stack,
-    Text,
-    useColorModeValue
-} from "@chakra-ui/react";
+import {Box, Flex, Input, InputGroup, InputLeftElement, InputRightElement, useColorModeValue} from "@chakra-ui/react";
 import {CloseIcon, SearchIcon} from "@chakra-ui/icons";
 import "../styles.css"
+import {BsInbox} from "react-icons/all";
 
 export interface SimpleTableWithTaskbarProps<T extends TableRow> extends TableComponentProps<T> {
     buttons?: React.JSX.Element
@@ -59,6 +50,8 @@ function filter(row: TableRow, search: string): boolean {
 
 function EmptyResultDisplay() {
     return <Box className={"centered-parent"}>
-        <Text as={"em"} className={"centered-child"}>Nothing to see here!</Text>
+        <Box className={"centered-child"}>
+            <BsInbox size={100} opacity={"10%"}/>
+        </Box>
     </Box>
 }
