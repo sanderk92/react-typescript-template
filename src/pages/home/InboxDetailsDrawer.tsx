@@ -8,12 +8,12 @@ import {
     FormControl,
     FormLabel,
     Input,
+    Spinner,
     Text,
 } from "@chakra-ui/react";
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {fetchData, DataView} from "./InboxStubs";
-import SpinnerCentered from "../../components/SpinnerCentered";
+import {DataView, fetchData} from "./InboxStubs";
 import "../../styles.css"
 import Collage from "../../components/Collage";
 
@@ -39,7 +39,7 @@ export default function InboxDetailsDrawer({isOpen, onClose}: DetailsDrawerProps
         <Drawer isOpen={isOpen} onClose={onClose}>
             <DrawerContent>
                 <DrawerHeader>Details</DrawerHeader>
-                { isLoading ? <SpinnerCentered/> : !selected ? <MissingResultDisplay/> :
+                { isLoading ? <LoadingDisplay/> : !selected ? <MissingResultDisplay/> :
                     <DrawerBody>
                         <FormControl >
                             <FormLabel>Id</FormLabel>
@@ -78,3 +78,8 @@ function MissingResultDisplay() {
     </Box>
 }
 
+function LoadingDisplay() {
+    return <Box className={"centered-parent"}>
+        <Spinner className="centered-child"></Spinner>
+    </Box>
+}

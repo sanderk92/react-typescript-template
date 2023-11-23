@@ -1,4 +1,6 @@
 import React, {Component, ErrorInfo, ReactNode} from "react";
+import {HiLightningBolt} from "react-icons/all";
+import {Box} from "@chakra-ui/react";
 
 interface Props {
     children: ReactNode;
@@ -24,8 +26,8 @@ export default class ErrorBoundary extends Component<Props, State> {
 
     public render() {
         if (this.state.hasError) {
-            return <p>Could not load page, please try again later ...</p>;
+            return <Box className={"centered-parent"}><HiLightningBolt className={"centered-child"} size={60}/></Box>
         }
-        return this.props.children;
+        return this.props.children
     }
 }
