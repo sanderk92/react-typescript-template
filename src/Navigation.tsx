@@ -24,7 +24,6 @@ import {FiChevronDown, FiHome, FiMenu, FiMessageCircle,} from 'react-icons/fi';
 import {IconType} from 'react-icons';
 import {ColorModeSwitcher} from "./ColorModeSwitcher";
 import {Link as RouteLink, useNavigate} from "react-router-dom";
-import useAuthService from "./auth/AuthService";
 import {Logo} from "./Logo";
 import {onResize} from "./utils/Resize";
 import {onBack} from "./utils/History";
