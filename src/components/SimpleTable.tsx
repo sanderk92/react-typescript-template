@@ -149,12 +149,11 @@ function TableBody<T extends TableRow>({rows, onSelect}: TableBodyProps<T>): Rea
 function TableBodyPlaceHolder(): React.JSX.Element {
     return (
         <Tbody>
-            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={4}/></Td></Tr>
-            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={4}/></Td></Tr>
-            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={4}/></Td></Tr>
-            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={4}/></Td></Tr>
-            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={4}/></Td></Tr>
-            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={4}/></Td></Tr>
+            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={5}/></Td></Tr>
+            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={5}/></Td></Tr>
+            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={5}/></Td></Tr>
+            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={5}/></Td></Tr>
+            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={5}/></Td></Tr>
         </Tbody>
     )
 }

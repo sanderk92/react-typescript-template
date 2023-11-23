@@ -6,9 +6,11 @@ import {ArrowDownIcon, ArrowUpIcon} from "@chakra-ui/icons";
 
 interface ScrollResetProps {
     clear: boolean
+    up?: boolean
+    down?: boolean
 }
 
-export default function ScrollReset({clear}: ScrollResetProps) {
+export default function ScrollReset({clear, up, down}: ScrollResetProps) {
     const [showScrollUp, setShowScrollUp] = useState(false)
     const [showScrollDown, setShowScrollDown] = useState(false)
 
@@ -19,12 +21,12 @@ export default function ScrollReset({clear}: ScrollResetProps) {
         }
         document.addEventListener("scroll", () => {
             setShowScrollUp(canScrollUp(300))
-            setShowScrollDown(canScrollDown(0))
+            setShowScrollDown(canScrollDown(50))
         })
     }, [clear])
     return (
         <>
-            <Fade in={showScrollUp}>
+            <Fade in={up && showScrollUp}>
                 <IconButton
                     icon={<ArrowUpIcon/>}
                     borderRadius={"100"}
@@ -35,9 +37,10 @@ export default function ScrollReset({clear}: ScrollResetProps) {
                     top={7}
                     onClick={resetToTop}
                     animation={"fadein 1s"}
+                    opacity={"50%"}
                 ></IconButton>
             </Fade>
-            <Fade in={showScrollDown}>
+            <Fade in={down && showScrollDown}>
                 <IconButton
                     icon={<ArrowDownIcon/>}
                     borderRadius={"100"}
@@ -48,6 +51,7 @@ export default function ScrollReset({clear}: ScrollResetProps) {
                     bottom={-2}
                     onClick={resetToBottom}
                     animation={"fadein 1s"}
+                    opacity={"50%"}
                 ></IconButton>
             </Fade>
         </>

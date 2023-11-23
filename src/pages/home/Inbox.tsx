@@ -70,7 +70,7 @@ export default function Inbox() {
                 }/>
             </Routes>
 
-            <ScrollReset clear={rows == null}/>
+            <ScrollReset clear={rows == null} down={true}/>
         </Box>
     )
 }
