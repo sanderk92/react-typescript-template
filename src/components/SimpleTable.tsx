@@ -54,7 +54,7 @@ export default function SimpleTable<T extends TableRow>(
     const [sort, setSort] = useState<SortState>(defaultSort ?? {column: 0, direction: false})
 
     return (
-        <TableContainer maxH={maxHeight} overflowY={"scroll"}>
+        <TableContainer maxH={maxHeight}>
             <Table variant='simple' size="md">
                 {header && rows ? <TableHead header={header} sort={sort} setSort={setSort}/> : header ? <TableHeadPlaceHolder/> : null }
                 {rows ? <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/> : <TableBodyPlaceHolder/>}
@@ -147,7 +147,8 @@ function TableBody<T extends TableRow>({rows, onSelect}: TableBodyProps<T>): Rea
                             maxWidth={cell.maxWidth}
                             overflow={"hidden"}
                             text-overflow={"ellipsis"}
-                            white-space={"no-wrap"}>
+                            white-space={"no-wrap"}
+                        >
                             {cell.value}
                         </Td>
                     )}

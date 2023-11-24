@@ -1,6 +1,6 @@
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {canScrollDown, canScrollUp, resetToBottom, resetToTop} from "./utils/Scroll";
+import {canScrollDown, canScrollUp, isAtBottom, isAtTop, resetToBottom, resetToTop} from "./utils/Scroll";
 import {Fade, IconButton} from "@chakra-ui/react";
 import {ArrowDownIcon, ArrowUpIcon} from "@chakra-ui/icons";
 
@@ -20,8 +20,8 @@ export default function ScrollReset({clear, up, down}: ScrollResetProps) {
             setShowScrollDown(false)
         }
         document.addEventListener("scroll", () => {
-            setShowScrollUp(canScrollUp(300))
-            setShowScrollDown(canScrollDown(50))
+            setShowScrollUp(!isAtTop() && canScrollUp(300))
+            setShowScrollDown(!isAtTop() && !isAtBottom() && canScrollDown(25))
         })
     }, [clear])
     return (
@@ -32,7 +32,6 @@ export default function ScrollReset({clear, up, down}: ScrollResetProps) {
                     borderRadius={"100"}
                     position={"fixed"}
                     aria-label={`To Page Top`}
-                    right={"40%"}
                     transform={"translate(-50%, -50%)"}
                     top={7}
                     onClick={resetToTop}
