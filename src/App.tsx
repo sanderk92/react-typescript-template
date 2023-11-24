@@ -46,7 +46,8 @@ export function AppNavigation() {
     useEffect(() => {
         if (!auth.isLoading() && !auth.isLoggedIn()) {
             localStorage.setItem("request-url", window.location.href)
-            auth.login().catch(e => toast({title: `Login`, description: e.message, status: "error", duration: 5000}))
+            auth.login()
+                .catch(e => toast({title: `Login error`, description: e.message, status: "error", duration: 5000}))
         }
     })
 
@@ -54,7 +55,7 @@ export function AppNavigation() {
         if (auth.isLoggedIn() && user == null) {
             UserService.getCurrentUser()
                 .then((user) => setUser(user))
-                .catch(e => toast({title: `Fetch user`, description: e.message, status: "error", duration: 5000}))
+                .catch(e => toast({title: `Fetch user error`, description: e.message, status: "error", duration: 5000}))
                 .finally(() => setLoading(false))
         }
     })
