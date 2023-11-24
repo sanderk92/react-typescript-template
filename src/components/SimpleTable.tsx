@@ -1,17 +1,5 @@
 import React, {ReactNode, useState} from 'react';
-import {
-    Flex,
-    Icon,
-    SkeletonText,
-    Table,
-    TableContainer,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
-    useColorModeValue
-} from '@chakra-ui/react';
+import {Flex, Icon, SkeletonText, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
 import {TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import {v4 as uuid} from 'uuid';
 
@@ -55,10 +43,18 @@ export default function SimpleTable<T extends TableRow>(
 
     return (
         <TableContainer maxH={maxHeight}>
-            <Table variant='simple' size="md">
-                {header && rows ? <TableHead header={header} sort={sort} setSort={setSort}/> : header ? <TableHeadPlaceHolder/> : null }
-                {rows ? <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/> : <TableBodyPlaceHolder/>}
-            </Table>
+            {header && rows ?
+                <Table variant='simple' size="md">
+                    <TableHead header={header} sort={sort} setSort={setSort}/>
+                    <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/>
+                </Table> : <></>
+            }
+            {header && !rows ?
+                <Table variant='simple' size="md">
+                    <TableHeadPlaceHolder/>
+                    <TableBodyPlaceHolder/>
+                </Table> : <></>
+            }
         </TableContainer>
     )
 }
