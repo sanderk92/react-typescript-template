@@ -112,7 +112,7 @@ function TableHeadPlaceHolder(): React.JSX.Element {
     return (
         <Thead>
             <Tr bg={backgroundColorScheme}>
-                <Th><br/></Th>
+                <Th><SkeletonText noOfLines={1} skeletonHeight={4} height={4} opacity={"20%"}/></Th>
             </Tr>
         </Thead>
     )
