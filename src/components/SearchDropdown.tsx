@@ -31,7 +31,6 @@ export default function SearchDropdown<T extends TableRow>(
     const [query, setQuery] = useState<string>("")
     const [isOpen, setOpen] = useState(false)
     const [isLoading, setLoading] = useState(false)
-    const [isError, setError] = useState(false)
 
     const colorScheme = useColorModeValue('gray.50', 'gray.600')
     const outsideClickRef = useRef<HTMLDivElement>(null);
