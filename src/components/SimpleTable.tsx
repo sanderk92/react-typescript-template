@@ -49,6 +49,11 @@ export default function SimpleTable<T extends TableRow>(
                     <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/>
                 </Table> : <></>
             }
+            {!header && rows ?
+                <Table variant='simple' size="md">
+                    <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/>
+                </Table> : <></>
+            }
             {header && !rows ?
                 <Table variant='simple' size="md">
                     <TableHeadPlaceHolder/>
