@@ -44,7 +44,6 @@ export function AppNavigation() {
     OpenAPI.TOKEN = auth.getAccessToken();
 
     useEffect(() => {
-        console.log("first:" + error)
         if (!error && !auth.isLoading() && !auth.isLoggedIn()) {
             localStorage.setItem("request-url", window.location.href) // TODO Should use state parameter for this
             auth.login()
@@ -56,7 +55,6 @@ export function AppNavigation() {
     })
 
     useEffect(() => {
-        console.log("second:" + error)
         if (!error && auth.isLoggedIn() && user == null) {
             UserService.getCurrentUser()
                 .then((user) => setUser(user))
