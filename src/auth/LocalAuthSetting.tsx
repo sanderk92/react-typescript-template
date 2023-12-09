@@ -1,9 +1,9 @@
-export const host = ("https://" + window.location.host).replace("www.", "")
+export const host = `http://${window.location.host}`
 
-export const authSettings = {
+export const localAuthSettings = {
     authority: "https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_6wOiibFgH",
     redirect_uri: `${host}/redirect/`,
     post_logout_redirect_uri: `${host}/logout`,
     response_type: "code",
-    client_id: "7ogq7f8re2t778fs2b5sjf7avt",
+    client_id: "1gmag0ff95or0clk7ctvn5rgit",
 };
