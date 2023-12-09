@@ -37,33 +37,40 @@ export function AppNavigation() {
     const toast = useToast()
     const auth = useAuthService()
 
-    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(false)
     const [user, setUser] = useState<CurrentUserDto | undefined>()
 
     OpenAPI.BASE = window.location.protocol + "//api." + window.location.host + "/v1"
     OpenAPI.TOKEN = auth.getAccessToken();
 
     useEffect(() => {
-        if (!auth.isLoading() && !auth.isLoggedIn()) {
+        console.log("first:" + error)
+        if (!error && !auth.isLoading() && !auth.isLoggedIn()) {
             localStorage.setItem("request-url", window.location.href)
             auth.login()
-                .catch(e => toast({title: `Login error`, description: e.message, status: "error", duration: 5000}))
+                .catch(e => {
+                    setError(true)
+                    toast({title: `Login error`, description: e.message, status: "error", duration: 5000})
+                })
         }
     })
 
     useEffect(() => {
-        if (auth.isLoggedIn() && user == null) {
+        console.log("second:" + error)
+        if (!error && auth.isLoggedIn() && user == null) {
             UserService.getCurrentUser()
                 .then((user) => setUser(user))
-                .catch(e => toast({title: `Fetch user error`, description: e.message, status: "error", duration: 5000}))
-                .finally(() => setLoading(false))
+                .catch(e => {
+                    setError(true)
+                    toast({title: `Server error`, description: e.message, status: "error", duration: 5000})
+                })
         }
     })
 
-    if (loading) {
-        return <Box className={"centered-parent"}><Spinner className="centered-child"></Spinner></Box>
-    } else if (user == null) {
+    if (error) {
         return <Box className={"centered-parent"}><HiLightningBolt className={"centered-child"} size={60}/></Box>
+    } else if (user == null) {
+        return <Box className={"centered-parent"}><Spinner className="centered-child"></Spinner></Box>
     } else {
         return (
             <Navigation user={user}>

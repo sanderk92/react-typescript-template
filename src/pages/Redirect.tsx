@@ -1,12 +1,14 @@
 import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
-import {host} from "../auth/AuthSettings";
 
 export default function RedirectPage() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        navigate(localStorage.getItem("request-url")?.replace(host, "") ?? "/")
+        const original = localStorage.getItem("request-url")
+        const originalPath = original ? new URL(original).pathname : "/"
+        localStorage.removeItem("request-url")
+        navigate(originalPath)
     })
     return <></>
 }
