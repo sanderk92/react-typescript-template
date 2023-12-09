@@ -46,7 +46,7 @@ export function AppNavigation() {
     useEffect(() => {
         console.log("first:" + error)
         if (!error && !auth.isLoading() && !auth.isLoggedIn()) {
-            localStorage.setItem("request-url", window.location.href)
+            localStorage.setItem("request-url", window.location.href) // TODO Should use state parameter for this
             auth.login()
                 .catch(e => {
                     setError(true)
