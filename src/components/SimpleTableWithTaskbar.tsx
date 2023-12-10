@@ -10,7 +10,7 @@ export interface SimpleTableWithTaskbarProps<T extends TableRow> extends TableCo
 }
 
 export default function SimpleTableWithTaskbar<T extends TableRow>(
-    {header, rows, onSelect, defaultSort, buttons}: SimpleTableWithTaskbarProps<T>
+    {rows, header, defaultSort, maxHeight, size, onSelect, buttons}: SimpleTableWithTaskbarProps<T>
 ) {
     const [search, setSearch] = useState<string>('')
     const colorScheme = useColorModeValue('gray.50', 'gray.700')
@@ -37,6 +37,8 @@ export default function SimpleTableWithTaskbar<T extends TableRow>(
                     onSelect={onSelect}
                     header={header}
                     defaultSort={defaultSort}
+                    maxHeight={maxHeight}
+                    size={size}
                 ></SimpleTable>
             }
         </Flex>

@@ -46,7 +46,7 @@ export default function SimpleTableSearchDropdown<T extends TableRow>(
                 </InputGroup>
             </Flex>
             <Card position={"absolute"} zIndex={999} bg={colorScheme} width={"100%"} hidden={!isOpen}>
-                <SimpleTable maxHeight={"30vh"} rows={rows} onSelect={selectRow} header={header}/>
+                <SimpleTable maxHeight={"30vh"} rows={rows} onSelect={selectRow} header={header} size={"md"}/>
             </Card>
         </Box>
     )

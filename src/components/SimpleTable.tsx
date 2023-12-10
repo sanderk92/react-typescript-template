@@ -1,5 +1,5 @@
 import React, {ReactNode, useState} from 'react';
-import {Flex, Icon, SkeletonText, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
+import {Flex, Icon, Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
 import {TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import {v4 as uuid} from 'uuid';
 
@@ -28,6 +28,7 @@ export interface TableComponentProps<T extends TableRow> {
     header?: TableHeader
     defaultSort?: SortState
     maxHeight?: string
+    size?: "sm" | "md",
     onSelect: (row: T) => void
 }
 
@@ -37,27 +38,26 @@ interface SortState {
 }
 
 export default function SimpleTable<T extends TableRow>(
-    {header, rows, onSelect, defaultSort, maxHeight}: TableComponentProps<T>
+    {rows, header, defaultSort, maxHeight, size, onSelect}: TableComponentProps<T>
 ) {
     const [sort, setSort] = useState<SortState>(defaultSort ?? {column: 0, direction: false})
 
     return (
         <TableContainer maxH={maxHeight}>
             {header && rows ?
-                <Table variant='simple' size="md">
+                <Table variant='simple' size={size}>
                     <TableHead header={header} sort={sort} setSort={setSort}/>
                     <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/>
                 </Table> : <></>
             }
             {!header && rows ?
-                <Table variant='simple' size="md">
+                <Table variant='simple' size={size}>
                     <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/>
                 </Table> : <></>
             }
             {header && !rows ?
-                <Table variant='simple' size="md">
-                    <TableHeadPlaceHolder/>
-                    <TableBodyPlaceHolder/>
+                <Table variant='simple' size={size}>
+                    <TablePlaceHolder size={size}/>
                 </Table> : <></>
             }
         </TableContainer>
@@ -111,18 +111,6 @@ function TableHead({header, sort, setSort}: TableHeadProps): React.JSX.Element {
     }
 }
 
-function TableHeadPlaceHolder(): React.JSX.Element {
-    const backgroundColorScheme = useColorModeValue('gray.200', 'gray.800')
-
-    return (
-        <Thead>
-            <Tr bg={backgroundColorScheme}>
-                <Th><SkeletonText noOfLines={1} skeletonHeight={4} height={4} opacity={"20%"}/></Th>
-            </Tr>
-        </Thead>
-    )
-}
-
 interface TableBodyProps<T extends TableRow> {
     rows: T[]
     onSelect: (row: T) => void
@@ -159,16 +147,30 @@ function TableBody<T extends TableRow>({rows, onSelect}: TableBodyProps<T>): Rea
     )
 }
 
+interface TablePlaceholderProps {
+    size?: "sm" | "md"
+}
 
-function TableBodyPlaceHolder(): React.JSX.Element {
+function TablePlaceHolder({size}: TablePlaceholderProps): React.JSX.Element {
+    const backgroundColorScheme = useColorModeValue('gray.200', 'gray.800')
+    const header = size === "sm" ? 2 : 2
+    const row = size === "sm" ? 4 : 5
+
     return (
-        <Tbody>
-            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={5} opacity={"30%"}/></Td></Tr>
-            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={5} opacity={"30%"}/></Td></Tr>
-            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={5} opacity={"30%"}/></Td></Tr>
-            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={5} opacity={"30%"}/></Td></Tr>
-            <Tr><Td><SkeletonText noOfLines={1} skeletonHeight={3} height={5} opacity={"30%"}/></Td></Tr>
-        </Tbody>
+        <>
+            <Thead>
+                <Tr bg={backgroundColorScheme}>
+                    <Td><Skeleton height={header} isLoaded/></Td>
+                </Tr>
+            </Thead>
+            <Tbody>
+                <Tr><Td><Skeleton height={row} opacity={"10%"}/> </Td></Tr>
+                <Tr><Td><Skeleton height={row} opacity={"10%"}/> </Td></Tr>
+                <Tr><Td><Skeleton height={row} opacity={"10%"}/> </Td></Tr>
+                <Tr><Td><Skeleton height={row} opacity={"10%"}/> </Td></Tr>
+                <Tr><Td><Skeleton height={row} opacity={"10%"}/> </Td></Tr>
+            </Tbody>
+        </>
     )
 }
 

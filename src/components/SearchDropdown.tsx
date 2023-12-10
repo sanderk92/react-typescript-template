@@ -88,7 +88,7 @@ export default function SearchDropdown<T extends TableRow>(
                 <Button isLoading={isLoading} onClick={requestSearch}>Search</Button>
             </Flex>
             <Card position={"absolute"} zIndex={999} bg={colorScheme} width={"100%"} hidden={!isOpen}>
-                <SimpleTable maxHeight={"30vh"} rows={rows} onSelect={selectRow} header={header}/>
+                <SimpleTable maxHeight={"30vh"} rows={rows} onSelect={selectRow} header={header} size={"md"}/>
             </Card>
             { selections.map(row =>
                 <Tag size={"sm"} mr={"1"}>
