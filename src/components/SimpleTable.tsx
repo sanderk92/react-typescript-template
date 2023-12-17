@@ -1,5 +1,19 @@
 import React, {ReactNode, useState} from 'react';
-import {Text, Flex, Icon, Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
+import {
+    Text,
+    Flex,
+    Icon,
+    Skeleton,
+    Table,
+    TableContainer,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    Tr,
+    useColorModeValue,
+    Box
+} from '@chakra-ui/react';
 import {TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import {v4 as uuid} from 'uuid';
 
@@ -137,7 +151,7 @@ function TableBody<T extends TableRow>({rows, onSelect}: TableBodyProps<T>): Rea
                             overflow={"hidden"}
                             text-overflow={"ellipsis"}
                             white-space={"no-wrap"}>
-                            <Text whiteSpace="break-spaces">{cell.value}</Text>
+                            <Box whiteSpace="break-spaces">{cell.value}</Box>
                         </Td>
                     )}
                 </Tr>
