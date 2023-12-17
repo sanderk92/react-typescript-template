@@ -1,19 +1,5 @@
 import React, {ReactNode, useState} from 'react';
-import {
-    Text,
-    Flex,
-    Icon,
-    Skeleton,
-    Table,
-    TableContainer,
-    Tbody,
-    Td,
-    Th,
-    Thead,
-    Tr,
-    useColorModeValue,
-    Box
-} from '@chakra-ui/react';
+import {Flex, Icon, Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue, Box} from '@chakra-ui/react';
 import {TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import {v4 as uuid} from 'uuid';
 
