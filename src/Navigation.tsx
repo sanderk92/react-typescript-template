@@ -1,32 +1,11 @@
 import React, {ReactNode, useEffect} from 'react';
-import {
-    Avatar,
-    Box,
-    BoxProps,
-    CloseButton,
-    Drawer,
-    DrawerContent,
-    Flex,
-    HStack,
-    Icon,
-    IconButton,
-    Menu,
-    MenuButton,
-    MenuDivider,
-    MenuItem,
-    MenuList,
-    Text,
-    useColorModeValue,
-    useDisclosure,
-    VStack,
-} from '@chakra-ui/react';
+import {Avatar, Box, BoxProps, CloseButton, Drawer, DrawerContent, Flex, HStack, Icon, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Text, useColorModeValue, useDisclosure, VStack,} from '@chakra-ui/react';
 import {FiChevronDown, FiHome, FiMenu, FiMessageCircle,} from 'react-icons/fi';
 import {IconType} from 'react-icons';
 import {ColorModeSwitcher} from "./ColorModeSwitcher";
-import {Link as RouteLink, useNavigate} from "react-router-dom";
+import {Link as RouteLink, useLocation, useNavigate} from "react-router-dom";
 import {Logo} from "./Logo";
-import {onResize} from "./utils/Resize";
-import {onBack} from "./utils/History";
+import {onResize, resetOnResize} from "./utils/Resize";
 import {CurrentUserDto} from "../generated";
 
 export interface NavigationProps {
@@ -35,13 +14,18 @@ export interface NavigationProps {
 }
 
 export default function Navigation({user, children}: NavigationProps) {
-    const {isOpen, onOpen, onClose} = useDisclosure();
+    const location = useLocation()
+    const navigate = useNavigate()
+
+    const closeSideBar = () => navigate(-1)
+    const openSideBar = () => navigate("/navigation")
+    const sideBarIsOpen = () => location.pathname === "/navigation"
 
     return (
         <Box minH="100vh">
-            <SidebarContent onClose={onClose} display={{base: 'none', md: 'block'}}/>
-            <SidebarDrawer isOpen={isOpen} onClose={onClose}/>
-            <TopNavigation onOpen={onOpen} user={user}/>
+            <SidebarContent onClose={closeSideBar} display={{base: 'none', md: 'block'}}/>
+            <SidebarDrawer isOpen={sideBarIsOpen()} onClose={closeSideBar}/>
+            <TopNavigation onOpen={openSideBar} user={user}/>
             <Box ml={{base: 0, md: 60}}>{children}</Box>
         </Box>
     );
@@ -68,17 +52,17 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
                 <CloseButton display={{base: 'flex', md: 'none'}} onClick={onClose}/>
             </Flex>
             <Flex p="1" mx="4"><Text as={"b"} fontSize={"xs"}>General</Text></Flex>
-            <NavItem onClick={onClose} key="Home" name="Home" link="/" icon={FiHome}></NavItem>
-            <NavItem onClick={onClose} key="Contact" name="Contact" link="/contact" icon={FiMessageCircle}></NavItem>
+            <NavItem key="Home" name="Home" link="/" icon={FiHome}></NavItem>
+            <NavItem key="Contact" name="Contact" link="/contact" icon={FiMessageCircle}></NavItem>
         </Box>
     );
 };
 
-const NavItem = ({icon, link, name, onClick, ...rest}: {
+const NavItem = ({icon, link, name, onClick}: {
     icon: IconType
     link: string
     name: string
-    onClick: () => void
+    onClick?: () => void
 }) => {
     return (
         <RouteLink to={link} onClick={onClick}>
@@ -96,14 +80,14 @@ const NavItem = ({icon, link, name, onClick, ...rest}: {
     );
 };
 
-const SidebarDrawer = ({isOpen, onClose, ...rest}: {
+const SidebarDrawer = ({isOpen, onClose}: {
     isOpen: boolean
     onClose: () => void
 }) => {
 
     useEffect(() => {
-        onResize(onClose)
-        onBack(onClose)
+        if (isOpen) onResize(onClose)
+        return () => resetOnResize(onClose)
     })
 
     return (

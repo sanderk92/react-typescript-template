@@ -5,5 +5,5 @@ export const authSettings = {
     redirect_uri: `${host}/redirect/`,
     post_logout_redirect_uri: `${host}/logout`,
     response_type: "code",
-    client_id: "7nkc8gpea6v5cs6vvaa470thp9",
+    client_id: "4c9hh7fk0neq6jr47f877c3a49",
 };
