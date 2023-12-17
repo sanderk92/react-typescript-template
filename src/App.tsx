@@ -15,6 +15,7 @@ import {CurrentUserDto, OpenAPI, UserService} from "../generated";
 import RedirectPage from "./pages/Redirect";
 import LogoutPage from "./pages/Logout";
 import {HiLightningBolt} from "react-icons/all";
+import {storeRequestUrl} from "./utils/Login";
 
 export function App() {
     return (
@@ -45,7 +46,7 @@ export function AppNavigation() {
 
     useEffect(() => {
         if (!error && !auth.isLoading() && !auth.isLoggedIn()) {
-            localStorage.setItem("request-url", window.location.href) // TODO Should use state parameter for this
+            storeRequestUrl()
             auth.login()
                 .catch(e => {
                     setError(true)

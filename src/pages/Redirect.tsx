@@ -1,14 +1,14 @@
 import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
+import {clearRequestUrl, getRequestUrl} from "../utils/Login";
 
 export default function RedirectPage() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const original = localStorage.getItem("request-url")
-        const originalPath = original ? new URL(original).pathname : "/"
-        localStorage.removeItem("request-url")
-        navigate(originalPath)
+        const url = getRequestUrl()
+        clearRequestUrl()
+        navigate(url ? new URL(url).pathname : "/")
     })
     return <></>
 }
