@@ -69,8 +69,6 @@ export default function Inbox() {
                     <InboxFiltersDrawer isOpen={true} onClose={navigateBase} filter={filter} setFilter={setFilter}/>
                 }/>
             </Routes>
-
-            <ScrollReset clear={rows == null} down={true}/>
         </Box>
     )
 }

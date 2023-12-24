@@ -2,7 +2,7 @@ import {useParams} from "react-router-dom";
 import {
     Box,
     Drawer,
-    DrawerBody,
+    DrawerBody, DrawerCloseButton,
     DrawerContent,
     DrawerHeader,
     FormControl,
@@ -67,6 +67,7 @@ export default function InboxDetailsDrawer({isOpen, onClose}: DetailsDrawerProps
                         </FormControl>
                     </DrawerBody>
                 }
+                <DrawerCloseButton/>
             </DrawerContent>
         </Drawer>
     )

@@ -2,6 +2,7 @@ import React, {ReactNode, useState} from 'react';
 import {Flex, Icon, Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue, Box} from '@chakra-ui/react';
 import {TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import {v4 as uuid} from 'uuid';
+import ScrollReset from "../ScrollReset";
 
 export interface TableCell {
     value: ReactNode

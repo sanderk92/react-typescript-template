@@ -2,11 +2,8 @@ import * as React from "react"
 import {useEffect, useState} from "react"
 import {Box, ChakraProvider, Spinner, theme, useToast} from "@chakra-ui/react"
 import Navigation from "./Navigation";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
 import {AuthProvider} from "react-oidc-context";
-import {authSettings} from "./auth/AuthSettings";
-import HomePage from "./pages/home/HomePage";
-import ContactPage from "./pages/contact/ContactPage";
 import ErrorBoundary from "./ErrorBoundary";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -16,6 +13,10 @@ import RedirectPage from "./pages/Redirect";
 import LogoutPage from "./pages/Logout";
 import {HiLightningBolt} from "react-icons/all";
 import {storeRequestUrl} from "./utils/Login";
+import Inbox from "./pages/home/Inbox";
+import Outbox from "./pages/home/Outbox";
+import Contact from "./pages/contact/Contact";
+import {authSettings} from "./auth/AuthSettings";
 
 export function App() {
     return (
@@ -37,6 +38,7 @@ export function App() {
 export function AppNavigation() {
     const toast = useToast()
     const auth = useAuthService()
+    const navigate = useNavigate()
 
     const [error, setError] = useState(false)
     const [user, setUser] = useState<CurrentUserDto | undefined>()
@@ -66,6 +68,12 @@ export function AppNavigation() {
         }
     })
 
+    useEffect(() => {
+        if (!error && user != null && window.location.pathname === "/") {
+            navigate("/inbox")
+        }
+    })
+
     if (error) {
         return <Box className={"centered-parent"}><HiLightningBolt className={"centered-child"} size={60}/></Box>
     } else if (user == null) {
@@ -74,8 +82,9 @@ export function AppNavigation() {
         return (
             <Navigation user={user}>
                 <Routes>
-                    <Route path="/*" element={<HomePage/>}/>
-                    <Route path="/contact" element={<ContactPage/>}/>
+                    <Route path="/inbox/*" element={<Inbox/>}/>
+                    <Route path="/outbox/*" element={<Outbox/>}/>
+                    <Route path="/contact/*" element={<Contact/>}/>
                     <Route path="/redirect" element={<RedirectPage/>}/>
                 </Routes>
             </Navigation>
