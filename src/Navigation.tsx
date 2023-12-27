@@ -192,16 +192,26 @@ const NavItem = ({icon, link, name, onClick}: {
     name: string
     onClick?: () => void
 }) => {
+    const activeBg = useColorModeValue('gray.600', 'gray.700')
+    const inactiveBg = useColorModeValue('', '')
+    const activeColor = useColorModeValue('white', 'white')
+    const inactiveColor = useColorModeValue('black', '')
+    const bottomBorder = useColorModeValue('lightgray', 'transparent')
+
     return (
         <RouteLink to={link} onClick={onClick}>
-            <Flex align="center"
-                  p="4"
-                  mx="4"
-                  borderRadius="lg"
-                  role="group"
-                  cursor="pointer"
-                  _hover={{bg: useColorModeValue('gray.500', 'gray.700'), color: 'white',}}>
-                {icon && (<Icon mr="4" as={icon} fontSize="16" _groupHover={{color: 'white'}}/>)}
+            <Flex
+                align="center"
+                className={"grow"}
+                p="4"
+                mx="4"
+                role="group"
+                cursor="pointer"
+                borderBottom={`1px solid ${bottomBorder}`}
+                bg={window.location.href.includes(link) ? activeBg : inactiveBg}
+                color={window.location.href.includes(link) ? activeColor : inactiveColor}
+            >
+                {icon && (<Icon mr="4" as={icon} fontSize="16"/>)}
                 {name}
             </Flex>
         </RouteLink>
