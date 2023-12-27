@@ -3,7 +3,7 @@ import SimpleTable, {TableComponentProps, TableRow} from "./SimpleTable";
 import {Box, Flex, Input, InputGroup, InputLeftElement, InputRightElement, useColorModeValue} from "@chakra-ui/react";
 import {CloseIcon, SearchIcon} from "@chakra-ui/icons";
 import "../styles.css"
-import {BsInbox} from "react-icons/all";
+import {BsInbox} from "react-icons/bs";
 
 export interface SimpleTableWithTaskbarProps<T extends TableRow> extends TableComponentProps<T> {
     buttons?: React.JSX.Element

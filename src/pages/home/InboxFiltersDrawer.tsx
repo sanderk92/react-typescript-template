@@ -13,8 +13,7 @@ import {
 } from "@chakra-ui/react";
 import * as React from "react";
 import {useState} from "react";
-import {RiAddCircleFill} from "react-icons/all";
-import {RiCheckboxCircleFill, RiCloseCircleFill, RiPlayCircleFill} from "react-icons/ri";
+import {RiCheckboxCircleFill, RiCloseCircleFill, RiPlayCircleFill, RiAddCircleFill} from "react-icons/ri";
 import {InboxFilter} from "./Inbox";
 import DatePicker from "react-datepicker";
 import {DataStatus} from "./InboxStubs";

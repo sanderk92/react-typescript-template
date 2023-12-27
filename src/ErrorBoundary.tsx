@@ -1,5 +1,5 @@
 import React, {Component, ErrorInfo, ReactNode} from "react";
-import {HiLightningBolt} from "react-icons/all";
+import {HiLightningBolt} from "react-icons/hi";
 import {Box} from "@chakra-ui/react";
 
 interface Props {

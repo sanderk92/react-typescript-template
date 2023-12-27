@@ -5,13 +5,12 @@ import {Route, Routes, useNavigate} from "react-router-dom";
 import {DataStatus, DataView, findData} from "./InboxStubs";
 import InboxDetailsDrawer from "./InboxDetailsDrawer";
 import InboxCreateModal from "./InboxCreateModal";
-import {RiAddCircleFill, RiAddLine, RiCheckboxCircleFill, RiCloseCircleFill, RiFilterLine, RiRefreshLine} from "react-icons/all";
+import {RiAddCircleFill, RiAddLine, RiCheckboxCircleFill, RiCloseCircleFill, RiFilterLine, RiRefreshLine} from "react-icons/ri";
 import {RiPlayCircleFill} from "react-icons/ri";
 import {minusMonths, timeIndicator} from "../../utils/Date";
 import InboxFiltersDrawer from "./InboxFiltersDrawer";
 import {Box, Flex, IconButton, useBoolean} from "@chakra-ui/react";
 import SimpleTableWithTaskbar from "../../components/SimpleTableWithTaskbar";
-import ScrollReset from "../../ScrollReset";
 
 export interface InboxFilter {
     status: DataStatus[],
