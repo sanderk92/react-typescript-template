@@ -47,9 +47,10 @@ const DesktopBars = ({...rest}) => {
                     <Logo/>
                 </Text>
             </Flex>
-            <Flex p="1" mx="4"><Text as={"b"} fontSize={"xs"}>General</Text></Flex>
+            <Flex p="1" mx="4"><Text fontSize={"sm"}>Business</Text></Flex>
             <NavItem key="Inbox" name="Inbox" link="/inbox" icon={FiInbox}></NavItem>
             <NavItem key="Outbox" name="Outbox" link="/outbox" icon={FiMessageCircle}></NavItem>
+            <Flex p="1" mx="4"><Text fontSize={"sm"}>Other</Text></Flex>
             <NavItem key="Contact" name="Contact" link="/contact" icon={FiMail}></NavItem>
         </Box>
     );
@@ -90,7 +91,6 @@ const MobileBars = ({isOpen, onClose, ...rest}: {
                             </Text>
                             <CloseButton display={{base: 'flex', md: 'none'}} onClick={onClose}/>
                         </Flex>
-                        <Flex p="1" mx="4"><Text as={"b"} fontSize={"xs"}>General</Text></Flex>
                         <NavItem key="Contact" name="Contact" link="/contact" icon={FiMail}></NavItem>
                     </Box>
                 </DrawerContent>
