@@ -202,14 +202,19 @@ const NavItem = ({icon, link, name, onClick}: {
         <RouteLink to={link} onClick={onClick}>
             <Flex
                 align="center"
-                className={"grow"}
+                borderRadius="sm"
                 p="4"
                 mx="4"
                 role="group"
                 cursor="pointer"
+                transition={"all .1s ease-in-out"}
                 borderBottom={`1px solid ${bottomBorder}`}
                 bg={window.location.href.includes(link) ? activeBg : inactiveBg}
                 color={window.location.href.includes(link) ? activeColor : inactiveColor}
+                _hover={{
+                    borderBottom: "1px solid transparent",
+                    boxShadow: "1px 1px 1px black",
+                }}
             >
                 {icon && (<Icon mr="4" as={icon} fontSize="16"/>)}
                 {name}
