@@ -1,8 +1,8 @@
 import React, {ReactNode, useState} from 'react';
-import {Flex, Icon, Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue, Box} from '@chakra-ui/react';
-import {TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
+import {Flex, Icon, Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue, Box, InputGroup, InputLeftElement, Input, InputRightElement} from '@chakra-ui/react';
+import {CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import {v4 as uuid} from 'uuid';
-import ScrollReset from "../ScrollReset";
+import {BsMailbox} from "react-icons/bs";
 
 export interface TableCell {
     value: ReactNode
@@ -13,6 +13,7 @@ export interface TableCell {
 
 export interface TableRow {
     id: string,
+    key: string,
     cells: TableCell[]
 }
 
@@ -30,6 +31,8 @@ export interface TableComponentProps<T extends TableRow> {
     defaultSort?: SortState
     maxHeight?: string
     size?: "sm" | "md",
+    taskbar?: React.JSX.Element
+    context?: (row: T) => React.JSX.Element
     onSelect: (row: T) => void
 }
 
@@ -38,32 +41,64 @@ interface SortState {
     column: number
 }
 
-export default function SimpleTable<T extends TableRow>(
-    {rows, header, defaultSort, maxHeight, size, onSelect}: TableComponentProps<T>
-) {
+export const SimpleTable = <T extends TableRow>(
+    {rows, header, defaultSort, maxHeight, size, taskbar, context, onSelect}: TableComponentProps<T>
+) => {
+    const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<SortState>(defaultSort ?? {column: 0, direction: false})
 
     return (
-        <TableContainer maxH={maxHeight}>
-            {header && rows ?
-                <Table variant='simple' size={size}>
+        <Flex mb={1} flexDirection={"column"}>
+            {taskbar && <TableTaskbar taskbar={taskbar} search={search} onSearch={setSearch}/>}
+
+            <TableContainer maxH={maxHeight}>
+                {header && rows &&
+                  <Table variant='simple' size={size}>
                     <TableHead header={header} sort={sort} setSort={setSort}/>
-                    <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/>
-                </Table> : <></>
-            }
-            {!header && rows ?
-                <Table variant='simple' size={size}>
-                    <TableBody rows={sorted(rows, sort)} onSelect={onSelect}/>
-                </Table> : <></>
-            }
-            {header && !rows ?
-                <Table variant='simple' size={size}>
+                    <TableBody rows={sortedAndFiltered(rows, sort, search)} context={context} onSelect={onSelect}/>
+                  </Table>
+                }
+                {!header && rows &&
+                  <Table variant='simple' size={size}>
+                    <TableBody rows={sortedAndFiltered(rows, sort, search)} context={context} onSelect={onSelect}/>
+                  </Table>
+                }
+                {header && !rows &&
+                  <Table variant='simple' size={size}>
                     <TablePlaceHolder size={size}/>
-                </Table> : <></>
-            }
-        </TableContainer>
+                  </Table>
+                }
+
+                {rows?.length === 0 && <EmptyResultDisplay/>}
+            </TableContainer>
+        </Flex>
     )
+};
+
+interface TableTaskbarProps {
+    taskbar: React.JSX.Element
+    search: string
+    onSearch: (value: string) => void
 }
+
+const TableTaskbar = ({taskbar, search, onSearch}: TableTaskbarProps): React.JSX.Element => {
+    const colorScheme = useColorModeValue('gray.50', 'gray.700')
+
+    return <Flex mb={2} justifyContent={"flex-end"}>
+        <Box mr={2}>
+            <InputGroup>
+                <InputLeftElement>
+                    <SearchIcon/>
+                </InputLeftElement>
+                <Input variant={"filled"} bg={colorScheme} value={search} onChange={event => onSearch(event.target.value)} placeholder={"Search"}/>
+                <InputRightElement>
+                    <CloseIcon className={"clickable"} onClick={() => onSearch("")}/>
+                </InputRightElement>
+            </InputGroup>
+        </Box>
+        <Flex alignItems={"flex-end"} justifyContent={"flex-end"}>{taskbar}</Flex>
+    </Flex>
+};
 
 interface TableHeadProps {
     header: TableHeader
@@ -71,7 +106,7 @@ interface TableHeadProps {
     setSort: (sort: SortState) => void
 }
 
-function TableHead({header, sort, setSort}: TableHeadProps): React.JSX.Element {
+const TableHead = ({header, sort, setSort}: TableHeadProps): React.JSX.Element => {
     const backgroundColorScheme = useColorModeValue('gray.200', 'gray.800')
     const hoverColorScheme = useColorModeValue('gray.300', 'gray.700')
     const activeColorScheme = useColorModeValue('gray.400', 'gray.600')
@@ -110,14 +145,15 @@ function TableHead({header, sort, setSort}: TableHeadProps): React.JSX.Element {
     function isSortable(cell: TableHeaderCell): boolean {
         return cell?.sortable ?? true
     }
-}
+};
 
 interface TableBodyProps<T extends TableRow> {
     rows: T[]
     onSelect: (row: T) => void
+    context?: (row: T) => React.JSX.Element
 }
 
-function TableBody<T extends TableRow>({rows, onSelect}: TableBodyProps<T>): React.JSX.Element {
+const TableBody = <T extends TableRow>({rows, context, onSelect}: TableBodyProps<T>): React.JSX.Element => {
     const hoverColorScheme = useColorModeValue('gray.100', 'gray.700')
     const activeColorScheme = useColorModeValue('gray.200', 'gray.600')
 
@@ -138,20 +174,23 @@ function TableBody<T extends TableRow>({rows, onSelect}: TableBodyProps<T>): Rea
                             overflow={"hidden"}
                             text-overflow={"ellipsis"}
                             white-space={"no-wrap"}>
-                            <Box whiteSpace="break-spaces">{cell.value}</Box>
+                            <Flex justifyContent={"space-between"} alignItems={"center"}>
+                                <Box whiteSpace="break-spaces">{cell.value}</Box>
+                                {context && index === row.cells.length - 1 && context(row)}
+                            </Flex>
                         </Td>
                     )}
                 </Tr>
             )
         }</Tbody>
     )
-}
+};
 
 interface TablePlaceholderProps {
     size?: "sm" | "md"
 }
 
-function TablePlaceHolder({size}: TablePlaceholderProps): React.JSX.Element {
+const TablePlaceHolder = ({size}: TablePlaceholderProps): React.JSX.Element => {
     const backgroundColorScheme = useColorModeValue('gray.200', 'gray.800')
     const header = size === "sm" ? 2 : 2
     const row = size === "sm" ? 4 : 5
@@ -172,11 +211,24 @@ function TablePlaceHolder({size}: TablePlaceholderProps): React.JSX.Element {
             </Tbody>
         </>
     )
+};
+
+function EmptyResultDisplay() {
+    return <Box className={"centered-parent"}>
+        <Box className={"centered-child"}>
+            <BsMailbox size={100} opacity={"10%"}/>
+        </Box>
+    </Box>
+}
+
+function sortedAndFiltered<T extends TableRow>(rows: T[], sort: SortState, search: string): T[] {
+    return sorted(rows, sort).filter(row => filtered(row, search))
 }
 
 function sorted<T extends TableRow>(rows: T[], sort: SortState): T[] {
     const collator = Intl.Collator([], {numeric: true})
-    return rows.sort((a, b) => compare(getSortValue(a), getSortValue(b)))
+    return rows
+        .sort((a, b) => compare(getSortValue(a), getSortValue(b)))
 
     function getSortValue(a: TableRow): ReactNode {
         const cell = a.cells[sort.column]
@@ -186,4 +238,9 @@ function sorted<T extends TableRow>(rows: T[], sort: SortState): T[] {
     function compare(a: ReactNode, b: ReactNode): number {
         return sort.direction ? (collator.compare(`${a}`, `${b}`)) : (collator.compare(`${b}`, `${a}`))
     }
+}
+
+function filtered(row: TableRow, search: string): boolean {
+    const cells = row.cells.map(cell => cell.value)
+    return Object.values(cells).join(" ").toLowerCase().includes(search.toLowerCase())
 }
