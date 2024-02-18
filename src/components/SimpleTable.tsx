@@ -45,6 +45,11 @@ export interface ContextMenuItem {
     icon?: React.JSX.Element
 }
 
+interface SortState {
+    ascending: boolean,
+    column: number
+}
+
 export interface TableComponentProps<T extends TableRow> {
     rows?: T[]
     header?: TableHeaderRow
@@ -53,12 +58,7 @@ export interface TableComponentProps<T extends TableRow> {
     size?: "sm" | "md",
     buttons?: TaskBarButton[]
     menu?: (row: T) => ContextMenuGroup[]
-    onSelect: (row: T) => void
-}
-
-interface SortState {
-    ascending: boolean,
-    column: number
+    onSelect?: (row: T) => void
 }
 
 export const SimpleTable = <T extends TableRow>(
@@ -179,7 +179,7 @@ const TableHead = ({header, sort, setSort}: TableHeadProps): React.JSX.Element =
 
 interface TableBodyProps<T extends TableRow> {
     rows: T[]
-    onSelect: (row: T) => void
+    onSelect?: (row: T) => void
     menu?: (row: T) => ContextMenuGroup[]
 }
 
@@ -195,9 +195,9 @@ const TableBody = <T extends TableRow>({rows, menu, onSelect}: TableBodyProps<T>
                     key={row.id}
                     overflowX={"hidden"}
                     className={"unselectable clickable"}
-                    onClick={() => onSelect(row)}
+                    onClick={() => onSelect && onSelect(row)}
                     _hover={{background: hoverColorScheme}}
-                    _active={{background: activeColorScheme}}>
+                    _active={onSelect && {background: activeColorScheme}}>
                     {row.cells.map((cell, cellIndex) =>
                         <Td
                             key={`${row.id}-${cellIndex}`}
