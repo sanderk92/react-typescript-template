@@ -11,7 +11,7 @@ import useAuthService from "./auth/AuthService";
 import {CurrentUserDto, OpenAPI, UserService} from "../generated";
 import RedirectPage from "./pages/Redirect";
 import LogoutPage from "./pages/Logout";
-import {HiLightningBolt} from "react-icons/all";
+import {HiLightningBolt} from "react-icons/hi";
 import {storeRequestUrl} from "./utils/Login";
 import Inbox from "./pages/home/Inbox";
 import Outbox from "./pages/home/Outbox";
