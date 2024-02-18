@@ -43,7 +43,7 @@ export function AppNavigation() {
     const [error, setError] = useState(false)
     const [user, setUser] = useState<CurrentUserDto | undefined>()
 
-    OpenAPI.BASE = window.location.protocol + "//api." + window.location.host + "/v1"
+    OpenAPI.BASE = window.location.protocol + "//api." + window.location.host
     OpenAPI.TOKEN = auth.getAccessToken();
 
     useEffect(() => {
