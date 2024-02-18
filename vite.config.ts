@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/v1": {
-        target: "https://api.sanderkrabbenborg.com",
+        target: "http://localhost:8080",
         changeOrigin: true,
         secure: false,
       },

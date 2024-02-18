@@ -8,7 +8,7 @@ import ErrorBoundary from "./ErrorBoundary";
 
 import "react-datepicker/dist/react-datepicker.css";
 import useAuthService from "./auth/AuthService";
-import {CurrentUserDto, OpenAPI, UserService} from "../generated";
+import {CurrentUserDto, OpenAPI, UsersService} from "../generated";
 import RedirectPage from "./pages/Redirect";
 import LogoutPage from "./pages/Logout";
 import {HiLightningBolt} from "react-icons/hi";
@@ -59,7 +59,7 @@ export function AppNavigation() {
 
     useEffect(() => {
         if (!error && auth.isLoggedIn() && user == null) {
-            UserService.getCurrentUser()
+            UsersService.getCurrentUser()
                 .then((user) => setUser(user))
                 .catch(e => {
                     setError(true)

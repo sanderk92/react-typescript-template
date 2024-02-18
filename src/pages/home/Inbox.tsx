@@ -41,7 +41,7 @@ export default function Inbox() {
     }, [refresh, filter])
 
     return (
-        <Box>
+        <Box m={4}>
             <SimpleTable
                 onSelect={(row: TableRow) => navigateDetails(row.id)}
                 rows={rows?.map(tableRow)}
@@ -82,7 +82,8 @@ const secondColumnWidth = "50%"
 const tableHeader = () => ({
     cells: [
         {value: "sender", maxWidth: firstColumnWidth},
-        {value: "time ago", maxWidth: secondColumnWidth},
+        {value: "age", maxWidth: secondColumnWidth},
+        {value: "status", maxWidth: secondColumnWidth},
     ]
 });
 
@@ -92,6 +93,7 @@ const tableRow = (data: DataView): TableRow => ({
     cells: [
         companyCell(data.company),
         timeCell(data),
+        statusCell(data),
     ],
 })
 
@@ -107,11 +109,15 @@ const timeCell = (data: DataView): TableCell => {
     return {
         sortValue: data.time.getTime(),
         maxWidth: firstColumnWidth,
-        value:
-            <Flex justifyContent={"space-between"}>
-                { timeIndicator(data.time) }
-                { statusIndicator(data.status) }
-            </Flex>,
+        value: timeIndicator(data.time)
+    }
+}
+
+const statusCell = (data: DataView): TableCell => {
+    return {
+        sortValue: data.time.getTime(),
+        maxWidth: firstColumnWidth,
+        value: statusIndicator(data.status)
     }
 }
 

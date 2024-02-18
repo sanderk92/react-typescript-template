@@ -4,7 +4,7 @@ import {useState} from "react";
 import {TableRow} from "../../components/SimpleTable";
 import Dropdown, {DropdownRow} from "../../components/Dropdown";
 import {DataView, submitData} from "./InboxStubs";
-import {UserDto, UserService} from "../../../generated";
+import {UserDto, UsersService} from "../../../generated";
 
 export interface CreateDrawerProps {
     isOpen: boolean
@@ -75,7 +75,7 @@ export default function InboxCreateModal({isOpen, onClose, onCreated}: CreateDra
     }
 
     // function findUsers(query: string): Promise<UserTableRow[]> {
-    //     return UserService.searchUsers(query)
+    //     return UsersService.searchUsers(query)
     //         .then(users => users.map(user => asTableRow(user)))
     //         .catch(_ => { toast({title: "Error fetching users.", status: 'error', isClosable: true}); return []})
     // }
