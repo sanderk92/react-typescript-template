@@ -15,7 +15,7 @@ export interface DataView {
 }
 
 export interface DataEntry {
-    input: string,
+    company: string,
 }
 
 export const fetchData = (id: String): Promise<DataView | undefined> =>
@@ -31,7 +31,7 @@ export const findData = (status: DataStatus[], start: Date, end: Date): Promise<
 
 export const submitData = (entry: DataEntry): Promise<DataView> =>
     new Promise(resolve => setTimeout(resolve, 2000))
-        .then(_ => ({id: uuid(), status: DataStatus.open, company: entry.input, time: new Date()}))
+        .then(_ => ({id: uuid(), status: DataStatus.open, company: entry.company, time: new Date()}))
 
 const inbox : DataView[] = [
     {id: "25c83a41-4918-46bf-9f20-4f15f1651a17", status: DataStatus.open, company: 'Pikobello B.V.', time: new Date()},
