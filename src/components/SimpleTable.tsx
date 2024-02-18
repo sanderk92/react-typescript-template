@@ -1,8 +1,9 @@
 import React, {ReactNode, useState} from 'react';
-import {Flex, Icon, Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue, Box, InputGroup, InputLeftElement, Input, InputRightElement} from '@chakra-ui/react';
+import {Flex, Icon, Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue, Box, InputGroup, InputLeftElement, Input, InputRightElement, MenuButton, IconButton, MenuList, Menu, MenuItem, MenuOptionGroup} from '@chakra-ui/react';
 import {CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import {v4 as uuid} from 'uuid';
 import {BsMailbox} from "react-icons/bs";
+import {HiOutlineDotsVertical} from "react-icons/hi";
 
 export interface TableCell {
     value: ReactNode
@@ -15,52 +16,71 @@ export interface TableRow {
     id: string,
     key: string,
     cells: TableCell[]
+    menu?: boolean
 }
 
 export interface TableHeaderCell extends TableCell {
     sortable?: boolean,
 }
 
-export interface TableHeader {
+export interface TableHeaderRow {
     cells: TableHeaderCell[]
+}
+
+export interface TaskBarButton {
+    label: string,
+    onClick: () => void
+    icon?: React.JSX.Element
+    isLoading?: boolean
+}
+
+export interface ContextMenuGroup {
+    label: string,
+    items: ContextMenuItem[]
+}
+
+export interface ContextMenuItem {
+    label: string,
+    onClick: () => void
+    icon?: React.JSX.Element
 }
 
 export interface TableComponentProps<T extends TableRow> {
     rows?: T[]
-    header?: TableHeader
+    header?: TableHeaderRow
     defaultSort?: SortState
     maxHeight?: string
     size?: "sm" | "md",
-    taskbar?: React.JSX.Element
-    context?: (row: T) => React.JSX.Element
+    buttons?: TaskBarButton[]
+    menu?: (row: T) => ContextMenuGroup[]
     onSelect: (row: T) => void
 }
 
 interface SortState {
-    direction: boolean,
+    ascending: boolean,
     column: number
 }
 
 export const SimpleTable = <T extends TableRow>(
-    {rows, header, defaultSort, maxHeight, size, taskbar, context, onSelect}: TableComponentProps<T>
+    {rows, header, defaultSort, maxHeight, size, buttons, menu, onSelect}: TableComponentProps<T>
 ) => {
     const [search, setSearch] = useState<string>('')
-    const [sort, setSort] = useState<SortState>(defaultSort ?? {column: 0, direction: false})
+    const [sort, setSort] = useState<SortState>(defaultSort ?? {column: 0, ascending: false})
 
     return (
         <Flex mb={1} flexDirection={"column"}>
-            {taskbar && <TableTaskbar taskbar={taskbar} search={search} onSearch={setSearch}/>}
+            {buttons && <TableTaskbar taskbar={buttons} search={search} onSearch={setSearch}/>}
 
             <TableContainer maxH={maxHeight}>
                 {header && rows &&
                   <Table variant='simple' size={size}>
                     <TableHead header={header} sort={sort} setSort={setSort}/>
-                    <TableBody rows={sortedAndFiltered(rows, sort, search)} context={context} onSelect={onSelect}/>
+                    <TableBody rows={sortedAndFiltered(rows, sort, search)} menu={menu} onSelect={onSelect}/>
                   </Table>
                 }
                 {!header && rows &&
                   <Table variant='simple' size={size}>
-                    <TableBody rows={sortedAndFiltered(rows, sort, search)} context={context} onSelect={onSelect}/>
+                    <TableBody rows={sortedAndFiltered(rows, sort, search)} menu={menu} onSelect={onSelect}/>
                   </Table>
                 }
                 {header && !rows &&
@@ -76,7 +96,7 @@ export const SimpleTable = <T extends TableRow>(
 };
 
 interface TableTaskbarProps {
-    taskbar: React.JSX.Element
+    taskbar: TaskBarButton[]
     search: string
     onSearch: (value: string) => void
 }
@@ -96,12 +116,22 @@ const TableTaskbar = ({taskbar, search, onSearch}: TableTaskbarProps): React.JSX
                 </InputRightElement>
             </InputGroup>
         </Box>
-        <Flex alignItems={"flex-end"} justifyContent={"flex-end"}>{taskbar}</Flex>
+        <Flex alignItems={"flex-end"} justifyContent={"flex-end"}>
+            {taskbar?.map(button =>
+                <IconButton
+                    mr="2"
+                    icon={button.icon}
+                    aria-label={button.label}
+                    onClick={button.onClick}
+                    isLoading={button.isLoading}
+                />
+            )}
+        </Flex>
     </Flex>
 };
 
 interface TableHeadProps {
-    header: TableHeader
+    header: TableHeaderRow
     sort: SortState
     setSort: (sort: SortState) => void
 }
@@ -125,7 +155,7 @@ const TableHead = ({header, sort, setSort}: TableHeadProps): React.JSX.Element =
                         _hover={isSortable(cell) ? {background: hoverColorScheme} : {backgroundColorScheme}}
                         _active={isSortable(cell) ? {background: activeColorScheme} : {backgroundColorScheme}}
                         onClick={() => {
-                            if (isSortable(cell)) setSort({direction: !sort.direction, column: index})
+                            if (isSortable(cell)) setSort({ascending: !sort.ascending, column: index})
                         }}
                     >
                         <Flex justifyContent="space-between">
@@ -139,7 +169,7 @@ const TableHead = ({header, sort, setSort}: TableHeadProps): React.JSX.Element =
     )
 
     function sortIcon() {
-        return sort.direction ? <TriangleUpIcon boxSize={2}/> : <TriangleDownIcon boxSize={2}/>;
+        return sort.ascending ? <TriangleUpIcon boxSize={2}/> : <TriangleDownIcon boxSize={2}/>;
     }
 
     function isSortable(cell: TableHeaderCell): boolean {
@@ -150,16 +180,17 @@ const TableHead = ({header, sort, setSort}: TableHeadProps): React.JSX.Element =
 interface TableBodyProps<T extends TableRow> {
     rows: T[]
     onSelect: (row: T) => void
-    context?: (row: T) => React.JSX.Element
+    menu?: (row: T) => ContextMenuGroup[]
 }
 
-const TableBody = <T extends TableRow>({rows, context, onSelect}: TableBodyProps<T>): React.JSX.Element => {
+const TableBody = <T extends TableRow>({rows, menu, onSelect}: TableBodyProps<T>): React.JSX.Element => {
+    const [contextMenuOpenFor, setContextMenuOpenFor] = useState<number | undefined>()
     const hoverColorScheme = useColorModeValue('gray.100', 'gray.700')
     const activeColorScheme = useColorModeValue('gray.200', 'gray.600')
 
     return (
         <Tbody>{
-            rows.map(row =>
+            rows.map((row, rowIndex) =>
                 <Tr
                     key={row.id}
                     overflowX={"hidden"}
@@ -167,16 +198,23 @@ const TableBody = <T extends TableRow>({rows, context, onSelect}: TableBodyProps
                     onClick={() => onSelect(row)}
                     _hover={{background: hoverColorScheme}}
                     _active={{background: activeColorScheme}}>
-                    {row.cells.map((cell, index) =>
+                    {row.cells.map((cell, cellIndex) =>
                         <Td
-                            key={`${row.id}-${index}`}
+                            key={`${row.id}-${cellIndex}`}
                             maxWidth={cell.maxWidth}
                             overflow={"hidden"}
                             text-overflow={"ellipsis"}
                             white-space={"no-wrap"}>
                             <Flex justifyContent={"space-between"} alignItems={"center"}>
                                 <Box whiteSpace="break-spaces">{cell.value}</Box>
-                                {context && index === row.cells.length - 1 && context(row)}
+                                {menu && cellIndex === row.cells.length - 1 &&
+                                    <ContextMenu
+                                        isOpen={contextMenuOpenFor === rowIndex}
+                                        onOpen={() => setContextMenuOpenFor(rowIndex)}
+                                        onClose={() => setContextMenuOpenFor(undefined)}
+                                        menu={menu(row)}
+                                    />
+                                }
                             </Flex>
                         </Td>
                     )}
@@ -185,6 +223,49 @@ const TableBody = <T extends TableRow>({rows, context, onSelect}: TableBodyProps
         }</Tbody>
     )
 };
+
+interface ContextMenuProps {
+    isOpen: boolean,
+    onClose: () => void,
+    onOpen: () => void,
+    menu?: ContextMenuGroup[],
+}
+
+const ContextMenu = ({isOpen, onOpen, onClose, menu}: ContextMenuProps): React.JSX.Element => {
+    const menuHoverBg = useColorModeValue("gray.300", "gray.600")
+
+    return (
+        <Menu isOpen={isOpen} onClose={onClose}>
+            <MenuButton
+                ml={2}
+                boxSize='2rem'
+                variant=''
+                _hover={{bg: menuHoverBg}}
+                onClick={e => {onOpen(); e.stopPropagation()}}
+                as={IconButton}
+                aria-label='Options'
+                icon={<HiOutlineDotsVertical/>}
+            />
+            <MenuList justifyContent={"flex-end"}>
+                {menu?.map(group =>
+                    <MenuOptionGroup
+                        defaultValue='asc'
+                        title={group.label}
+                        type={"radio"}
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {group.items.map(item =>
+                            <MenuItem
+                                onClick={e => {item.onClick(); e.stopPropagation()}}
+                                icon={item.icon}
+                            >{item.label}</MenuItem>
+                        )}
+                    </MenuOptionGroup>
+                )}
+            </MenuList>
+        </Menu>
+    )
+}
 
 interface TablePlaceholderProps {
     size?: "sm" | "md"
@@ -236,7 +317,7 @@ function sorted<T extends TableRow>(rows: T[], sort: SortState): T[] {
     }
 
     function compare(a: ReactNode, b: ReactNode): number {
-        return sort.direction ? (collator.compare(`${a}`, `${b}`)) : (collator.compare(`${b}`, `${a}`))
+        return sort.ascending ? (collator.compare(`${a}`, `${b}`)) : (collator.compare(`${b}`, `${a}`))
     }
 }
 

@@ -9,7 +9,7 @@ import {RiAddCircleFill, RiAddLine, RiCheckboxCircleFill, RiCloseCircleFill, RiF
 import {RiPlayCircleFill} from "react-icons/ri";
 import {minusMonths, timeIndicator} from "../../utils/Date";
 import InboxFiltersDrawer from "./InboxFiltersDrawer";
-import {Box, Flex, IconButton, Menu, useBoolean} from "@chakra-ui/react";
+import {Box, useBoolean} from "@chakra-ui/react";
 
 export interface InboxFilter {
     status: DataStatus[],
@@ -46,19 +46,19 @@ export default function Inbox() {
                 onSelect={(row: TableRow) => navigateDetails(row.id)}
                 rows={rows?.map(tableRow)}
                 header={tableHeader()}
-                defaultSort={{ direction: false, column: 1 }}
-                taskbar={
-                    <Flex alignItems={"flex-end"} justifyContent={"flex-end"}>
-                        <IconButton mr="2" icon={<RiAddLine/>} aria-label={"create"} onClick={navigateCreate}/>
-                        <IconButton mr="2" icon={<RiFilterLine/>} aria-label={"filter"} onClick={navigateFilters}/>
-                        <IconButton mr="2" icon={<RiRefreshLine/>} aria-label={"refresh"} isLoading={rows == null} onClick={() => setRefreshing.toggle()}/>
-                    </Flex>
-                }
-                context={(row) =>
-                    <Menu isOpen={false} onClose={() => null}>
-                        <></>
-                    </Menu>
-                }
+                defaultSort={{ ascending: false, column: 1 }}
+                buttons={[
+                    {label: "create", icon: <RiAddLine/>, onClick: () => navigateCreate()},
+                    {label: "filter", icon: <RiFilterLine/>, onClick: () => navigateFilters()},
+                    {label: "refresh", icon: <RiRefreshLine/>, onClick: () => setRefreshing.toggle(), isLoading: rows == null},
+                ]}
+                menu={(row) => [
+                    { label: "My group", items: [
+                        {label: "My item 1", onClick: () => window.alert('My item 1')},
+                        {label: "My item 2", onClick: () => window.alert('My item 2')},
+                        {label: "My item 3", onClick: () => window.alert('My item 3')},
+                    ]}
+                ]}
             />
 
             <Routes>
