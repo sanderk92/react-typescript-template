@@ -10,9 +10,7 @@ This project contains a complete template for a React Typescript project, includ
 This project depends on the OpenAPI spec from the backend defined in the `spring-kotlin-template`. Currently,
 the specification is retrieved from a running application, but when the template is used for a project the 
 specifications should be published to a separate repository. In order to run this application, you should first follow
-the run instructions for the [backend](https://github.com/sanderk92/spring-kotlin-template), and then:
-
-Configure a `frontend` public client in Keycloak
+the run instructions for the [backend](https://github.com/sanderk92/spring-kotlin-template), and then run:
 
 ```shell
 # Generate the required backend clients
