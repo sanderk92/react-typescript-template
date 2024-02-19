@@ -43,6 +43,7 @@ export interface ContextMenuItem {
     label: string,
     onClick: () => void
     icon?: React.JSX.Element
+    disabled?: boolean
 }
 
 interface SortState {
@@ -262,6 +263,7 @@ const ContextMenu = ({isOpen, onOpen, onClose, menu}: ContextMenuProps): React.J
                             <MenuItem
                                 onClick={e => {item.onClick(); e.stopPropagation()}}
                                 icon={item.icon}
+                                isDisabled={item.disabled}
                             >{item.label}</MenuItem>
                         )}
                     </MenuOptionGroup>
