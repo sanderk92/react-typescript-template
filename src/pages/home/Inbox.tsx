@@ -99,29 +99,23 @@ const tableRow = (data: DataView): TableRow => ({
     ],
 })
 
-const companyCell = (name: string): TableCell => {
-    return {
-        sortValue: name,
-        width: firstColumnWidth,
-        value: name,
-    }
-}
+const companyCell = (name: string): TableCell => ({
+    sortValue: name,
+    width: firstColumnWidth,
+    value: name,
+})
 
-const timeCell = (data: DataView): TableCell => {
-    return {
-        sortValue: data.time.getTime(),
-        width: secondColumnWidth,
-        value: timeIndicator(data.time)
-    }
-}
+const timeCell = (data: DataView): TableCell => ({
+    sortValue: data.time.getTime(),
+    width: secondColumnWidth,
+    value: timeIndicator(data.time)
+})
 
-const statusCell = (data: DataView): TableCell => {
-    return {
-        sortValue: data.time.getTime(),
-        width: thirdColumnWidth,
-        value: statusIndicator(data.status)
-    }
-}
+const statusCell = (data: DataView): TableCell => ({
+    sortValue: data.time.getTime(),
+    width: thirdColumnWidth,
+    value: statusIndicator(data.status)
+})
 
 const statusIndicator = (status: DataStatus): React.JSX.Element => {
     if (status === DataStatus.open) {
