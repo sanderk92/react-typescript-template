@@ -277,7 +277,7 @@ interface TablePlaceholderProps {
 
 const TablePlaceHolder = ({size}: TablePlaceholderProps): React.JSX.Element => {
     const backgroundColorScheme = useColorModeValue('gray.200', 'gray.800')
-    const header = size === "sm" ? 2 : 2
+    const header = 2
     const row = size === "sm" ? 4 : 5
 
     return (
