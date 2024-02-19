@@ -1,5 +1,5 @@
 import React, {ReactNode, useState} from 'react';
-import {Flex, Icon, Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue, Box, InputGroup, InputLeftElement, Input, InputRightElement, MenuButton, IconButton, MenuList, Menu, MenuItem, MenuOptionGroup} from '@chakra-ui/react';
+import {Flex, Text, Icon, Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue, Box, InputGroup, InputLeftElement, Input, InputRightElement, MenuButton, IconButton, MenuList, Menu, MenuItem, MenuOptionGroup} from '@chakra-ui/react';
 import {CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import {v4 as uuid} from 'uuid';
 import {BsMailbox} from "react-icons/bs";
@@ -7,7 +7,7 @@ import {HiOutlineDotsVertical} from "react-icons/hi";
 
 export interface TableCell {
     value: ReactNode
-    maxWidth?: string
+    width?: string
     numerical?: boolean
     sortValue?: ReactNode
 }
@@ -55,7 +55,7 @@ export interface TableComponentProps<T extends TableRow> {
     header?: TableHeaderRow
     defaultSort?: SortState
     maxHeight?: string
-    size?: "sm" | "md",
+    size?: "sm" | "md" | "lg",
     buttons?: TaskBarButton[]
     menu?: (row: T) => ContextMenuGroup[]
     onSelect?: (row: T) => void
@@ -70,25 +70,23 @@ export const SimpleTable = <T extends TableRow>(
     return (
         <Flex mb={1} flexDirection={"column"}>
             {buttons && <TableTaskbar taskbar={buttons} search={search} onSearch={setSearch}/>}
-
             <TableContainer maxH={maxHeight}>
                 {header && rows &&
-                  <Table variant='simple' size={size}>
+                  <Table __css={{'table-layout': 'fixed'}} width={"full"} size={size}>
                     <TableHead header={header} sort={sort} setSort={setSort}/>
                     <TableBody rows={sortedAndFiltered(rows, sort, search)} menu={menu} onSelect={onSelect}/>
                   </Table>
                 }
                 {!header && rows &&
-                  <Table variant='simple' size={size}>
+                  <Table __css={{'table-layout': 'fixed'}} width={"full"} size={size}>
                     <TableBody rows={sortedAndFiltered(rows, sort, search)} menu={menu} onSelect={onSelect}/>
                   </Table>
                 }
                 {header && !rows &&
-                  <Table variant='simple' size={size}>
+                  <Table __css={{'table-layout': 'fixed'}} width={"full"} size={size}>
                     <TablePlaceHolder size={size}/>
                   </Table>
                 }
-
                 {rows?.length === 0 && <EmptyResultDisplay/>}
             </TableContainer>
         </Flex>
@@ -148,7 +146,7 @@ const TableHead = ({header, sort, setSort}: TableHeadProps): React.JSX.Element =
                     <Th
                         key={uuid()}
                         overflowX={"hidden"}
-                        maxWidth={cell.maxWidth}
+                        width={cell.width}
                         isNumeric={cell.numerical}
                         bg={backgroundColorScheme}
                         className={isSortable(cell) ? "unselectable clickable" : "unselectable"}
@@ -159,8 +157,12 @@ const TableHead = ({header, sort, setSort}: TableHeadProps): React.JSX.Element =
                         }}
                     >
                         <Flex justifyContent="space-between">
-                            {cell.value}
-                            {sort.column === index ? sortIcon() : <Icon visibility={"hidden"} boxSize={2}/>}
+                            <Text
+                                overflow={"hidden"}
+                                whiteSpace={"nowrap"}
+                                textOverflow={"ellipsis"}
+                            >{cell.value}</Text>
+                            {sort.column === index ? sortIcon() : <Icon visibility={"hidden"}/>}
                         </Flex>
                     </Th>
                 )}
@@ -193,7 +195,6 @@ const TableBody = <T extends TableRow>({rows, menu, onSelect}: TableBodyProps<T>
             rows.map((row, rowIndex) =>
                 <Tr
                     key={row.id}
-                    overflowX={"hidden"}
                     className={"unselectable clickable"}
                     onClick={() => onSelect && onSelect(row)}
                     _hover={{background: hoverColorScheme}}
@@ -201,12 +202,15 @@ const TableBody = <T extends TableRow>({rows, menu, onSelect}: TableBodyProps<T>
                     {row.cells.map((cell, cellIndex) =>
                         <Td
                             key={`${row.id}-${cellIndex}`}
-                            maxWidth={cell.maxWidth}
+                            width={cell.width}
                             overflow={"hidden"}
                             text-overflow={"ellipsis"}
                             white-space={"no-wrap"}>
                             <Flex justifyContent={"space-between"} alignItems={"center"}>
-                                <Box whiteSpace="break-spaces">{cell.value}</Box>
+                                <Text
+                                    overflow={"hidden"}
+                                    whiteSpace={"break-spaces"}
+                                >{cell.value}</Text>
                                 {menu && cellIndex === row.cells.length - 1 &&
                                     <ContextMenu
                                         isOpen={contextMenuOpenFor === rowIndex}
@@ -238,7 +242,7 @@ const ContextMenu = ({isOpen, onOpen, onClose, menu}: ContextMenuProps): React.J
         <Menu isOpen={isOpen} onClose={onClose}>
             <MenuButton
                 ml={2}
-                boxSize='2rem'
+                boxSize={"1.5rem"}
                 variant=''
                 _hover={{bg: menuHoverBg}}
                 onClick={e => {onOpen(); e.stopPropagation()}}
@@ -268,7 +272,7 @@ const ContextMenu = ({isOpen, onOpen, onClose, menu}: ContextMenuProps): React.J
 }
 
 interface TablePlaceholderProps {
-    size?: "sm" | "md"
+    size?: "sm" | "md" | "lg"
 }
 
 const TablePlaceHolder = ({size}: TablePlaceholderProps): React.JSX.Element => {

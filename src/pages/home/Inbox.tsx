@@ -43,6 +43,7 @@ export default function Inbox() {
     return (
         <Box m={4}>
             <SimpleTable
+                size={"sm"}
                 onSelect={(row: TableRow) => navigateDetails(row.id)}
                 rows={rows?.map(tableRow)}
                 header={tableHeader()}
@@ -76,14 +77,15 @@ export default function Inbox() {
     )
 }
 
-const firstColumnWidth = "50%"
-const secondColumnWidth = "50%"
+const firstColumnWidth = "30%"
+const secondColumnWidth = "30%"
+const thirdColumnWidth = "40%"
 
 const tableHeader = () => ({
     cells: [
-        {value: "sender", maxWidth: firstColumnWidth},
-        {value: "age", maxWidth: secondColumnWidth},
-        {value: "status", maxWidth: secondColumnWidth},
+        {value: "sender", width: firstColumnWidth},
+        {value: "age", width: secondColumnWidth},
+        {value: "status", width: thirdColumnWidth},
     ]
 });
 
@@ -100,7 +102,7 @@ const tableRow = (data: DataView): TableRow => ({
 const companyCell = (name: string): TableCell => {
     return {
         sortValue: name,
-        maxWidth: secondColumnWidth,
+        width: firstColumnWidth,
         value: name,
     }
 }
@@ -108,7 +110,7 @@ const companyCell = (name: string): TableCell => {
 const timeCell = (data: DataView): TableCell => {
     return {
         sortValue: data.time.getTime(),
-        maxWidth: firstColumnWidth,
+        width: secondColumnWidth,
         value: timeIndicator(data.time)
     }
 }
@@ -116,7 +118,7 @@ const timeCell = (data: DataView): TableCell => {
 const statusCell = (data: DataView): TableCell => {
     return {
         sortValue: data.time.getTime(),
-        maxWidth: firstColumnWidth,
+        width: thirdColumnWidth,
         value: statusIndicator(data.status)
     }
 }
