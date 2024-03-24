@@ -1,12 +1,16 @@
-import React, {ReactNode, useEffect} from 'react';
-import {Avatar, Box, CloseButton, Drawer, DrawerContent, Flex, HStack, Icon, IconButton, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Tab, TabList, Tabs, Text, useColorModeValue, useMediaQuery, VStack,} from '@chakra-ui/react';
-import {FiChevronDown, FiInbox, FiMail, FiMenu, FiMessageCircle,} from 'react-icons/fi';
-import {IconType} from 'react-icons';
-import {ColorModeSwitcher} from "./ColorModeSwitcher";
+import React, {ReactNode, useEffect, useState} from 'react';
+import {Avatar, AvatarBadge, Box, Button, CloseButton, Divider, Drawer, DrawerContent, Flex, HStack, IconButton, Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Tab, TabList, Tabs, Text, useColorModeValue, useMediaQuery, VStack,} from '@chakra-ui/react';
+import {FiChevronDown, FiFacebook, FiMail, FiMenu, FiTwitter} from 'react-icons/fi';
 import {Link as RouteLink, useLocation, useNavigate} from "react-router-dom";
 import {Logo} from "./Logo";
 import {CurrentUserDto} from "../generated";
 import {onResize, resetOnResize} from "./utils/Resize";
+import {BsBuildingFill, BsFillBriefcaseFill, BsInboxFill} from "react-icons/bs";
+import {SearchIcon} from "@chakra-ui/icons";
+import {elementActiveColor, elementHoverColor, elementInactiveColor, primaryBackgroundColor, secondaryBackgroundColor, tertiaryBackgroundColor} from "./ColorSchemes";
+import {ColorModeSwitcher} from "./ColorModeSwitcher";
+
+const mailAddress = "sanderkrabbenborg@hotmail.com"
 
 export interface NavigationProps {
     user: CurrentUserDto
@@ -35,28 +39,49 @@ export default function Navigation({user, children}: NavigationProps) {
 const DesktopBars = ({...rest}) => {
     return (
         <Box
-            bg={useColorModeValue('gray.100', 'gray.900')}
+            bg={secondaryBackgroundColor()}
             borderRight="1px"
             borderRightColor={useColorModeValue('gray.200', 'gray.700')}
             w={60}
             pos="fixed"
             h="full"
             {...rest}>
-            <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-                <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-                    <Logo/>
-                </Text>
-            </Flex>
-            <Flex p="1" mx="4"><Text fontSize={"sm"}>Business</Text></Flex>
-            <NavItem key="Inbox" name="Inbox" link="/inbox" icon={FiInbox}></NavItem>
-            <NavItem key="Outbox" name="Outbox" link="/outbox" icon={FiMessageCircle}></NavItem>
-            <Flex p="1" mx="4"><Text fontSize={"sm"}>Other</Text></Flex>
-            <NavItem key="Contact" name="Contact" link="/contact" icon={FiMail}></NavItem>
-        </Box>
-    );
-};
 
-const MobileBars = ({isOpen, onClose, ...rest}: {
+            <Flex direction={"column"} gap={6} height={"100%"}>
+                <Flex direction={"column"} gap={6}>
+
+                    <Flex h="20" alignItems="center" mx="8" justifyContent="space-between"><Logo/></Flex>
+
+                    <InputGroup mb={4} width={"85%"} mx="auto">
+                        <InputLeftElement pointerEvents='none'>
+                            <SearchIcon/>
+                        </InputLeftElement>
+                        <Input
+                            background={tertiaryBackgroundColor()}
+                            isDisabled
+                            _placeholder={{ opacity: 1 }}
+                            variant={"outline"}
+                            type='search'
+                            placeholder='Search'
+                        />
+                    </InputGroup>
+                    <Divider/>
+                    <Flex width={"85%"} mx="auto" justifyContent={"center"} direction={"column"} gap={2}>
+                        <NavItem key="Inbox" name="Inbox" link="/inbox" icon={<BsInboxFill/>}/>
+                        <NavItem key="Outbox" name="Outbox" link="/outbox" icon={<BsInboxFill/>}/>
+                    </Flex>
+                    <Divider/>
+                </Flex>
+
+                <Flex height="100%" gap={2} mb={4} alignItems={"flex-end"} justifyContent={"center"}>
+                    <SocialIcons/>
+                </Flex>
+            </Flex>
+        </Box>
+    )
+}
+
+const MobileBars = ({isOpen, onClose}: {
     isOpen: boolean
     onClose: () => void
 }) => {
@@ -77,22 +102,23 @@ const MobileBars = ({isOpen, onClose, ...rest}: {
                 onOverlayClick={onClose}
                 size="full">
                 <DrawerContent>
-                    <Box
-                        bg={useColorModeValue('gray.100', 'gray.900')}
-                        borderRight="1px"
-                        borderRightColor={useColorModeValue('gray.200', 'gray.700')}
-                        w={{base: 'full', md: 60}}
-                        pos="fixed"
+                    <Flex
                         h="full"
-                        {...rest}>
+                        direction={"column"}
+                        alignItems={"space-between"}
+                        bg={secondaryBackgroundColor()}
+                        w={{base: 'full', md: 60}}
+                    >
                         <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
                             <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
                                 <Logo/>
                             </Text>
                             <CloseButton display={{base: 'flex', md: 'none'}} onClick={onClose}/>
                         </Flex>
-                        <NavItem key="Contact" name="Contact" link="/contact" icon={FiMail}></NavItem>
-                    </Box>
+                        <Flex height="100%" alignItems="center" gap={2} justifyContent={"center"}>
+                            <SocialIcons/>
+                        </Flex>
+                    </Flex>
                 </DrawerContent>
             </Drawer>
             <Bottombar></Bottombar>
@@ -106,16 +132,17 @@ const Bottombar = ({...rest}) => {
     return (
         <Tabs
             isFitted
+            zIndex={1000}
             id={"footer"}
-            bg={useColorModeValue('gray.100', 'gray.900')}
             width={"100%"}
             variant='enclosed-colored'
             index={calculateTabIndex()}
             size={"lg"}
             {...rest}>
             <TabList>
-                <Tab onClick={() => navigate("/inbox")}><FiInbox/><Text ml={2}>Inbox</Text></Tab>
-                <Tab onClick={() => navigate("/outbox")}><FiMessageCircle/><Text ml={2}>Outbox</Text></Tab>
+                <Tab onClick={() => navigate("/tasks")}><BsInboxFill/><Text fontSize="15" ml={2}>Tasks</Text></Tab>
+                <Tab onClick={() => navigate("/partners")}><BsFillBriefcaseFill/><Text fontSize="15" ml={2}>Partners</Text></Tab>
+                <Tab onClick={() => navigate("/companies")}><BsBuildingFill/><Text fontSize="15"  ml={2}>Companies</Text></Tab>
             </TabList>
         </Tabs>
     )
@@ -126,20 +153,24 @@ const TopNavigation = ({user, onOpen, ...rest}: {
     onOpen: () => void
 }) => {
     const navigate = useNavigate()
+    const [clockingModalOpen, setClockingModalOpen] = useState(false)
+    const [isCheckedIn, setIsCheckedIn] = useState(false)
+
     return (
         <Flex
             ml={{base: 0, md: 60}}
             px={{base: 4, md: 4}}
             alignItems="center"
-            bg={useColorModeValue('gray.700', 'gray.900')}
+            bg={primaryBackgroundColor()}
             justifyContent={{base: 'space-between', md: 'flex-end'}}
             {...rest}>
             <IconButton
+                color={"white"}
+                bgColor={elementInactiveColor()}
+                _hover={{bgColor: elementHoverColor()}}
                 display={{base: 'flex', md: 'none'}}
                 onClick={onOpen}
-                variant="outline"
                 aria-label="open menu"
-                bg={useColorModeValue('gray.100', 'gray.700')}
                 icon={<FiMenu/>}
             />
 
@@ -159,13 +190,13 @@ const TopNavigation = ({user, onOpen, ...rest}: {
                             transition="all 0.3s"
                             _focus={{boxShadow: 'none'}}>
                             <HStack>
-                                <Avatar size={'sm'} src={'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'}/>
+                                <Avatar size={'sm'} src={userAvatarUrl(user)}>
+                                    <AvatarBadge boxSize='1.25em' bg={isCheckedIn ? 'green.500': 'red.500'}/>
+                                </Avatar>
                                 <VStack
                                     display={{base: 'none', md: 'flex'}}
                                     alignItems="flex-start"
-                                    spacing="1px"
-                                    ml="2">
-                                    <Text fontSize="sm" color={"white"}>{`${user.firstName} ${user.lastName}`}</Text>=
+                                    spacing="1px">
                                 </VStack>
                                 <Box display={{base: 'none', md: 'flex'}}>
                                     <FiChevronDown color={"white"}/>
@@ -173,9 +204,13 @@ const TopNavigation = ({user, onOpen, ...rest}: {
                             </HStack>
                         </MenuButton>
                         <MenuList
-                            bg={useColorModeValue('white', 'gray.900')}
-                            borderColor={useColorModeValue('gray.200', 'gray.700')}>
-                            <MenuItem onClick={() => navigate("/logout")}>Sign out</MenuItem>
+                            bg={tertiaryBackgroundColor()}>
+                            <MenuItem
+                                bg={tertiaryBackgroundColor()}
+                                _hover={{bgColor: secondaryBackgroundColor()}}
+                                onClick={() => navigate("/logout")}>
+                                Sign out
+                            </MenuItem>
                             <MenuDivider/>
                             <ColorModeSwitcher flex={"auto"} justifySelf="center"/>
                         </MenuList>
@@ -187,38 +222,25 @@ const TopNavigation = ({user, onOpen, ...rest}: {
 };
 
 const NavItem = ({icon, link, name, onClick}: {
-    icon: IconType
+    icon: React.JSX.Element
     link: string
     name: string
     onClick?: () => void
 }) => {
-    const activeBg = useColorModeValue('gray.600', 'gray.700')
-    const inactiveBg = useColorModeValue('', '')
-    const activeColor = useColorModeValue('white', 'white')
-    const inactiveColor = useColorModeValue('black', '')
-    const bottomBorder = useColorModeValue('lightgray', 'transparent')
-
     return (
         <RouteLink to={link} onClick={onClick}>
-            <Flex
-                align="center"
-                borderRadius="sm"
-                p="4"
-                mx="4"
-                role="group"
-                cursor="pointer"
-                transition={"all .1s ease-in-out"}
-                borderBottom={`1px solid ${bottomBorder}`}
-                bg={window.location.href.includes(link) ? activeBg : inactiveBg}
-                color={window.location.href.includes(link) ? activeColor : inactiveColor}
-                _hover={{
-                    borderBottom: "1px solid transparent",
-                    boxShadow: "1px 1px 1px black",
-                }}
-            >
-                {icon && (<Icon mr="4" as={icon} fontSize="16"/>)}
-                {name}
-            </Flex>
+            <Button
+                variant={""}
+                color={"white"}
+                bgColor={elementInactiveColor()}
+                _hover={{bgColor: elementHoverColor()}}
+                _active={{bgColor: elementActiveColor()}}
+                isActive={window.location.pathname.startsWith(link)}
+                aria-label="test"
+                justifyContent={"flex-start"}
+                leftIcon={icon}
+                width={"100%"}
+            >{name}</Button>
         </RouteLink>
     );
 };
@@ -231,4 +253,42 @@ function calculateTabIndex(): number {
     } else {
         return -1
     }
+};
+
+const SocialIcons = () => {
+    return <>
+        <IconButton
+            color={"white"}
+            onClick={() => window.location.href = "mailto:" + mailAddress}
+            bgColor={elementInactiveColor()}
+            _hover={{bgColor: elementHoverColor()}}
+            w="10px"
+            aria-label={"contact"}
+            borderRadius={50}
+            icon={<FiMail/>}
+        />
+        <IconButton
+            isDisabled
+            color={"white"}
+            bgColor={elementInactiveColor()}
+            _hover={{bgColor: elementHoverColor()}}
+            w="10px"
+            aria-label={"contact"}
+            borderRadius={50}
+            icon={<FiFacebook/>}
+        />
+        <IconButton
+            isDisabled
+            color={"white"}
+            bgColor={elementInactiveColor()}
+            _hover={{bgColor: elementHoverColor()}}
+            w="10px"
+            aria-label={"contact"}
+            borderRadius={50}
+            icon={<FiTwitter/>}
+        />
+    </>;
 }
+
+const userAvatarUrl = (user: CurrentUserDto) =>
+    `https://ui-avatars.com/api/?name=${user.firstName.substring(0, 1)} ${user.lastName.substring(0, 1)}`;
