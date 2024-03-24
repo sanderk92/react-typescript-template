@@ -1,5 +1,6 @@
-import {Box, Flex, Image, Modal, ModalContent, ModalOverlay} from "@chakra-ui/react"
+import {Box, Flex, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay} from "@chakra-ui/react"
 import React, {useState} from "react";
+import {TransformComponent, TransformWrapper} from "react-zoom-pan-pinch";
 
 export interface CollageProps {
     photos: string[]
@@ -14,17 +15,31 @@ export default function Collage({photos, imagesPerRow}: CollageProps) {
         <Box>
             <Flex flexWrap={"wrap"}>
                 {
-                    photos.map((photo, index) =>
+                    photos.map(photo =>
                         <Box key={photo} flex={`${100 / imagesPerRow}%`} _hover={{cursor: "zoom-in"}}>
-                            <Image borderRadius="md" src={photo} alt="photo" p={0.5} onClick={() => {setOpen(true); setSelection(photo)}}/>
+                            <Image
+                                borderRadius="md"
+                                src={photo}
+                                alt="photo" p={0.5}
+                                onClick={() => {setOpen(true); setSelection(photo)}}/>
                         </Box>
                     )
                 }
             </Flex>
-            <Modal isOpen={open} onClose={() => setOpen(false)}>
+            <Modal isOpen={open} onClose={() => setOpen(false)} size={"xl"}>
                 <ModalOverlay/>
                 <ModalContent>
-                    <Image src={selection}></Image>
+                    <ModalCloseButton></ModalCloseButton>
+                    <ModalHeader>Image preview</ModalHeader>
+                    <ModalBody>
+                        <Flex justifyContent={"center"} >
+                            <TransformWrapper>
+                                <TransformComponent>
+                                    <Image src={selection}></Image>
+                                </TransformComponent>
+                            </TransformWrapper>
+                        </Flex>
+                    </ModalBody>
                 </ModalContent>
             </Modal>
         </Box>
