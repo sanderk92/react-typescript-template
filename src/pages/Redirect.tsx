@@ -8,7 +8,7 @@ export default function RedirectPage() {
     useEffect(() => {
         const url = getRequestUrl()
         clearRequestUrl()
-        navigate(url ? new URL(url).pathname : "/")
+        navigate(url ? new URL(url).pathname : "/inbox")
     })
     return <></>
 }

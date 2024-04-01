@@ -1,5 +1,6 @@
 import {User} from "oidc-client-ts";
 import {useAuth} from "react-oidc-context";
+import {authSettings} from "./AuthSettings";
 
 export interface AuthServiceProps {
     getUser(): User | null | undefined
@@ -34,7 +35,7 @@ export const useAuthService = (): AuthServiceProps => {
     }
 
     const logout = (): Promise<void> => {
-        return auth.signoutRedirect()
+        return auth.signoutRedirect({extraQueryParams: {...authSettings}})
     }
 
     return {

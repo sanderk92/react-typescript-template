@@ -9,6 +9,7 @@ import {BsBuildingFill, BsFillBriefcaseFill, BsInboxFill} from "react-icons/bs";
 import {SearchIcon} from "@chakra-ui/icons";
 import {elementActiveColor, elementHoverColor, elementInactiveColor, primaryBackgroundColor, secondaryBackgroundColor, tertiaryBackgroundColor} from "./ColorSchemes";
 import {ColorModeSwitcher} from "./ColorModeSwitcher";
+import useAuthService from "./auth/AuthService";
 
 const mailAddress = "sanderkrabbenborg@hotmail.com"
 
@@ -152,9 +153,7 @@ const TopNavigation = ({user, onOpen, ...rest}: {
     user: CurrentUserDto
     onOpen: () => void
 }) => {
-    const navigate = useNavigate()
-    const [clockingModalOpen, setClockingModalOpen] = useState(false)
-    const [isCheckedIn, setIsCheckedIn] = useState(false)
+    const auth = useAuthService()
 
     return (
         <Flex
@@ -190,9 +189,7 @@ const TopNavigation = ({user, onOpen, ...rest}: {
                             transition="all 0.3s"
                             _focus={{boxShadow: 'none'}}>
                             <HStack>
-                                <Avatar size={'sm'} src={userAvatarUrl(user)}>
-                                    <AvatarBadge boxSize='1.25em' bg={isCheckedIn ? 'green.500': 'red.500'}/>
-                                </Avatar>
+                                <Avatar size={'sm'} src={userAvatarUrl(user)}/>
                                 <VStack
                                     display={{base: 'none', md: 'flex'}}
                                     alignItems="flex-start"
@@ -208,7 +205,7 @@ const TopNavigation = ({user, onOpen, ...rest}: {
                             <MenuItem
                                 bg={tertiaryBackgroundColor()}
                                 _hover={{bgColor: secondaryBackgroundColor()}}
-                                onClick={() => navigate("/logout")}>
+                                onClick={() => auth.logout()}>
                                 Sign out
                             </MenuItem>
                             <MenuDivider/>

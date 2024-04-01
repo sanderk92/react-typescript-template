@@ -73,18 +73,18 @@ export const SimpleTable = <T extends TableRow>(
             {buttons && <TableTaskbar taskbar={buttons} search={search} onSearch={setSearch}/>}
             <TableContainer maxH={maxHeight}>
                 {header && rows &&
-                  <Table __css={{'table-layout': 'fixed'}} width={"full"} size={size}>
+                  <Table width={"full"} size={size}>
                     <TableHead header={header} sort={sort} setSort={setSort}/>
-                    <TableBody rows={sortedAndFiltered(rows, sort, search)} menu={menu} onSelect={onSelect}/>
+                    <TableBody rows={sortedAndFiltered(rows, sort, search)} menu={menu} size={size} onSelect={onSelect}/>
                   </Table>
                 }
                 {!header && rows &&
-                  <Table __css={{'table-layout': 'fixed'}} width={"full"} size={size}>
-                    <TableBody rows={sortedAndFiltered(rows, sort, search)} menu={menu} onSelect={onSelect}/>
+                  <Table width={"full"} size={size}>
+                    <TableBody rows={sortedAndFiltered(rows, sort, search)} menu={menu} size={size} onSelect={onSelect}/>
                   </Table>
                 }
                 {header && !rows &&
-                  <Table __css={{'table-layout': 'fixed'}} width={"full"} size={size}>
+                  <Table width={"full"} size={size}>
                     <TablePlaceHolder size={size}/>
                   </Table>
                 }
@@ -118,6 +118,7 @@ const TableTaskbar = ({taskbar, search, onSearch}: TableTaskbarProps): React.JSX
         <Flex alignItems={"flex-end"} justifyContent={"flex-end"}>
             {taskbar?.map(button =>
                 <IconButton
+                    key={button.label}
                     mr="2"
                     icon={button.icon}
                     aria-label={button.label}
@@ -184,9 +185,10 @@ interface TableBodyProps<T extends TableRow> {
     rows: T[]
     onSelect?: (row: T) => void
     menu?: (row: T) => ContextMenuGroup[]
+    size?: "sm" | "md" | "lg"
 }
 
-const TableBody = <T extends TableRow>({rows, menu, onSelect}: TableBodyProps<T>): React.JSX.Element => {
+const TableBody = <T extends TableRow>({rows, menu, onSelect, size}: TableBodyProps<T>): React.JSX.Element => {
     const [contextMenuOpenFor, setContextMenuOpenFor] = useState<number | undefined>()
     const hoverColorScheme = useColorModeValue('gray.100', 'gray.700')
     const activeColorScheme = useColorModeValue('gray.200', 'gray.600')
@@ -208,17 +210,15 @@ const TableBody = <T extends TableRow>({rows, menu, onSelect}: TableBodyProps<T>
                             text-overflow={"ellipsis"}
                             white-space={"no-wrap"}>
                             <Flex justifyContent={"space-between"} alignItems={"center"}>
-                                <Text
-                                    overflow={"hidden"}
-                                    whiteSpace={"break-spaces"}
-                                >{cell.value}</Text>
+                                <Text whiteSpace={"break-spaces"}>{cell.value}</Text>
                                 {menu && cellIndex === row.cells.length - 1 &&
-                                    <ContextMenu
-                                        isOpen={contextMenuOpenFor === rowIndex}
-                                        onOpen={() => setContextMenuOpenFor(rowIndex)}
-                                        onClose={() => setContextMenuOpenFor(undefined)}
-                                        menu={menu(row)}
-                                    />
+                                  <ContextMenu
+                                    isOpen={contextMenuOpenFor === rowIndex}
+                                    onOpen={() => setContextMenuOpenFor(rowIndex)}
+                                    onClose={() => setContextMenuOpenFor(undefined)}
+                                    menu={menu(row)}
+                                    size={size}
+                                  />
                                 }
                             </Flex>
                         </Td>
@@ -233,17 +233,17 @@ interface ContextMenuProps {
     isOpen: boolean,
     onClose: () => void,
     onOpen: () => void,
-    menu?: ContextMenuGroup[],
+    menu: ContextMenuGroup[],
+    size?: "sm" | "md" | "lg",
 }
 
-const ContextMenu = ({isOpen, onOpen, onClose, menu}: ContextMenuProps): React.JSX.Element => {
+const ContextMenu = ({isOpen, onOpen, onClose, menu, size}: ContextMenuProps): React.JSX.Element => {
     const menuHoverBg = useColorModeValue("gray.300", "gray.600")
 
     return (
         <Menu isOpen={isOpen} onClose={onClose}>
             <MenuButton
-                ml={2}
-                boxSize={"1.5rem"}
+                size={size}
                 variant=''
                 _hover={{bg: menuHoverBg}}
                 onClick={e => {onOpen(); e.stopPropagation()}}
@@ -252,8 +252,9 @@ const ContextMenu = ({isOpen, onOpen, onClose, menu}: ContextMenuProps): React.J
                 icon={<HiOutlineDotsVertical/>}
             />
             <MenuList justifyContent={"flex-end"}>
-                {menu?.map(group =>
+                {menu.map(group =>
                     <MenuOptionGroup
+                        key={group.label}
                         defaultValue='asc'
                         title={group.label}
                         type={"radio"}
@@ -261,9 +262,10 @@ const ContextMenu = ({isOpen, onOpen, onClose, menu}: ContextMenuProps): React.J
                     >
                         {group.items.map(item =>
                             <MenuItem
-                                onClick={e => {item.onClick(); e.stopPropagation()}}
+                                key={item.label}
                                 icon={item.icon}
                                 isDisabled={item.disabled}
+                                onClick={e => {item.onClick(); e.stopPropagation()}}
                             >{item.label}</MenuItem>
                         )}
                     </MenuOptionGroup>

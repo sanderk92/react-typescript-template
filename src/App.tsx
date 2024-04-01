@@ -10,13 +10,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import useAuthService from "./auth/AuthService";
 import {CurrentUserDto, OpenAPI, UsersService} from "../generated";
 import RedirectPage from "./pages/Redirect";
-import LogoutPage from "./pages/Logout";
 import {HiLightningBolt} from "react-icons/hi";
 import {storeRequestUrl} from "./utils/Login";
-import Inbox from "./pages/home/Inbox";
-import Outbox from "./pages/home/Outbox";
+import Inbox from "./pages/inbox/Inbox";
+import Outbox from "./pages/inbox/Outbox";
 import Contact from "./pages/contact/Contact";
 import {authSettings} from "./auth/AuthSettings";
+import HomePage from "./pages/home/HomePage";
 
 export function App() {
     return (
@@ -25,8 +25,8 @@ export function App() {
                 <ChakraProvider theme={theme}>
                     <BrowserRouter>
                         <Routes>
+                            <Route path="/" element={<HomePage/>}/>
                             <Route path="/*" element={<AppNavigation/>}/>
-                            <Route path="/logout" element={<LogoutPage/>}/>
                         </Routes>
                     </BrowserRouter>
                 </ChakraProvider>
