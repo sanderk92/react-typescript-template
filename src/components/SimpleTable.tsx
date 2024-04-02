@@ -104,7 +104,7 @@ const TableTaskbar = ({taskbar, search, onSearch}: TableTaskbarProps): React.JSX
     const colorScheme = useColorModeValue('gray.50', 'gray.700')
 
     return <Flex mb={2} justifyContent={"flex-end"}>
-        <Box mr={2}>
+        <Box>
             <InputGroup>
                 <InputLeftElement>
                     <SearchIcon/>
@@ -119,7 +119,7 @@ const TableTaskbar = ({taskbar, search, onSearch}: TableTaskbarProps): React.JSX
             {taskbar?.map(button =>
                 <IconButton
                     key={button.label}
-                    mr="2"
+                    ml="2"
                     icon={button.icon}
                     aria-label={button.label}
                     onClick={button.onClick}
