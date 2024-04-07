@@ -1,4 +1,4 @@
-import {TableCell, TableRow, SimpleTable} from "../../components/SimpleTable";
+import {TableCell, TableRow, ReadTable} from "../../components/ReadTable";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {Route, Routes, useNavigate} from "react-router-dom";
@@ -42,11 +42,12 @@ export default function Inbox() {
 
     return (
         <Box m={4}>
-            <SimpleTable
+            <ReadTable
                 size={"sm"}
                 onSelect={(row: TableRow) => navigateDetails(row.id)}
                 rows={rows?.map(tableRow)}
                 header={tableHeader()}
+                defaultPage={{page: 0, size: 10}}
                 defaultSort={{ ascending: false, column: 1 }}
                 buttons={[
                     {label: "create", icon: <RiAddLine/>, onClick: () => navigateCreate()},

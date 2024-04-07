@@ -1,6 +1,5 @@
 import {Box, Heading, Container, Text, Button, Stack, Icon, createIcon, Flex,} from '@chakra-ui/react'
 import {useNavigate} from "react-router-dom";
-import {elementActiveColor, elementHoverColor, elementInactiveColor} from "../../ColorSchemes";
 import {Logo} from "../../Logo";
 import React from "react";
 
@@ -23,7 +22,7 @@ export default function HomePage() {
                         fontSize={{ base: '2xl', sm: '4xl', md: '6xl' }}
                         lineHeight={'110%'}>
                         Manage your business <br/>
-                        <Text as={'span'} color={elementInactiveColor()}>
+                        <Text as={'span'} color={"primary.400"}>
                             effectively and organized.
                         </Text>
                     </Heading>
@@ -41,8 +40,8 @@ export default function HomePage() {
                         <Button
                             onClick={() => navigate("/inbox")}
                             color={"white"}
-                            bg={elementInactiveColor()}
-                            _hover={{bg: elementHoverColor()}}
+                            bg={"primary.200"}
+                            _hover={{bg: "primary.400"}}
                             rounded={'full'}
                             px={6}>
                             Login
@@ -50,7 +49,7 @@ export default function HomePage() {
                         <Box>
                             <Icon
                                 as={Arrow}
-                                color={elementActiveColor()}
+                                color={"primary.200"}
                                 w={71}
                                 position={'absolute'}
                                 right={-71}

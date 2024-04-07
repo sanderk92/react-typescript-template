@@ -1,6 +1,6 @@
 import * as React from "react"
 import {useEffect, useState} from "react"
-import {Box, ChakraProvider, Spinner, theme, useToast} from "@chakra-ui/react"
+import {Box, ChakraProvider, Spinner, useToast} from "@chakra-ui/react"
 import Navigation from "./Navigation";
 import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
 import {AuthProvider} from "react-oidc-context";
@@ -17,6 +17,7 @@ import Outbox from "./pages/inbox/Outbox";
 import Contact from "./pages/contact/Contact";
 import {authSettings} from "./auth/AuthSettings";
 import HomePage from "./pages/home/HomePage";
+import {theme} from "./ColorTheme";
 
 export function App() {
     return (

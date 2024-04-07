@@ -3,12 +3,13 @@ import * as React from "react";
 import {useRef} from "react";
 
 interface FileInputButtonProps {
+    uniqueId: string,
     text: string
     onFileSelected: (file: File) => void
     isDisabled?: boolean
 }
 
-export const ImageUploadButton = ({text, onFileSelected, isDisabled}: FileInputButtonProps) => {
+export const ImageUploadButton = ({uniqueId, text, onFileSelected, isDisabled}: FileInputButtonProps) => {
     const uploadRef = useRef<HTMLInputElement | null>(null)
 
     return (
@@ -22,7 +23,7 @@ export const ImageUploadButton = ({text, onFileSelected, isDisabled}: FileInputB
                     display={"flex"}
                     alignItems={'center'}
                     justifyContent={"center"}
-                    htmlFor={"file-upload"}
+                    htmlFor={uniqueId}
                     width={"100%"}
                     height={"100%"}
                     p={0}
@@ -31,14 +32,14 @@ export const ImageUploadButton = ({text, onFileSelected, isDisabled}: FileInputB
                 </FormLabel>
             </Button>
             <Input
+                id={uniqueId}
                 mt={2}
                 pt={2}
-                id={"file-upload"}
                 display={"none"}
                 accept={"image/*"}
                 type="file"
                 ref={uploadRef}
-                onChange={e => e.target?.files && onFileSelected(e.target!.files![0])}
+                onChange={e => uploadRef?.current?.files && onFileSelected(uploadRef.current?.files[0])}
             />
         </>
     )

@@ -1,9 +1,10 @@
-import React, {ReactNode, useState} from 'react';
-import {Flex, Text, Icon, Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue, Box, InputGroup, InputLeftElement, Input, InputRightElement, MenuButton, IconButton, MenuList, Menu, MenuItem, MenuOptionGroup} from '@chakra-ui/react';
+import React, {ReactNode, useEffect, useState} from 'react';
+import {Flex, Text, Icon, Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue, Box, InputGroup, InputLeftElement, Input, InputRightElement, MenuButton, IconButton, MenuList, Menu, MenuItem, MenuOptionGroup, Button, NumberInput, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, NumberInputField, Divider, useMediaQuery} from '@chakra-ui/react';
 import {CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import {v4 as uuid} from 'uuid';
-import {BsMailbox} from "react-icons/bs";
+import {BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsMailbox} from "react-icons/bs";
 import {HiOutlineDotsVertical} from "react-icons/hi";
+import {isLgDevice} from "../utils/Mode";
 
 export interface TableCell {
     value: ReactNode
@@ -51,10 +52,16 @@ interface SortState {
     column: number
 }
 
+interface PageState {
+    page: number,
+    size: number,
+}
+
 export interface TableComponentProps<T extends TableRow> {
     rows?: T[]
     header?: TableHeaderRow
     defaultSort?: SortState
+    defaultPage?: PageState
     maxHeight?: string
     size?: "sm" | "md" | "lg",
     buttons?: TaskBarButton[]
@@ -62,25 +69,30 @@ export interface TableComponentProps<T extends TableRow> {
     onSelect?: (row: T) => void
 }
 
-export const SimpleTable = <T extends TableRow>(
-    {rows, header, defaultSort, maxHeight, size, buttons, menu, onSelect}: TableComponentProps<T>
+export const ReadTable = <T extends TableRow>(
+    {rows, header, defaultSort, defaultPage, maxHeight, size, buttons, menu, onSelect}: TableComponentProps<T>
 ) => {
     const [search, setSearch] = useState<string>('')
     const [sort, setSort] = useState<SortState>(defaultSort ?? {column: 0, ascending: false})
+    const [page, setPage] = useState<PageState | undefined>(defaultPage)
+
+    const [isLg] = isLgDevice()
 
     return (
         <Flex mb={1} flexDirection={"column"}>
             {buttons && <TableTaskbar taskbar={buttons} search={search} onSearch={setSearch}/>}
+            <Divider/>
+            {page && <Pagination enabled={isLg} paginator={page} setPage={setPage} totalRows={curatedRowCount()}/>}
             <TableContainer maxH={maxHeight}>
                 {header && rows &&
                   <Table width={"full"} size={size}>
                     <TableHead header={header} sort={sort} setSort={setSort}/>
-                    <TableBody rows={sortedAndFiltered(rows, sort, search)} menu={menu} size={size} onSelect={onSelect}/>
+                    <TableBody rows={curatedRows()} menu={menu} size={size} onSelect={onSelect}/>
                   </Table>
                 }
                 {!header && rows &&
                   <Table width={"full"} size={size}>
-                    <TableBody rows={sortedAndFiltered(rows, sort, search)} menu={menu} size={size} onSelect={onSelect}/>
+                    <TableBody rows={curatedRows()} menu={menu} size={size} onSelect={onSelect}/>
                   </Table>
                 }
                 {header && !rows &&
@@ -88,14 +100,50 @@ export const SimpleTable = <T extends TableRow>(
                     <TablePlaceHolder size={size}/>
                   </Table>
                 }
-                {rows?.length === 0 && <EmptyResultDisplay/>}
             </TableContainer>
+            {rows && rows.length === 0 && <EmptyResultDisplay/>}
         </Flex>
     )
+
+    function curatedRows(): T[] {
+        return sorted(rows ?? [])
+            .filter(row => filtered(row))
+            .filter((_, index) => !isLg || paginated(index))
+    }
+
+    function curatedRowCount(): number {
+        return (rows ?? [])
+            .filter(row => filtered(row))
+            .length
+    }
+
+    function sorted(rows: T[]): T[] {
+        const sorted = rows.sort((a, b) => compare(a, b))
+        return sort.ascending ? sorted : sorted.reverse()
+    }
+
+    function compare(a: TableRow, b: TableRow): number {
+        const collator = Intl.Collator([], {numeric: true})
+        return collator.compare(sortValue(a), sortValue(b))
+    }
+
+    function sortValue(a: TableRow): string {
+        const cell = a.cells[sort.column]
+        return cell.sortValue ? `${cell.sortValue}` : `${cell.value}`
+    }
+
+    function filtered(row: TableRow): boolean {
+        const cells = row.cells.map(cell => cell.value)
+        return Object.values(cells).join(" ").toLowerCase().includes(search.toLowerCase())
+    }
+
+    function paginated(index: number): boolean {
+        return !page || index >= (page.size * page.page) && index < (page.size * (page.page + 1))
+    }
 };
 
 interface TableTaskbarProps {
-    taskbar: TaskBarButton[]
+    taskbar: TaskBarButton[] | undefined
     search: string
     onSearch: (value: string) => void
 }
@@ -275,6 +323,126 @@ const ContextMenu = ({isOpen, onOpen, onClose, menu, size}: ContextMenuProps): R
     )
 }
 
+interface PaginationProps {
+    enabled: boolean
+    paginator: PageState,
+    setPage: (page: PageState) => void
+    totalRows: number,
+}
+
+const Pagination = ({enabled, paginator, setPage, totalRows}: PaginationProps) => {
+
+    useEffect(() => {
+        currentPageStart() > totalRows && setPage({ page: lastPage(), size: paginator.size })
+    })
+
+    return enabled && paginator && (
+        <Flex justifyContent={"space-between"}>
+            <Flex my={1} justifyContent={"flex-end"}>
+                <IconButton
+                    mx={1}
+                    size={"xs"}
+                    icon={<BsChevronDoubleLeft/>}
+                    aria-label={"reset-backward"}
+                    isDisabled={isAtFirstPage() || isEmptyTable()}
+                    onClick={() =>
+                        setPage({ page: 0, size: paginator.size })
+                    }
+                />
+                <IconButton
+                    mx={1}
+                    size={"xs"}
+                    icon={<BsChevronLeft/>}
+                    aria-label={"backward"}
+                    isDisabled={isAtFirstPage() || isEmptyTable()}
+                    onClick={() =>
+                        setPage({ page: decrementPage(), size: paginator.size })
+                    }
+                />
+                <Button
+                    mx={1}
+                    width={8}
+                    size={"xs"}
+                    variant={"outline"}
+                >{paginator.page}</Button>
+                <IconButton
+                    mx={1}
+                    size={"xs"}
+                    icon={<BsChevronRight/>}
+                    aria-label={"forward"}
+                    isDisabled={isAtLastPage() || isEmptyTable()}
+                    onClick={() => {
+                        setPage({ page: incrementPage(), size: paginator.size })
+                    }}
+                />
+                <IconButton
+                    mx={1}
+                    size={"xs"}
+                    icon={<BsChevronDoubleRight/>}
+                    aria-label={"reset-forward"}
+                    isDisabled={isAtLastPage() || isEmptyTable()}
+                    onClick={() =>
+                        setPage({ page: lastPage(), size: paginator.size })
+                    }
+                />
+            </Flex>
+            <Flex
+                alignItems={"center"}>
+                <Text
+                    mx={1}
+                    fontSize={12}>
+                    {currentPageStart()} - {currentPageEnd()} of {totalRows}
+                </Text>
+                <NumberInput
+                    mx={1} size={"xs"} maxW={16} step={10} min={10} max={100} value={paginator.size}
+                    onChange={value => setPage({page: 0, size: +value})}>
+                    <NumberInputField />
+                    <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                    </NumberInputStepper>
+                </NumberInput>
+            </Flex>
+        </Flex>
+    )
+
+    function isEmptyTable() {
+        return totalRows === 0;
+    }
+
+    function firstPage() {
+        return 0
+    }
+
+    function lastPage() {
+        return Math.ceil(totalRows / paginator.size) - 1;
+    }
+
+    function isAtFirstPage() {
+        return paginator.page === firstPage();
+    }
+
+    function isAtLastPage() {
+        return paginator.page === lastPage();
+    }
+
+    function currentPageStart() {
+        return paginator.page * paginator.size;
+    }
+
+    function currentPageEnd() {
+        return Math.min(totalRows, paginator.size * (paginator.page + 1));
+    }
+
+    function decrementPage() {
+        return Math.max(firstPage(), paginator.page - 1);
+    }
+
+    function incrementPage() {
+        return Math.min(lastPage(), paginator.page + 1);
+    }
+}
+
 interface TablePlaceholderProps {
     size?: "sm" | "md" | "lg"
 }
@@ -308,28 +476,4 @@ function EmptyResultDisplay() {
             <BsMailbox size={100} opacity={"10%"}/>
         </Box>
     </Box>
-}
-
-function sortedAndFiltered<T extends TableRow>(rows: T[], sort: SortState, search: string): T[] {
-    return sorted(rows, sort).filter(row => filtered(row, search))
-}
-
-function sorted<T extends TableRow>(rows: T[], sort: SortState): T[] {
-    const collator = Intl.Collator([], {numeric: true})
-    return rows
-        .sort((a, b) => compare(getSortValue(a), getSortValue(b)))
-
-    function getSortValue(a: TableRow): ReactNode {
-        const cell = a.cells[sort.column]
-        return cell.sortValue != null ? cell.sortValue : cell.value
-    }
-
-    function compare(a: ReactNode, b: ReactNode): number {
-        return sort.ascending ? (collator.compare(`${a}`, `${b}`)) : (collator.compare(`${b}`, `${a}`))
-    }
-}
-
-function filtered(row: TableRow, search: string): boolean {
-    const cells = row.cells.map(cell => cell.value)
-    return Object.values(cells).join(" ").toLowerCase().includes(search.toLowerCase())
 }

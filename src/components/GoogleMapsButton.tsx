@@ -8,15 +8,15 @@ interface GoogleMapsButtonProps {
     latitude: number,
 }
 
-const GoogleMapsButton = ({longitude, latitude}: GoogleMapsButtonProps) => (
-    <IconButton
-        bg={""}
-        alignSelf={"center"}
-        borderRadius={0}
-        aria-label={"open in maps"}
-        onClick={() => showLocation(longitude, latitude)}
-        icon={<RiMapPinLine/>}
-    />
-);
-
-export default GoogleMapsButton
+export const GoogleMapsButton = ({longitude, latitude}: GoogleMapsButtonProps) => {
+    return (
+        <IconButton
+            bg={""}
+            alignSelf={"center"}
+            borderRadius={0}
+            aria-label={"open in maps"}
+            onClick={() => showLocation(longitude, latitude)}
+            icon={<RiMapPinLine/>}
+        />
+    )
+}
