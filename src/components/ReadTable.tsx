@@ -1,15 +1,16 @@
 import React, {ReactNode, useEffect, useState} from 'react';
-import {Flex, Text, Icon, Skeleton, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useColorModeValue, Box, InputGroup, InputLeftElement, Input, InputRightElement, MenuButton, IconButton, MenuList, Menu, MenuItem, MenuOptionGroup, Button, NumberInput, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper, NumberInputField, Divider, useMediaQuery} from '@chakra-ui/react';
+import {Box, Button, Divider, Flex, Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Menu, MenuButton, MenuItem, MenuList, MenuOptionGroup, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Skeleton, Table, TableContainer, Tbody, Td, Text, Th, Thead, Tr, useColorModeValue} from '@chakra-ui/react';
 import {CloseIcon, SearchIcon, TriangleDownIcon, TriangleUpIcon} from '@chakra-ui/icons';
 import {v4 as uuid} from 'uuid';
-import {BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight, BsMailbox} from "react-icons/bs";
+import {BsChevronDoubleLeft, BsChevronDoubleRight, BsChevronLeft, BsChevronRight} from "react-icons/bs";
 import {HiOutlineDotsVertical} from "react-icons/hi";
 import {isLgDevice} from "../utils/Mode";
+import {RiListCheck} from "react-icons/ri";
 
 export interface TableCell {
     value: ReactNode
     width?: string
-    numerical?: boolean
+    endAligned?: boolean
     sortValue?: ReactNode
 }
 
@@ -197,7 +198,6 @@ const TableHead = ({header, sort, setSort}: TableHeadProps): React.JSX.Element =
                         key={uuid()}
                         overflowX={"hidden"}
                         width={cell.width}
-                        isNumeric={cell.numerical}
                         bg={backgroundColorScheme}
                         className={isSortable(cell) ? "unselectable clickable" : "unselectable"}
                         _hover={isSortable(cell) ? {background: hoverColorScheme} : {backgroundColorScheme}}
@@ -206,7 +206,7 @@ const TableHead = ({header, sort, setSort}: TableHeadProps): React.JSX.Element =
                             if (isSortable(cell)) setSort({ascending: !sort.ascending, column: index})
                         }}
                     >
-                        <Flex justifyContent="space-between">
+                        <Flex justifyContent={cell.endAligned ? "flex-end" : "space-between"}>
                             <Text
                                 overflow={"hidden"}
                                 whiteSpace={"nowrap"}
@@ -257,7 +257,7 @@ const TableBody = <T extends TableRow>({rows, menu, onSelect, size}: TableBodyPr
                             overflow={"hidden"}
                             text-overflow={"ellipsis"}
                             white-space={"no-wrap"}>
-                            <Flex justifyContent={"space-between"} alignItems={"center"}>
+                            <Flex justifyContent={cell.endAligned ? "flex-end" : "space-between"} alignItems={"center"}>
                                 <Text whiteSpace={"break-spaces"}>{cell.value}</Text>
                                 {menu && cellIndex === row.cells.length - 1 &&
                                   <ContextMenu
@@ -472,8 +472,8 @@ const TablePlaceHolder = ({size}: TablePlaceholderProps): React.JSX.Element => {
 
 function EmptyResultDisplay() {
     return <Box className={"centered-parent"}>
-        <Box className={"centered-child"}>
-            <BsMailbox size={100} opacity={"10%"}/>
+        <Box className={"centered-child"} textAlign={"center"}>
+            <RiListCheck size={100} opacity={"10%"}/>
         </Box>
     </Box>
 }
