@@ -1,28 +1,70 @@
-import {Box, Flex, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay} from "@chakra-ui/react"
+import {
+    Box,
+    Button,
+    Flex, IconButton,
+    Image,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalHeader,
+    ModalOverlay
+} from "@chakra-ui/react"
 import React, {useState} from "react";
 import {TransformComponent, TransformWrapper} from "react-zoom-pan-pinch";
+import {BiArchive, BiCross, BiTrash} from "react-icons/bi";
+import {CgCross} from "react-icons/cg";
+import {FaCross} from "react-icons/fa";
+import {LuDelete} from "react-icons/lu";
+import {DeleteIcon} from "@chakra-ui/icons";
 
 export interface CollageProps {
     photos: string[]
     imagesPerRow: number
+    size: number
+    onDelete?: () => void
 }
 
-export default function Collage({photos, imagesPerRow}: CollageProps) {
+export default function Collage({photos, imagesPerRow, size, onDelete}: CollageProps) {
     const [open, setOpen] = useState(false)
     const [selection, setSelection] = useState<string | undefined>();
 
+    // Take full advantage of the given size by depending on image count
+    function calculateImageSize() {
+        return photos.length > imagesPerRow ? size / imagesPerRow : size / photos.length;
+    }
+
     return (
         <Box>
-            <Flex flexWrap={"wrap"}>
+            <Flex flexWrap={"wrap"} width={size}>
                 {
                     photos.map(photo =>
-                        <Box key={photo} flex={`${100 / imagesPerRow}%`} _hover={{cursor: "zoom-in"}}>
+                        <Flex
+                            key={photo}
+                            _hover={{cursor: "zoom-in"}}
+                            position={"relative"}>
+                            { onDelete && <IconButton
+                              color={"white"}
+                              bg={"primary.300"}
+                              _hover={{bg: "primary.500"}}
+                              icon={<BiTrash/>}
+                              aria-label={"delete picture"}
+                              onClick={onDelete}
+                              position={"absolute"}
+                              borderRadius={25}
+                              top={1}
+                              right={1}/>
+                            }
                             <Image
+                                objectFit={"cover"}
+                                height={calculateImageSize()}
+                                width={calculateImageSize()}
                                 borderRadius="md"
                                 src={photo}
-                                alt="photo" p={0.5}
+                                alt="photo"
+                                p={0.5}
                                 onClick={() => {setOpen(true); setSelection(photo)}}/>
-                        </Box>
+                        </Flex>
                     )
                 }
             </Flex>
@@ -31,7 +73,7 @@ export default function Collage({photos, imagesPerRow}: CollageProps) {
                 <ModalContent>
                     <ModalCloseButton></ModalCloseButton>
                     <ModalHeader>Image preview</ModalHeader>
-                    <ModalBody>
+                    <ModalBody mb={4}>
                         <Flex justifyContent={"center"} >
                             <TransformWrapper>
                                 <TransformComponent>
