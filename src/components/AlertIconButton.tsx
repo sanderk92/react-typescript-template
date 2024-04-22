@@ -1,31 +1,34 @@
-import {AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, useDisclosure} from "@chakra-ui/react";
+import {AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Box, Button, IconButton, useDisclosure} from "@chakra-ui/react";
 import {useRef} from "react";
 import * as React from "react";
 
-export interface AlertButtonProps {
-    tag: string,
+export interface AlertIconButtonProps {
+    icon: React.JSX.Element,
     color: string,
     title: string,
     text: string,
     onClick: () => void
-    isLoading: boolean,
+    isLoading?: boolean,
     isRound?: boolean
+    size?: string,
 }
 
-export const AlertButton = ({tag, title, text, color, onClick, isLoading, isRound}: AlertButtonProps) => {
+export const AlertIconButton = ({icon, title, text, color, onClick, isLoading, isRound, size}: AlertIconButtonProps) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = useRef(null)
 
     return (
         <Box>
-            <Button
+            <IconButton
                 m={1}
+                size={size}
                 borderRadius={isRound ? "25px" : "0px"}
                 colorScheme={color}
                 isLoading={isLoading}
+                icon={icon}
                 aria-label={title}
                 onClick={onOpen}
-            >{tag}</Button>
+            ></IconButton>
             <AlertDialog
                 isOpen={isOpen}
                 leastDestructiveRef={cancelRef}

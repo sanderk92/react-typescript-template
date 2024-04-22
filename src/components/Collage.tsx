@@ -1,28 +1,19 @@
-import {
-    Box,
-    Button,
-    Flex, IconButton,
-    Image,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalHeader,
-    ModalOverlay
-} from "@chakra-ui/react"
+import {Box, Flex, Image, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay} from "@chakra-ui/react"
 import React, {useState} from "react";
 import {TransformComponent, TransformWrapper} from "react-zoom-pan-pinch";
-import {BiArchive, BiCross, BiTrash} from "react-icons/bi";
-import {CgCross} from "react-icons/cg";
-import {FaCross} from "react-icons/fa";
-import {LuDelete} from "react-icons/lu";
-import {DeleteIcon} from "@chakra-ui/icons";
+import {BiTrash} from "react-icons/bi";
+import {AlertIconButton} from "./AlertIconButton";
 
 export interface CollageProps {
-    photos: string[]
+    photos: Photo[]
     imagesPerRow: number
     size: number
-    onDelete?: () => void
+    onDelete?: (photo: Photo) => void
+}
+
+export interface Photo {
+    id: string,
+    link: string,
 }
 
 export default function Collage({photos, imagesPerRow, size, onDelete}: CollageProps) {
@@ -40,30 +31,34 @@ export default function Collage({photos, imagesPerRow, size, onDelete}: CollageP
                 {
                     photos.map(photo =>
                         <Flex
-                            key={photo}
+                            key={photo.id}
                             _hover={{cursor: "zoom-in"}}
                             position={"relative"}>
-                            { onDelete && <IconButton
-                              color={"white"}
-                              bg={"primary.300"}
-                              _hover={{bg: "primary.500"}}
-                              icon={<BiTrash/>}
-                              aria-label={"delete picture"}
-                              onClick={onDelete}
-                              position={"absolute"}
-                              borderRadius={25}
-                              top={1}
-                              right={1}/>
+                            { onDelete &&
+                                <Box
+                                    position={"absolute"}
+                                    top={0}
+                                    right={0}>
+                                    <AlertIconButton
+                                        isRound={true}
+                                        size={"xs"}
+                                        title={"Confirm"}
+                                        text={"Are you sure you want to delete this picture?"}
+                                        color={"red"}
+                                        icon={<BiTrash/>}
+                                        onClick={() => onDelete(photo)}
+                                    />
+                              </Box>
                             }
                             <Image
                                 objectFit={"cover"}
                                 height={calculateImageSize()}
                                 width={calculateImageSize()}
                                 borderRadius="md"
-                                src={photo}
+                                src={photo.link}
                                 alt="photo"
                                 p={0.5}
-                                onClick={() => {setOpen(true); setSelection(photo)}}/>
+                                onClick={() => {setOpen(true); setSelection(photo.link)}}/>
                         </Flex>
                     )
                 }
