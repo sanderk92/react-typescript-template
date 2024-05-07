@@ -40,6 +40,7 @@ export const ImageUploadButton = ({uniqueId, text, onFileSelected, isDisabled}: 
                 type="file"
                 ref={uploadRef}
                 onChange={e => uploadRef?.current?.files && onFileSelected(uploadRef.current?.files[0])}
+                isDisabled={isDisabled}
             />
         </>
     )
