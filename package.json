@@ -35,7 +35,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite serve --host",
-    "preview": "vite preview",
+    "preview": "vite preview --port 5173",
     "generate": "openapi --input http://localhost:8080/v3/api-docs/API --output ./generated --client axios"
   },
   "eslintConfig": {
